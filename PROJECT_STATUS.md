@@ -24,10 +24,10 @@
 - **1** fix in `MiniHotel-old` ("bandaid fix" for language/currency).
 
 ## 3. Substantiated Work Hours
-**Total:** ~24 Hours
+**Total:** ~37 Hours
 
 | Component | Date | Duration | Description |
 | :--- | :--- | :--- | :--- |
-| **Old Repo** | Nov 5, 2025 | ~12 Hours | Intense development block. |
-| **Current Sessions** | Jan 1 - Jan 3, 2026 | ~11.5 Hours | Features, Refactoring, & Bug Fixes. |
+| **Old Repo** | Sept - Nov 2025 | ~25 Hours | Planning, Design, Development, & Bug Fixes. |
 | **Migration** | Nov 6, 2025 | ~0.5 Hours | Initial migration. |
+| **Current Sessions** | Jan 1 - Jan 3, 2026 | ~11.5 Hours | Features, Refactoring, & Bug Fixes. |
