@@ -18,7 +18,10 @@ import { api } from "@/lib/api"
 
 export default function SettingsPage() {
   const { settings, updateSettings, t } = useSettings()
-  const [localSettings, setLocalSettings] = useState(settings)
+  const [localSettings, setLocalSettings] = useState({
+    ...settings,
+    autoLogoutTimeout: settings.autoLogoutTimeout || 30
+  })
   const [saved, setSaved] = useState(false)
 
   // Password Change State
@@ -31,7 +34,10 @@ export default function SettingsPage() {
   const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
   useEffect(() => {
-    setLocalSettings(settings)
+    setLocalSettings({
+      ...settings,
+      autoLogoutTimeout: settings.autoLogoutTimeout ?? 30
+    })
   }, [settings])
 
   const handleSave = () => {
@@ -207,7 +213,7 @@ export default function SettingsPage() {
                     id="timeout"
                     type="number"
                     min="1"
-                    value={localSettings.autoLogoutTimeout}
+                    value={localSettings.autoLogoutTimeout ?? 30}
                     onChange={(e) => setLocalSettings({ ...localSettings, autoLogoutTimeout: parseInt(e.target.value) || 15 })}
                   />
                 </div>

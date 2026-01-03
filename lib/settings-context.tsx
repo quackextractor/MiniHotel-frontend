@@ -49,7 +49,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem("minihotel-settings")
     if (stored) {
       try {
-        setSettings(JSON.parse(stored))
+        const parsed = JSON.parse(stored)
+        setSettings({ ...defaultSettings, ...parsed })
       } catch (error) {
         console.error("Failed to parse settings:", error)
       }

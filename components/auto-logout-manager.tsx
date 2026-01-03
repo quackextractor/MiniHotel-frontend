@@ -26,7 +26,7 @@ export function AutoLogoutManager() {
             if (timeoutMs > 0) {
                 timerRef.current = setTimeout(() => {
                     console.log("Auto-logout triggered due to inactivity")
-                    logout()
+                    logout('Auto-logout due to inactivity')
                 }, timeoutMs)
             }
         }

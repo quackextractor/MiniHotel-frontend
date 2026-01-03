@@ -14,7 +14,7 @@ interface AuthContextType {
     user: User | null
     token: string | null
     login: (token: string, username: string, userId: number) => void
-    logout: () => void
+    logout: (reason?: string) => void
     isAuthenticated: boolean
     loading: boolean
 }
@@ -52,13 +52,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         router.push('/')
     }
 
-    const logout = () => {
+    const logout = (reason?: string) => {
         localStorage.removeItem('token')
         localStorage.removeItem('username')
         localStorage.removeItem('userId')
         setToken(null)
         setUser(null)
-        router.push('/login')
+        if (reason) {
+            router.push(`/login?error=${encodeURIComponent(reason)}`)
+        } else {
+            router.push('/login')
+        }
     }
 
     const isAuthenticated = !!token
