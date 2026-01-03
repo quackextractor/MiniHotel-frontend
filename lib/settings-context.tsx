@@ -9,6 +9,8 @@ export interface Settings {
   dateFormat: string
   timeFormat: string
   hotelName: string
+  autoLogoutEnabled: boolean
+  autoLogoutTimeout: number // in minutes
 }
 
 const defaultSettings: Settings = {
@@ -17,6 +19,8 @@ const defaultSettings: Settings = {
   dateFormat: "DD/MM/YYYY",
   timeFormat: "24h",
   hotelName: "",
+  autoLogoutEnabled: false,
+  autoLogoutTimeout: 30, // 30 minutes
 }
 
 const currencyRates: Record<string, number> = {

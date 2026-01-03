@@ -10,8 +10,9 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useAuth } from '@/contexts/AuthContext'
-import { Loader2 } from 'lucide-react'
+import { Loader2 } from "lucide-react"
+import { api } from "@/lib/api"
+import { useSettings } from "@/lib/settings-context"
 
 interface AuditLog {
     id: number
@@ -26,23 +27,15 @@ interface AuditLog {
 }
 
 export default function AuditLogsPage() {
-    const { token } = useAuth()
+    const { t } = useSettings() // Assuming simple t function for now or I can reuse translation logic if complex
     const [logs, setLogs] = useState<AuditLog[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         async function fetchLogs() {
-            if (!token) return
             try {
-                const res = await fetch('http://localhost:5000/api/audit-logs', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                if (res.ok) {
-                    const data = await res.json()
-                    setLogs(data)
-                }
+                const data = await api.getAuditLogs()
+                setLogs(data)
             } catch (error) {
                 console.error("Failed to fetch audit logs", error)
             } finally {
@@ -50,19 +43,21 @@ export default function AuditLogsPage() {
             }
         }
         fetchLogs()
-    }, [token])
+    }, [])
 
     if (loading) {
         return (
-            <div className="flex h-screen items-center justify-center">
+            <div className="flex flex-1 items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin" />
             </div>
         )
     }
 
     return (
-        <div className="p-8">
+        <div className="flex flex-1 flex-col gap-4">
+            <h1 className="text-3xl font-bold tracking-tight">Audit Logs</h1>
             <Card>
+
                 <CardHeader>
                     <CardTitle>Audit Logs</CardTitle>
                 </CardHeader>

@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { SettingsProvider } from "@/lib/settings-context"
 import { AuthProvider } from "@/contexts/AuthContext"
+import { AutoLogoutManager } from "@/components/auto-logout-manager"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -24,7 +25,10 @@ export default function RootLayout({
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
         <AuthProvider>
-          <SettingsProvider>{children}</SettingsProvider>
+          <SettingsProvider>
+            <AutoLogoutManager />
+            {children}
+          </SettingsProvider>
         </AuthProvider>
         <Analytics />
       </body>

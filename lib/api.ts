@@ -95,7 +95,11 @@ export const api = {
   getSeasonalRates: () => fetchAPI("/seasonal-rates"),
   createSeasonalRate: (data: any) => fetchAPI("/seasonal-rates", { method: "POST", body: JSON.stringify(data) }),
 
-  // Services
+  // services
   getServices: () => fetchAPI("/services"),
   createService: (data: any) => fetchAPI("/services", { method: "POST", body: JSON.stringify(data) }),
+
+  // Auth & System
+  getAuditLogs: () => fetchAPI("/audit-logs"),
+  updateUserPassword: (passwordData: any) => fetchAPI("/auth/change-password", { method: "POST", body: JSON.stringify(passwordData) }),
 }

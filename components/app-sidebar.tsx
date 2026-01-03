@@ -1,6 +1,7 @@
 "use client"
-import { Calendar, DoorOpen, Home, BarChart3, CalendarDays, Settings, Users } from "lucide-react"
+import { Calendar, DoorOpen, Home, BarChart3, CalendarDays, Settings, Users, LogOut, FileText } from "lucide-react"
 import { useSettings } from "@/lib/settings-context"
+import { useAuth } from "@/contexts/AuthContext"
 
 import {
   Sidebar,
@@ -17,6 +18,7 @@ import {
 
 export function AppSidebar() {
   const { t } = useSettings()
+  const { logout } = useAuth()
 
   const navItems = [
     {
@@ -43,6 +45,11 @@ export function AppSidebar() {
       title: t("events"),
       url: "/dashboard/events",
       icon: Users,
+    },
+    {
+      title: "Audit Logs",
+      url: "/dashboard/audit-logs",
+      icon: FileText,
     },
     {
       title: t("reports"),
@@ -91,6 +98,12 @@ export function AppSidebar() {
                 <Settings className="size-4" />
                 <span>{t("settings")}</span>
               </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={logout}>
+              <LogOut className="size-4" />
+              <span>Logout</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
