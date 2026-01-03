@@ -59,6 +59,8 @@ export const api = {
   getAvailability: (startDate: string, endDate: string) =>
     fetchAPI(`/availability?start_date=${startDate}&end_date=${endDate}`),
 
+  // Import Data
+  importData: () => fetchAPI("/import-data", { method: "POST" }),
 
   // Housekeeping
   getHousekeeping: () => fetchAPI("/housekeeping"),

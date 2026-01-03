@@ -11,10 +11,9 @@ import { Settings, Globe, Save, CheckCircle2, Shield, Lock } from "lucide-react"
 import { useSettings } from "@/lib/settings-context"
 // import { useToast } from "@/components/ui/use-toast" // Assuming useToast is available via hooks or context, but usually it's from a provider.
 // Given previous file view didn't show useToast in imports, and I saw use-toast.ts in components/ui.
-import { useToast } from "@/hooks/use-toast" // Shadcn UI standard path usually, looking at file list it was in components/ui/use-toast.ts so alias might be different. 
-// Actually list_dir showed use-toast.ts in components/ui. Let's try importing from there or @/components/ui/use-toast
-
+import { useToast } from "@/hooks/use-toast"
 import { api } from "@/lib/api"
+import { Database } from "lucide-react"
 
 export default function SettingsPage() {
   const { settings, updateSettings, t } = useSettings()
@@ -32,6 +31,8 @@ export default function SettingsPage() {
   })
   const [passwordLoading, setPasswordLoading] = useState(false)
   const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+
+  const [importLoading, setImportLoading] = useState(false)
 
   useEffect(() => {
     setLocalSettings({
@@ -70,6 +71,20 @@ export default function SettingsPage() {
       setPasswordMessage({ type: 'error', text: err.message || "Failed to update password" })
     } finally {
       setPasswordLoading(false)
+    }
+  }
+
+  const handleImportData = async () => {
+    if (!confirm("This will import example data. Existing data with same IDs/emails will be skipped.")) return
+
+    setImportLoading(true)
+    try {
+      await api.importData()
+      alert("Data imported successfully")
+    } catch (err: any) {
+      alert("Failed to import data: " + (err.message || "Unknown error"))
+    } finally {
+      setImportLoading(false)
     }
   }
 
@@ -295,6 +310,27 @@ export default function SettingsPage() {
                   <span className="text-sm">Active</span>
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Database className="size-5 text-primary" />
+              <CardTitle>System Management</CardTitle>
+            </div>
+            <CardDescription>Manage system data and administrative tasks</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Import Example Data</Label>
+              <p className="text-sm text-muted-foreground mb-4">
+                Populate the system with sample rooms, guests, and bookings.
+              </p>
+              <Button onClick={handleImportData} disabled={importLoading} variant="outline">
+                {importLoading ? "Importing..." : "Import Sample Data"}
+              </Button>
             </div>
           </CardContent>
         </Card>
