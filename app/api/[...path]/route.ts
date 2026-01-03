@@ -11,11 +11,18 @@ async function handleRequest(request: NextRequest, method: string) {
   try {
     const body = method !== "GET" && method !== "DELETE" ? await request.text() : undefined
 
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    }
+
+    const authHeader = request.headers.get("Authorization")
+    if (authHeader) {
+      headers["Authorization"] = authHeader
+    }
+
     const response = await fetch(url, {
       method,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body,
     })
 
