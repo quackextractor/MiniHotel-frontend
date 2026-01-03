@@ -59,10 +59,6 @@ export const api = {
   getAvailability: (startDate: string, endDate: string) =>
     fetchAPI(`/availability?start_date=${startDate}&end_date=${endDate}`),
 
-  // Events
-  getEvents: () => fetchAPI("/events"),
-  createEvent: (data: any) => fetchAPI("/events", { method: "POST", body: JSON.stringify(data) }),
-  updateEvent: (id: number, data: any) => fetchAPI(`/events/${id}`, { method: "PUT", body: JSON.stringify(data) }),
 
   // Housekeeping
   getHousekeeping: () => fetchAPI("/housekeeping"),

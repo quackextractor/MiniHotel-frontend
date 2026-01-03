@@ -4,23 +4,50 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ChevronLeft, ChevronRight, CalendarIcon } from "lucide-react"
+import {
+  ChevronLeft,
+  ChevronRight,
+  CalendarIcon,
+  User,
+  Mail,
+  Phone,
+  CreditCard,
+  Trash2
+} from "lucide-react"
 import { cn } from "@/lib/utils"
 import { api } from "@/lib/api"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-interface CalendarBooking {
+interface Booking {
   id: number
-  room_id: number
+  booking_id: string // Although the API returns string, sometimes we treat it as generic ID. Let's match API response.
   guest_id: number
+  room_id: number
   check_in: string
   check_out: string
+  number_of_guests: number
   status: string
+  payment_status?: string
+  total_amount?: number
+  notes?: string
   guest?: {
     first_name: string
     last_name: string
+    email?: string
+    phone?: string
   }
   room?: {
     room_number: string
+    room_type: string
   }
 }
 
@@ -34,10 +61,11 @@ const statusColors: Record<string, string> = {
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
-  const [bookings, setBookings] = useState<CalendarBooking[]>([])
+  const [bookings, setBookings] = useState<Booking[]>([])
   const [rooms, setRooms] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
 
   useEffect(() => {
     async function fetchCalendarData() {
@@ -106,7 +134,7 @@ export default function CalendarPage() {
     )
   }
 
-  const isCheckInDate = (booking: CalendarBooking, date: Date) => {
+  const isCheckInDate = (booking: Booking, date: Date) => {
     const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate())
     const checkInDate = new Date(booking.check_in)
     const checkInOnly = new Date(checkInDate.getFullYear(), checkInDate.getMonth(), checkInDate.getDate())
@@ -119,6 +147,45 @@ export default function CalendarPage() {
 
   const formatDayDate = (date: Date) => {
     return date.toLocaleDateString("en-US", { weekday: "short", day: "numeric" })
+  }
+
+  const handleStatusChange = async (bookingId: number, newStatus: string, paymentStatus?: string) => {
+    try {
+      console.log("[v0] Updating booking status...")
+      const updateData: any = { status: newStatus }
+      if (paymentStatus) updateData.payment_status = paymentStatus
+
+      await api.updateBookingStatus(bookingId, updateData)
+      setBookings(
+        bookings.map((booking) =>
+          booking.id === bookingId
+            ? { ...booking, status: newStatus, ...(paymentStatus && { payment_status: paymentStatus }) }
+            : booking,
+        ),
+      )
+      // Update selected booking as well if it's open
+      if (selectedBooking && selectedBooking.id === bookingId) {
+        setSelectedBooking({ ...selectedBooking, status: newStatus, ...(paymentStatus && { payment_status: paymentStatus }) })
+      }
+    } catch (err) {
+      console.error("[v0] Error updating booking status:", err)
+      alert("Failed to update status: " + (err instanceof Error ? err.message : "Unknown error"))
+    }
+  }
+
+  const handleDeleteBooking = async (bookingId: number) => {
+    if (!confirm("Are you sure you want to delete this booking? This action cannot be undone.")) return
+
+    try {
+      console.log("[v0] Deleting booking...", bookingId)
+      await api.deleteBooking(bookingId)
+      setBookings(bookings.filter((b) => b.id !== bookingId))
+      setSelectedBooking(null)
+      alert("Booking deleted successfully")
+    } catch (err) {
+      console.error("[v0] Error deleting booking:", err)
+      alert("Failed to delete booking: " + (err instanceof Error ? err.message : "Unknown error"))
+    }
   }
 
   if (loading) {
@@ -203,7 +270,13 @@ export default function CalendarPage() {
                           className={cn(
                             "min-h-[60px] rounded-md border border-border p-2 transition-colors",
                             booking ? statusColors[statusKey] || statusColors.pending : "bg-muted/30 hover:bg-muted/50",
+                            booking ? "cursor-pointer hover:opacity-80" : ""
                           )}
+                          onClick={() => {
+                            if (booking) {
+                              setSelectedBooking(booking)
+                            }
+                          }}
                         >
                           {booking && isCheckIn && (
                             <div className="space-y-1">
@@ -264,7 +337,8 @@ export default function CalendarPage() {
                 return (
                   <div
                     key={booking.id}
-                    className="flex items-center justify-between rounded-lg border border-border p-3"
+                    className="cursor-pointer flex items-center justify-between rounded-lg border border-border p-3 hover:bg-accent/50 transition-colors"
+                    onClick={() => setSelectedBooking(booking)}
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
@@ -288,6 +362,151 @@ export default function CalendarPage() {
           </div>
         </CardContent>
       </Card>
+
+      {selectedBooking && (
+        <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Booking Details - #{selectedBooking.id}</DialogTitle>
+              <DialogDescription>Complete information for this reservation</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-6 py-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Guest Information</Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <User className="size-4 text-muted-foreground" />
+                      <span>
+                        {selectedBooking.guest?.first_name} {selectedBooking.guest?.last_name}
+                      </span>
+                    </div>
+                    {selectedBooking.guest?.email && (
+                      <div className="flex items-center gap-2">
+                        <Mail className="size-4 text-muted-foreground" />
+                        <span className="text-sm">{selectedBooking.guest.email}</span>
+                      </div>
+                    )}
+                    {selectedBooking.guest?.phone && (
+                      <div className="flex items-center gap-2">
+                        <Phone className="size-4 text-muted-foreground" />
+                        <span className="text-sm">{selectedBooking.guest.phone}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Room Details</Label>
+                  <div className="space-y-2">
+                    <p>
+                      <span className="font-medium">Room:</span> {selectedBooking.room?.room_number}
+                    </p>
+                    <p>
+                      <span className="font-medium">Type:</span> {selectedBooking.room?.room_type}
+                    </p>
+                    <p>
+                      <span className="font-medium">Guests:</span> {selectedBooking.number_of_guests}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Stay Duration</Label>
+                  <div className="space-y-2">
+                    <p>
+                      <span className="font-medium">Check-in:</span>{" "}
+                      {new Date(selectedBooking.check_in).toLocaleDateString()}
+                    </p>
+                    <p>
+                      <span className="font-medium">Check-out:</span>{" "}
+                      {new Date(selectedBooking.check_out).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Payment</Label>
+                  <div className="space-y-2">
+                    {selectedBooking.total_amount && (
+                      <p>
+                        <span className="font-medium">Total:</span> ${selectedBooking.total_amount}
+                      </p>
+                    )}
+                    {selectedBooking.payment_status && (
+                      <div className="flex items-center gap-2">
+                        <CreditCard className="size-4 text-muted-foreground" />
+                        <Badge
+                          variant="outline"
+                          className={
+                            selectedBooking.payment_status === "paid"
+                              ? "bg-green-500/10 text-green-500"
+                              : "bg-yellow-500/10 text-yellow-500"
+                          }
+                        >
+                          {selectedBooking.payment_status}
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              {selectedBooking.notes && (
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Notes</Label>
+                  <p className="text-sm">{selectedBooking.notes}</p>
+                </div>
+              )}
+              <div className="space-y-2">
+                <Label>Update Status</Label>
+                <div className="grid gap-2">
+                  <Select
+                    value={selectedBooking.status}
+                    onValueChange={(value) => {
+                      handleStatusChange(selectedBooking.id, value, selectedBooking.payment_status)
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="confirmed">Confirmed</SelectItem>
+                      <SelectItem value="checked-in">Checked In</SelectItem>
+                      <SelectItem value="checked-out">Checked Out</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select
+                    value={selectedBooking.payment_status || "pending"}
+                    onValueChange={(value) => {
+                      handleStatusChange(selectedBooking.id, selectedBooking.status, value)
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Payment status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Payment Pending</SelectItem>
+                      <SelectItem value="paid">Paid</SelectItem>
+                      <SelectItem value="partial">Partial Payment</SelectItem>
+                      <SelectItem value="refunded">Refunded</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleDeleteBooking(selectedBooking.id)}
+                >
+                  <Trash2 className="mr-2 size-4" />
+                  Delete Booking
+                </Button>
+              </DialogFooter>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   )
 }

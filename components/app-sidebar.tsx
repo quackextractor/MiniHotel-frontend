@@ -42,11 +42,6 @@ export function AppSidebar() {
       icon: CalendarDays,
     },
     {
-      title: t("events"),
-      url: "/dashboard/events",
-      icon: Users,
-    },
-    {
       title: "Audit Logs",
       url: "/dashboard/audit-logs",
       icon: FileText,

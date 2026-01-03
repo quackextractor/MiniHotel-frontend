@@ -31,6 +31,7 @@ import {
   Clock,
   XCircle,
   UserPlus,
+  Trash2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { api } from "@/lib/api"
@@ -205,6 +206,21 @@ export default function BookingsPage() {
     } catch (err) {
       console.error("[v0] Error updating booking status:", err)
       alert("Failed to update status: " + (err instanceof Error ? err.message : "Unknown error"))
+    }
+  }
+
+  const handleDeleteBooking = async (bookingId: number) => {
+    if (!confirm("Are you sure you want to delete this booking? This action cannot be undone.")) return
+
+    try {
+      console.log("[v0] Deleting booking...", bookingId)
+      await api.deleteBooking(bookingId)
+      setBookings(bookings.filter((b) => b.id !== bookingId))
+      setSelectedBooking(null)
+      alert("Booking deleted successfully")
+    } catch (err) {
+      console.error("[v0] Error deleting booking:", err)
+      alert("Failed to delete booking: " + (err instanceof Error ? err.message : "Unknown error"))
     }
   }
 
@@ -690,6 +706,15 @@ export default function BookingsPage() {
                   </Select>
                 </div>
               </div>
+              <DialogFooter>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleDeleteBooking(selectedBooking.id)}
+                >
+                  <Trash2 className="mr-2 size-4" />
+                  Delete Booking
+                </Button>
+              </DialogFooter>
             </div>
           </DialogContent>
         </Dialog>

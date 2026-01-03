@@ -13,7 +13,6 @@ interface DashboardStats {
   todayCheckIns: number
   todayCheckOuts: number
   occupancyRate: number
-  activeEvents: number
 }
 
 export default function DashboardPage() {
@@ -27,7 +26,7 @@ export default function DashboardPage() {
       try {
         setLoading(true)
 
-        const [rooms, bookings, events] = await Promise.all([api.getRooms(), api.getBookings(), api.getEvents()])
+        const [rooms, bookings] = await Promise.all([api.getRooms(), api.getBookings()])
 
         const today = new Date().toISOString().split("T")[0]
         const todayCheckIns = bookings.filter((b: any) => b.check_in === today).length
@@ -41,7 +40,6 @@ export default function DashboardPage() {
           todayCheckIns,
           todayCheckOuts,
           occupancyRate: rooms.length > 0 ? Math.round((occupiedRooms / rooms.length) * 100) : 0,
-          activeEvents: events.filter((e: any) => e.status === "confirmed" || e.status === "tentative").length,
         })
         setError(null)
       } catch (err) {
@@ -106,13 +104,6 @@ export default function DashboardPage() {
       icon: TrendingUp,
       trend: `${stats?.occupiedRooms} of ${stats?.totalRooms} ${t("rooms")}`,
     },
-    {
-      title: t("activeEvents"),
-      value: stats?.activeEvents.toString() || "0",
-      description: t("confirmedOrTentative"),
-      icon: Users,
-      trend: t("currentEvents"),
-    },
   ]
 
   return (
@@ -124,7 +115,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {statCards.map((stat) => (
           <Card key={stat.title}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
