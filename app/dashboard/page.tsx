@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DoorOpen, Calendar, Users, TrendingUp } from "lucide-react"
 import { api } from "@/lib/api"
 import { useSettings } from "@/lib/settings-context"
+import { useAuth } from "@/contexts/AuthContext"
 
 interface DashboardStats {
   totalRooms: number
@@ -17,12 +18,15 @@ interface DashboardStats {
 
 export default function DashboardPage() {
   const { t } = useSettings()
+  const { isAuthenticated, loading: authLoading } = useAuth()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchDashboardData() {
+      if (authLoading || !isAuthenticated) return
+
       try {
         setLoading(true)
 
@@ -51,7 +55,7 @@ export default function DashboardPage() {
     }
 
     fetchDashboardData()
-  }, [])
+  }, [isAuthenticated, authLoading])
 
   if (loading) {
     return (

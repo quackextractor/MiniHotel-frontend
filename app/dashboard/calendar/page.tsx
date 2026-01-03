@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -169,7 +170,7 @@ export default function CalendarPage() {
       }
     } catch (err) {
       console.error("[v0] Error updating booking status:", err)
-      alert("Failed to update status: " + (err instanceof Error ? err.message : "Unknown error"))
+      toast.error("Failed to update status: " + (err instanceof Error ? err.message : "Unknown error"))
     }
   }
 
@@ -181,10 +182,10 @@ export default function CalendarPage() {
       await api.deleteBooking(bookingId)
       setBookings(bookings.filter((b) => b.id !== bookingId))
       setSelectedBooking(null)
-      alert("Booking deleted successfully")
+      toast.success("Booking deleted successfully")
     } catch (err) {
       console.error("[v0] Error deleting booking:", err)
-      alert("Failed to delete booking: " + (err instanceof Error ? err.message : "Unknown error"))
+      toast.error("Failed to delete booking: " + (err instanceof Error ? err.message : "Unknown error"))
     }
   }
 

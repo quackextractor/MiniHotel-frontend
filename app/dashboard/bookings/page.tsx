@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import type React from "react"
+import { toast } from "sonner"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -146,7 +147,7 @@ export default function BookingsPage() {
       setCalculatedRate(null)
     } catch (err) {
       console.error("[v0] Error creating booking:", err)
-      alert("Failed to create booking: " + (err instanceof Error ? err.message : "Unknown error"))
+      toast.error("Failed to create booking: " + (err instanceof Error ? err.message : "Unknown error"))
     }
   }
 
@@ -166,10 +167,10 @@ export default function BookingsPage() {
       console.log("[v0] Guest created:", newGuest)
       setGuests([...guests, newGuest])
       setShowGuestForm(false)
-      alert("Guest created successfully!")
+      toast.success("Guest created successfully!")
     } catch (err) {
       console.error("[v0] Error creating guest:", err)
-      alert("Failed to create guest: " + (err instanceof Error ? err.message : "Unknown error"))
+      toast.error("Failed to create guest: " + (err instanceof Error ? err.message : "Unknown error"))
     }
   }
 
@@ -205,7 +206,7 @@ export default function BookingsPage() {
       )
     } catch (err) {
       console.error("[v0] Error updating booking status:", err)
-      alert("Failed to update status: " + (err instanceof Error ? err.message : "Unknown error"))
+      toast.error("Failed to update status: " + (err instanceof Error ? err.message : "Unknown error"))
     }
   }
 
@@ -217,10 +218,10 @@ export default function BookingsPage() {
       await api.deleteBooking(bookingId)
       setBookings(bookings.filter((b) => b.id !== bookingId))
       setSelectedBooking(null)
-      alert("Booking deleted successfully")
+      toast.success("Booking deleted successfully")
     } catch (err) {
       console.error("[v0] Error deleting booking:", err)
-      alert("Failed to delete booking: " + (err instanceof Error ? err.message : "Unknown error"))
+      toast.error("Failed to delete booking: " + (err instanceof Error ? err.message : "Unknown error"))
     }
   }
 

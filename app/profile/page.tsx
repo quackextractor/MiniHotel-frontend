@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useAuth } from '@/contexts/AuthContext'
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 
 const formSchema = z.object({
     username: z.string().min(2, {
@@ -43,7 +43,6 @@ export default function ProfilePage() {
     const { token, user } = useAuth()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const { toast } = useToast()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -81,8 +80,7 @@ export default function ProfilePage() {
                 throw new Error(data.message || 'Update failed')
             }
 
-            toast({
-                title: "Profile Updated",
+            toast.success("Profile Updated", {
                 description: "Your profile has been updated successfully."
             })
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import type React from "react"
+import { toast } from "sonner"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -101,7 +102,7 @@ export default function RoomsPage() {
       setIsAddDialogOpen(false)
     } catch (err) {
       console.error("[v0] Error creating room:", err)
-      alert("Failed to create room: " + (err instanceof Error ? err.message : "Unknown error"))
+      toast.error("Failed to create room: " + (err instanceof Error ? err.message : "Unknown error"))
     }
   }
 

@@ -11,7 +11,7 @@ import { Settings, Globe, Save, CheckCircle2, Shield, Lock } from "lucide-react"
 import { useSettings } from "@/lib/settings-context"
 // import { useToast } from "@/components/ui/use-toast" // Assuming useToast is available via hooks or context, but usually it's from a provider.
 // Given previous file view didn't show useToast in imports, and I saw use-toast.ts in components/ui.
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { api } from "@/lib/api"
 import { Database } from "lucide-react"
 
@@ -80,9 +80,9 @@ export default function SettingsPage() {
     setImportLoading(true)
     try {
       await api.importData()
-      alert("Data imported successfully")
+      toast.success("Data imported successfully")
     } catch (err: any) {
-      alert("Failed to import data: " + (err.message || "Unknown error"))
+      toast.error("Failed to import data: " + (err.message || "Unknown error"))
     } finally {
       setImportLoading(false)
     }

@@ -143,7 +143,7 @@ export default function ReportsPage() {
               config={{
                 rate: {
                   label: "Occupancy %",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
               }}
               className="h-[300px]"
@@ -151,15 +151,20 @@ export default function ReportsPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={stats.daily_occupancy}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis dataKey="date" className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+                  <XAxis
+                    dataKey="date"
+                    className="text-xs"
+                    tick={{ fill: "hsl(var(--muted-foreground))" }}
+                    tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  />
                   <YAxis className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Line
                     type="monotone"
                     dataKey="occupancy_rate"
-                    stroke="var(--color-rate)"
+                    stroke="var(--chart-1)"
                     strokeWidth={2}
-                    dot={{ fill: "var(--color-rate)" }}
+                    dot={{ fill: "var(--chart-1)" }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -179,7 +184,7 @@ export default function ReportsPage() {
               config={{
                 bookings: {
                   label: "Bookings",
-                  color: "hsl(var(--chart-2))",
+                  color: "var(--chart-2)",
                 },
               }}
               className="h-[300px]"
@@ -188,9 +193,9 @@ export default function ReportsPage() {
                 <BarChart data={stats.room_type_performance}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis dataKey="room_type" className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
-                  <YAxis className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+                  <YAxis className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} allowDecimals={false} />
                   <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="booking_count" fill="var(--color-bookings)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="booking_count" fill="var(--chart-2)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>

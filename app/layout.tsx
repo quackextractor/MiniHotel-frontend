@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SettingsProvider } from "@/lib/settings-context"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { AutoLogoutManager } from "@/components/auto-logout-manager"
+import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -28,6 +29,7 @@ export default function RootLayout({
           <SettingsProvider>
             <AutoLogoutManager />
             {children}
+            <Toaster />
           </SettingsProvider>
         </AuthProvider>
         <Analytics />
