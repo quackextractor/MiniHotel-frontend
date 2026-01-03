@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useAuth } from '@/contexts/AuthContext'
+import { useEnterNavigation } from '@/hooks/use-enter-navigation'
 
 const formSchema = z.object({
     username: z.string().min(2, {
@@ -38,6 +39,7 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false)
     const [initChecking, setInitChecking] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const formRef = useEnterNavigation()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -90,13 +92,6 @@ export default function LoginPage() {
             }
 
             // Login successful
-            // We need to decode the token or just use the response if it returns user info. My backend returns { token, username }.
-            // I need userId though. My backend implementation of login: `return jsonify({'token': token, 'username': user.username})`
-            // Wait, I forgot to return userId in the backend login response!
-            // I should update backend or decode the token in frontend.
-            // The token payload has `user_id`.
-            // I'll parse the token payload.
-
             const payload = JSON.parse(atob(data.token.split('.')[1]))
             const userId = payload.user_id
 
@@ -126,46 +121,48 @@ export default function LoginPage() {
                         Enter your credentials to access the admin dashboard.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-4">
-                    {error && (
-                        <Alert variant="destructive">
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>
-                                {error}
-                            </AlertDescription>
-                        </Alert>
-                    )}
-                    <div className="grid gap-2">
-                        <Label htmlFor="username">Username</Label>
-                        <Input
-                            id="username"
-                            type="text"
-                            placeholder="admin"
-                            {...form.register("username")}
-                        />
-                        {form.formState.errors.username && (
-                            <p className="text-sm text-destructive">{form.formState.errors.username.message}</p>
+                <form ref={formRef} onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                    <CardContent className="grid gap-4">
+                        {error && (
+                            <Alert variant="destructive">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertTitle>Error</AlertTitle>
+                                <AlertDescription>
+                                    {error}
+                                </AlertDescription>
+                            </Alert>
                         )}
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            {...form.register("password")}
-                        />
-                        {form.formState.errors.password && (
-                            <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
-                        )}
-                    </div>
-                </CardContent>
-                <CardFooter>
-                    <Button className="w-full" onClick={form.handleSubmit(onSubmit)} disabled={loading}>
-                        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Sign in
-                    </Button>
-                </CardFooter>
+                        <div className="grid gap-2">
+                            <Label htmlFor="username">Username</Label>
+                            <Input
+                                id="username"
+                                type="text"
+                                placeholder="admin"
+                                {...form.register("username")}
+                            />
+                            {form.formState.errors.username && (
+                                <p className="text-sm text-destructive">{form.formState.errors.username.message}</p>
+                            )}
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="password">Password</Label>
+                            <Input
+                                id="password"
+                                type="password"
+                                {...form.register("password")}
+                            />
+                            {form.formState.errors.password && (
+                                <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
+                            )}
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                        <Button className="w-full" type="submit" disabled={loading}>
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Sign in
+                        </Button>
+                    </CardFooter>
+                </form>
             </Card>
         </div>
     )

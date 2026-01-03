@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { Loader2, AlertCircle } from 'lucide-react'
+import { useEnterNavigation } from '@/hooks/use-enter-navigation'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -37,6 +38,7 @@ export default function RegisterPage() {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const formRef = useEnterNavigation()
 
     // Verify that registration is allowed (no admin exists)
     useEffect(() => {
@@ -104,56 +106,58 @@ export default function RegisterPage() {
                         Set up the initial administrator account.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-4">
-                    {error && (
-                        <Alert variant="destructive">
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>
-                                {error}
-                            </AlertDescription>
-                        </Alert>
-                    )}
-                    <div className="grid gap-2">
-                        <Label htmlFor="username">Username</Label>
-                        <Input
-                            id="username"
-                            type="text"
-                            {...form.register("username")}
-                        />
-                        {form.formState.errors.username && (
-                            <p className="text-sm text-destructive">{form.formState.errors.username.message}</p>
+                <form ref={formRef} onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                    <CardContent className="grid gap-4">
+                        {error && (
+                            <Alert variant="destructive">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertTitle>Error</AlertTitle>
+                                <AlertDescription>
+                                    {error}
+                                </AlertDescription>
+                            </Alert>
                         )}
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
-                            type="password"
-                            {...form.register("password")}
-                        />
-                        {form.formState.errors.password && (
-                            <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
-                        )}
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="confirmPassword">Confirm Password</Label>
-                        <Input
-                            id="confirmPassword"
-                            type="password"
-                            {...form.register("confirmPassword")}
-                        />
-                        {form.formState.errors.confirmPassword && (
-                            <p className="text-sm text-destructive">{form.formState.errors.confirmPassword.message}</p>
-                        )}
-                    </div>
-                </CardContent>
-                <CardFooter>
-                    <Button className="w-full" onClick={form.handleSubmit(onSubmit)} disabled={loading}>
-                        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Register Admin
-                    </Button>
-                </CardFooter>
+                        <div className="grid gap-2">
+                            <Label htmlFor="username">Username</Label>
+                            <Input
+                                id="username"
+                                type="text"
+                                {...form.register("username")}
+                            />
+                            {form.formState.errors.username && (
+                                <p className="text-sm text-destructive">{form.formState.errors.username.message}</p>
+                            )}
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="password">Password</Label>
+                            <Input
+                                id="password"
+                                type="password"
+                                {...form.register("password")}
+                            />
+                            {form.formState.errors.password && (
+                                <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
+                            )}
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="confirmPassword">Confirm Password</Label>
+                            <Input
+                                id="confirmPassword"
+                                type="password"
+                                {...form.register("confirmPassword")}
+                            />
+                            {form.formState.errors.confirmPassword && (
+                                <p className="text-sm text-destructive">{form.formState.errors.confirmPassword.message}</p>
+                            )}
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                        <Button className="w-full" type="submit" disabled={loading}>
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Register Admin
+                        </Button>
+                    </CardFooter>
+                </form>
             </Card>
         </div>
     )

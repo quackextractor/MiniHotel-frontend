@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { DoorOpen, Plus, Search, Bed, Users, Wifi, Tv, Coffee } from "lucide-react"
 import { api } from "@/lib/api"
 import { useSettings } from "@/lib/settings-context"
+import { useEnterNavigation } from "@/hooks/use-enter-navigation"
 
 interface Room {
   id: number
@@ -54,6 +55,7 @@ export default function RoomsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [filterType, setFilterType] = useState<string>("all")
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const formRef = useEnterNavigation()
 
   useEffect(() => {
     async function fetchRooms() {
@@ -147,7 +149,7 @@ export default function RoomsPage() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <form onSubmit={handleAddRoom}>
+            <form ref={formRef} onSubmit={handleAddRoom}>
               <DialogHeader>
                 <DialogTitle>Add New Room</DialogTitle>
                 <DialogDescription>Create a new room in your hotel inventory</DialogDescription>

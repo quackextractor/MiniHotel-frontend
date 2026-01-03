@@ -34,6 +34,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { api } from "@/lib/api"
+import { useEnterNavigation } from "@/hooks/use-enter-navigation"
 
 interface Booking {
   id: number
@@ -80,6 +81,7 @@ export default function BookingsPage() {
   const [guests, setGuests] = useState<any[]>([])
   const [showGuestForm, setShowGuestForm] = useState(false)
   const [calculatedRate, setCalculatedRate] = useState<number | null>(null)
+  const formRef = useEnterNavigation()
 
   useEffect(() => {
     async function fetchData() {
@@ -263,7 +265,7 @@ export default function BookingsPage() {
           </DialogTrigger>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             {showGuestForm ? (
-              <form onSubmit={handleCreateGuest}>
+              <form ref={formRef} onSubmit={handleCreateGuest}>
                 <DialogHeader>
                   <DialogTitle>Create New Guest</DialogTitle>
                   <DialogDescription>Add a new guest to the system</DialogDescription>
@@ -302,7 +304,7 @@ export default function BookingsPage() {
                 </DialogFooter>
               </form>
             ) : (
-              <form onSubmit={handleAddBooking}>
+              <form ref={formRef} onSubmit={handleAddBooking}>
                 <DialogHeader>
                   <DialogTitle>Create New Booking</DialogTitle>
                   <DialogDescription>Add a new reservation to the system</DialogDescription>
