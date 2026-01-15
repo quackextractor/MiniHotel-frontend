@@ -19,6 +19,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Calendar,
@@ -33,6 +42,8 @@ import {
   XCircle,
   UserPlus,
   Trash2,
+  Check,
+  ChevronsUpDown,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { api } from "@/lib/api"
@@ -83,6 +94,8 @@ export default function BookingsPage() {
   const [guests, setGuests] = useState<any[]>([])
   const [showGuestForm, setShowGuestForm] = useState(false)
   const [calculatedRate, setCalculatedRate] = useState<number | null>(null)
+  const [open, setOpen] = useState(false)
+  const [selectedGuestId, setSelectedGuestId] = useState<string>("")
   const formRef = useEnterNavigation()
 
   useEffect(() => {
@@ -335,18 +348,58 @@ export default function BookingsPage() {
                         New Guest
                       </Button>
                     </div>
-                    <Select name="guestId" required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select guest" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {guests.map((guest) => (
-                          <SelectItem key={guest.id} value={guest.id.toString()}>
-                            {guest.first_name} {guest.last_name} {guest.email && `(${guest.email})`}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+
+
+                    <input type="hidden" name="guestId" value={selectedGuestId} />
+
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={open}
+                          className="w-full justify-between"
+                        >
+                          {selectedGuestId
+                            ? (() => {
+                              const guest = guests.find((g) => g.id.toString() === selectedGuestId)
+                              return guest
+                                ? `${guest.first_name} ${guest.last_name} ${guest.email ? `(${guest.email})` : ""}`
+                                : "Select guest..."
+                            })()
+                            : "Select guest..."}
+                          <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                        <Command>
+                          <CommandInput placeholder="Search guest..." />
+                          <CommandList>
+                            <CommandEmpty>No guest found.</CommandEmpty>
+                            <CommandGroup>
+                              {guests.map((guest) => (
+                                <CommandItem
+                                  key={guest.id}
+                                  value={`${guest.first_name} ${guest.last_name} ${guest.email || ""}`}
+                                  onSelect={() => {
+                                    setSelectedGuestId(guest.id.toString())
+                                    setOpen(false)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 size-4",
+                                      selectedGuestId === guest.id.toString() ? "opacity-100" : "opacity-0"
+                                    )}
+                                  />
+                                  {guest.first_name} {guest.last_name} {guest.email && <span className="ml-2 text-muted-foreground">({guest.email})</span>}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
 
                   <div className="grid gap-2">
@@ -515,7 +568,7 @@ export default function BookingsPage() {
             )}
           </DialogContent>
         </Dialog>
-      </div>
+      </div >
 
       <Card>
         <CardHeader>
@@ -574,153 +627,155 @@ export default function BookingsPage() {
         </TabsContent>
       </Tabs>
 
-      {selectedBooking && (
-        <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Booking Details - #{selectedBooking.id}</DialogTitle>
-              <DialogDescription>Complete information for this reservation</DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-6 py-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">Guest Information</Label>
+      {
+        selectedBooking && (
+          <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Booking Details - #{selectedBooking.id}</DialogTitle>
+                <DialogDescription>Complete information for this reservation</DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-6 py-4">
+                <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <User className="size-4 text-muted-foreground" />
-                      <span>
-                        {selectedBooking.guest?.first_name} {selectedBooking.guest?.last_name}
-                      </span>
+                    <Label className="text-muted-foreground">Guest Information</Label>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <User className="size-4 text-muted-foreground" />
+                        <span>
+                          {selectedBooking.guest?.first_name} {selectedBooking.guest?.last_name}
+                        </span>
+                      </div>
+                      {selectedBooking.guest?.email && (
+                        <div className="flex items-center gap-2">
+                          <Mail className="size-4 text-muted-foreground" />
+                          <span className="text-sm">{selectedBooking.guest.email}</span>
+                        </div>
+                      )}
+                      {selectedBooking.guest?.phone && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="size-4 text-muted-foreground" />
+                          <span className="text-sm">{selectedBooking.guest.phone}</span>
+                        </div>
+                      )}
                     </div>
-                    {selectedBooking.guest?.email && (
-                      <div className="flex items-center gap-2">
-                        <Mail className="size-4 text-muted-foreground" />
-                        <span className="text-sm">{selectedBooking.guest.email}</span>
-                      </div>
-                    )}
-                    {selectedBooking.guest?.phone && (
-                      <div className="flex items-center gap-2">
-                        <Phone className="size-4 text-muted-foreground" />
-                        <span className="text-sm">{selectedBooking.guest.phone}</span>
-                      </div>
-                    )}
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">Room Details</Label>
                   <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">Room:</span> {selectedBooking.room?.room_number}
-                    </p>
-                    <p>
-                      <span className="font-medium">Type:</span> {selectedBooking.room?.room_type}
-                    </p>
-                    <p>
-                      <span className="font-medium">Guests:</span> {selectedBooking.number_of_guests}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">Stay Duration</Label>
-                  <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">Check-in:</span>{" "}
-                      {new Date(selectedBooking.check_in).toLocaleDateString()}
-                    </p>
-                    <p>
-                      <span className="font-medium">Check-out:</span>{" "}
-                      {new Date(selectedBooking.check_out).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">Payment</Label>
-                  <div className="space-y-2">
-                    {selectedBooking.total_amount && (
+                    <Label className="text-muted-foreground">Room Details</Label>
+                    <div className="space-y-2">
                       <p>
-                        <span className="font-medium">Total:</span> ${selectedBooking.total_amount}
+                        <span className="font-medium">Room:</span> {selectedBooking.room?.room_number}
                       </p>
-                    )}
-                    {selectedBooking.payment_status && (
-                      <div className="flex items-center gap-2">
-                        <CreditCard className="size-4 text-muted-foreground" />
-                        <Badge
-                          variant="outline"
-                          className={
-                            selectedBooking.payment_status === "paid"
-                              ? "bg-green-500/10 text-green-500"
-                              : "bg-yellow-500/10 text-yellow-500"
-                          }
-                        >
-                          {selectedBooking.payment_status}
-                        </Badge>
-                      </div>
-                    )}
+                      <p>
+                        <span className="font-medium">Type:</span> {selectedBooking.room?.room_type}
+                      </p>
+                      <p>
+                        <span className="font-medium">Guests:</span> {selectedBooking.number_of_guests}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              {selectedBooking.notes && (
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label className="text-muted-foreground">Stay Duration</Label>
+                    <div className="space-y-2">
+                      <p>
+                        <span className="font-medium">Check-in:</span>{" "}
+                        {new Date(selectedBooking.check_in).toLocaleDateString()}
+                      </p>
+                      <p>
+                        <span className="font-medium">Check-out:</span>{" "}
+                        {new Date(selectedBooking.check_out).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-muted-foreground">Payment</Label>
+                    <div className="space-y-2">
+                      {selectedBooking.total_amount && (
+                        <p>
+                          <span className="font-medium">Total:</span> ${selectedBooking.total_amount}
+                        </p>
+                      )}
+                      {selectedBooking.payment_status && (
+                        <div className="flex items-center gap-2">
+                          <CreditCard className="size-4 text-muted-foreground" />
+                          <Badge
+                            variant="outline"
+                            className={
+                              selectedBooking.payment_status === "paid"
+                                ? "bg-green-500/10 text-green-500"
+                                : "bg-yellow-500/10 text-yellow-500"
+                            }
+                          >
+                            {selectedBooking.payment_status}
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {selectedBooking.notes && (
+                  <div className="space-y-2">
+                    <Label className="text-muted-foreground">Notes</Label>
+                    <p className="text-sm">{selectedBooking.notes}</p>
+                  </div>
+                )}
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Notes</Label>
-                  <p className="text-sm">{selectedBooking.notes}</p>
+                  <Label>Update Status</Label>
+                  <div className="grid gap-2">
+                    <Select
+                      value={selectedBooking.status}
+                      onValueChange={(value) => {
+                        handleStatusChange(selectedBooking.id, value, selectedBooking.payment_status)
+                        setSelectedBooking({ ...selectedBooking, status: value })
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="confirmed">Confirmed</SelectItem>
+                        <SelectItem value="checked-in">Checked In</SelectItem>
+                        <SelectItem value="checked-out">Checked Out</SelectItem>
+                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Select
+                      value={selectedBooking.payment_status || "pending"}
+                      onValueChange={(value) => {
+                        handleStatusChange(selectedBooking.id, selectedBooking.status, value)
+                        setSelectedBooking({ ...selectedBooking, payment_status: value })
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Payment status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="pending">Payment Pending</SelectItem>
+                        <SelectItem value="paid">Paid</SelectItem>
+                        <SelectItem value="partial">Partial Payment</SelectItem>
+                        <SelectItem value="refunded">Refunded</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-              )}
-              <div className="space-y-2">
-                <Label>Update Status</Label>
-                <div className="grid gap-2">
-                  <Select
-                    value={selectedBooking.status}
-                    onValueChange={(value) => {
-                      handleStatusChange(selectedBooking.id, value, selectedBooking.payment_status)
-                      setSelectedBooking({ ...selectedBooking, status: value })
-                    }}
+                <DialogFooter>
+                  <Button
+                    variant="destructive"
+                    onClick={() => handleDeleteBooking(selectedBooking.id)}
                   >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="confirmed">Confirmed</SelectItem>
-                      <SelectItem value="checked-in">Checked In</SelectItem>
-                      <SelectItem value="checked-out">Checked Out</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select
-                    value={selectedBooking.payment_status || "pending"}
-                    onValueChange={(value) => {
-                      handleStatusChange(selectedBooking.id, selectedBooking.status, value)
-                      setSelectedBooking({ ...selectedBooking, payment_status: value })
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Payment status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Payment Pending</SelectItem>
-                      <SelectItem value="paid">Paid</SelectItem>
-                      <SelectItem value="partial">Partial Payment</SelectItem>
-                      <SelectItem value="refunded">Refunded</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                    <Trash2 className="mr-2 size-4" />
+                    Delete Booking
+                  </Button>
+                </DialogFooter>
               </div>
-              <DialogFooter>
-                <Button
-                  variant="destructive"
-                  onClick={() => handleDeleteBooking(selectedBooking.id)}
-                >
-                  <Trash2 className="mr-2 size-4" />
-                  Delete Booking
-                </Button>
-              </DialogFooter>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-    </div>
+            </DialogContent>
+          </Dialog>
+        )
+      }
+    </div >
   )
 }
 
