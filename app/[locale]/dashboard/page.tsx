@@ -6,6 +6,7 @@ import { DoorOpen, Calendar, Users, TrendingUp } from "lucide-react"
 import { api } from "@/lib/api"
 import { useSettings } from "@/lib/settings-context"
 import { useAuth } from "@/contexts/AuthContext"
+import { useTranslations } from "next-intl"
 
 interface DashboardStats {
   totalRooms: number
@@ -17,7 +18,8 @@ interface DashboardStats {
 }
 
 export default function DashboardPage() {
-  const { t } = useSettings()
+  const t = useTranslations("Dashboard")
+  const commonT = useTranslations("Common")
   const { isAuthenticated, loading: authLoading } = useAuth()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -62,7 +64,7 @@ export default function DashboardPage() {
       <div className="flex flex-1 items-center justify-center">
         <div className="text-center">
           <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
-          <p className="mt-4 text-muted-foreground">{t("loading")}</p>
+          <p className="mt-4 text-muted-foreground">{commonT("loading")}</p>
         </div>
       </div>
     )
@@ -73,7 +75,7 @@ export default function DashboardPage() {
       <div className="flex flex-1 items-center justify-center">
         <Card className="max-w-md">
           <CardHeader>
-            <CardTitle>{t("error")}</CardTitle>
+            <CardTitle>{commonT("error")}</CardTitle>
             <CardDescription>{error}</CardDescription>
           </CardHeader>
           <CardContent>
@@ -90,14 +92,14 @@ export default function DashboardPage() {
     {
       title: t("totalRooms"),
       value: stats?.totalRooms.toString() || "0",
-      description: `${stats?.availableRooms} ${t("available")}, ${stats?.occupiedRooms} ${t("occupied")}`,
+      description: t("occupancyDescription", { available: stats?.availableRooms, occupied: stats?.occupiedRooms }),
       icon: DoorOpen,
-      trend: `${stats?.occupiedRooms} ${t("occupied")}`,
+      trend: t("occupancyTrend", { occupied: stats?.occupiedRooms, total: stats?.totalRooms }),
     },
     {
       title: t("todayActivity"),
       value: ((stats?.todayCheckIns || 0) + (stats?.todayCheckOuts || 0)).toString(),
-      description: `${stats?.todayCheckIns} ${t("checkIns")}, ${stats?.todayCheckOuts} ${t("checkOuts")}`,
+      description: t("activityDescription", { checkIns: stats?.todayCheckIns, checkOuts: stats?.todayCheckOuts }),
       icon: Calendar,
       trend: t("todayActivity"),
     },
@@ -106,7 +108,7 @@ export default function DashboardPage() {
       value: `${stats?.occupancyRate}%`,
       description: stats?.occupancyRate && stats.occupancyRate > 70 ? t("aboveAverage") : t("belowAverage"),
       icon: TrendingUp,
-      trend: `${stats?.occupiedRooms} of ${stats?.totalRooms} ${t("rooms")}`,
+      trend: t("occupancyTrend", { occupied: stats?.occupiedRooms, total: stats?.totalRooms }),
     },
   ]
 

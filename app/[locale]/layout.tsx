@@ -6,7 +6,9 @@ import { SettingsProvider } from "@/lib/settings-context"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { AutoLogoutManager } from "@/components/auto-logout-manager"
 import { Toaster } from "@/components/ui/sonner"
-import "./globals.css"
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import "../globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -17,22 +19,29 @@ export const metadata: Metadata = {
   generator: "v0.app",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params
 }: Readonly<{
   children: React.ReactNode
+  params: Promise<{ locale: string }>
 }>) {
+  const { locale } = await params;
+  const messages = await getMessages();
+
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang={locale} className="dark" suppressHydrationWarning>
       <body className={`font-sans antialiased`} suppressHydrationWarning>
-        <AuthProvider>
-          <SettingsProvider>
-            <AutoLogoutManager />
-            {children}
-            <Toaster />
-          </SettingsProvider>
-        </AuthProvider>
-        <Analytics />
+        <NextIntlClientProvider messages={messages}>
+          <AuthProvider>
+            <SettingsProvider>
+              <AutoLogoutManager />
+              {children}
+              <Toaster />
+            </SettingsProvider>
+          </AuthProvider>
+          <Analytics />
+        </NextIntlClientProvider>
       </body>
     </html>
   )

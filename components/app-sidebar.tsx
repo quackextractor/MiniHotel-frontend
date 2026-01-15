@@ -2,6 +2,7 @@
 import { Calendar, DoorOpen, Home, BarChart3, CalendarDays, Settings, Users, LogOut, FileText } from "lucide-react"
 import { useSettings } from "@/lib/settings-context"
 import { useAuth } from "@/contexts/AuthContext"
+import { useTranslations } from "next-intl"
 
 import {
   Sidebar,
@@ -17,7 +18,7 @@ import {
 } from "@/components/ui/sidebar"
 
 export function AppSidebar() {
-  const { t } = useSettings()
+  const t = useTranslations("Navigation")
   const { logout } = useAuth()
 
   const navItems = [

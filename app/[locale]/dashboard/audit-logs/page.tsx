@@ -12,22 +12,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { api } from "@/lib/api"
-import { useSettings } from "@/lib/settings-context"
-
-interface AuditLog {
-    id: number
-    user_id: number
-    action: string
-    details: string
-    timestamp: string
-    ip_address: string
-    user: {
-        username: string
-    }
-}
-
 export default function AuditLogsPage() {
-    const { t } = useSettings() // Assuming simple t function for now or I can reuse translation logic if complex
     const [logs, setLogs] = useState<AuditLog[]>([])
     const [loading, setLoading] = useState(true)
 

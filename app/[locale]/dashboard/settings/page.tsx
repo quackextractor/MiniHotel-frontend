@@ -14,9 +14,15 @@ import { useSettings } from "@/lib/settings-context"
 import { toast } from "sonner"
 import { api } from "@/lib/api"
 import { Database } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useRouter, usePathname } from "@/i18n/routing"
 
 export default function SettingsPage() {
-  const { settings, updateSettings, t } = useSettings()
+  const { settings, updateSettings } = useSettings()
+  const t = useTranslations("Settings")
+  const commonT = useTranslations("Common")
+  const router = useRouter()
+  const pathname = usePathname()
   const [localSettings, setLocalSettings] = useState({
     ...settings,
     autoLogoutTimeout: settings.autoLogoutTimeout || 30
@@ -45,6 +51,11 @@ export default function SettingsPage() {
     updateSettings(localSettings)
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
+
+    // Switch locale if changed
+    if (localSettings.language !== settings.language) {
+      router.replace(pathname, { locale: localSettings.language });
+    }
   }
 
   const handlePasswordUpdate = async () => {
@@ -203,7 +214,7 @@ export default function SettingsPage() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Shield className="size-5 text-primary" />
-                <CardTitle>Security Settings</CardTitle>
+                <CardTitle>{t("securitySettings")}</CardTitle>
               </div>
               <CardDescription>Configure session timeout and security</CardDescription>
             </CardHeader>
@@ -243,7 +254,7 @@ export default function SettingsPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Lock className="size-5 text-primary" />
-              <CardTitle>Change Password</CardTitle>
+              <CardTitle>{t("changePassword")}</CardTitle>
             </div>
             <CardDescription>Update your account password</CardDescription>
           </CardHeader>
@@ -254,7 +265,7 @@ export default function SettingsPage() {
               </div>
             )}
             <div className="grid gap-2">
-              <Label htmlFor="current-password">Current Password</Label>
+              <Label htmlFor="current-password">{t("currentPassword")}</Label>
               <Input
                 id="current-password"
                 type="password"
@@ -263,7 +274,7 @@ export default function SettingsPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="new-password">New Password</Label>
+              <Label htmlFor="new-password">{t("newPassword")}</Label>
               <Input
                 id="new-password"
                 type="password"
@@ -272,7 +283,7 @@ export default function SettingsPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="confirm-password">Confirm Password</Label>
+              <Label htmlFor="confirm-password">{t("confirmPassword")}</Label>
               <Input
                 id="confirm-password"
                 type="password"
@@ -282,7 +293,7 @@ export default function SettingsPage() {
             </div>
             <div className="flex justify-end">
               <Button onClick={handlePasswordUpdate} disabled={passwordLoading}>
-                {passwordLoading ? "Updating..." : "Update Password"}
+                {passwordLoading ? commonT("loading") : t("updatePassword")}
               </Button>
             </div>
           </CardContent>
@@ -290,7 +301,7 @@ export default function SettingsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>API Configuration</CardTitle>
+            <CardTitle>{t("apiConfiguration")}</CardTitle>
             <CardDescription>Information about your API connection</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -318,18 +329,18 @@ export default function SettingsPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Database className="size-5 text-primary" />
-              <CardTitle>System Management</CardTitle>
+              <CardTitle>{t("systemManagement")}</CardTitle>
             </div>
             <CardDescription>Manage system data and administrative tasks</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Import Example Data</Label>
+              <Label>{t("importExampleData")}</Label>
               <p className="text-sm text-muted-foreground mb-4">
                 Populate the system with sample rooms, guests, and bookings.
               </p>
               <Button onClick={handleImportData} disabled={importLoading} variant="outline">
-                {importLoading ? "Importing..." : "Import Sample Data"}
+                {importLoading ? "Importing..." : t("importSampleData")}
               </Button>
             </div>
           </CardContent>

@@ -21,8 +21,10 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { DoorOpen, Plus, Search, Bed, Users, Wifi, Tv, Coffee } from "lucide-react"
 import { api } from "@/lib/api"
-import { useSettings } from "@/lib/settings-context"
+// import { useSettings } from "@/lib/settings-context" // Removed as we use custom hooks/next-intl
 import { useEnterNavigation } from "@/hooks/use-enter-navigation"
+import { useTranslations, useFormatter } from "next-intl"
+import { useCurrency } from "@/hooks/use-currency"
 
 interface Room {
   id: number
@@ -49,7 +51,9 @@ const amenityIcons: Record<string, any> = {
 }
 
 export default function RoomsPage() {
-  const { formatCurrency, t } = useSettings()
+  const t = useTranslations("Rooms")
+  const format = useFormatter()
+  const { convert, currency } = useCurrency()
   const [rooms, setRooms] = useState<Room[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -146,22 +150,22 @@ export default function RoomsPage() {
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 size-4" />
-              Add Room
+              {t("addRoom")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <form ref={formRef} onSubmit={handleAddRoom}>
               <DialogHeader>
-                <DialogTitle>Add New Room</DialogTitle>
+                <DialogTitle>{t("addRoom")}</DialogTitle>
                 <DialogDescription>Create a new room in your hotel inventory</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="number">Room Number</Label>
+                  <Label htmlFor="number">{t("roomNumber")}</Label>
                   <Input id="number" name="number" placeholder="101" required />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="type">Room Type</Label>
+                  <Label htmlFor="type">{t("roomType")}</Label>
                   <Select name="type" required>
                     <SelectTrigger>
                       <SelectValue placeholder="Select type" />
@@ -176,25 +180,25 @@ export default function RoomsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="floor">Floor</Label>
+                    <Label htmlFor="floor">{t("floor")}</Label>
                     <Input id="floor" name="floor" type="number" placeholder="1" required />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="capacity">Capacity</Label>
+                    <Label htmlFor="capacity">{t("capacity")}</Label>
                     <Input id="capacity" name="capacity" type="number" placeholder="2" required />
                   </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="price">Price per Night (USD base)</Label>
+                  <Label htmlFor="price">{t("pricePerNight")}</Label>
                   <Input id="price" name="price" type="number" placeholder="120" required />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t("description")}</Label>
                   <Textarea id="description" name="description" placeholder="Room description..." />
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit">Add Room</Button>
+                <Button type="submit">{t("addRoom")}</Button>
               </DialogFooter>
             </form>
           </DialogContent>
@@ -203,7 +207,7 @@ export default function RoomsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Filters</CardTitle>
+          <CardTitle>{t("filters")}</CardTitle>
           <CardDescription>Search and filter rooms</CardDescription>
         </CardHeader>
         <CardContent>
@@ -211,7 +215,7 @@ export default function RoomsPage() {
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
               <Input
-                placeholder="Search by room number..."
+                placeholder={t("searchRooms")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-8"
@@ -268,7 +272,7 @@ export default function RoomsPage() {
 
               <div className="flex items-center justify-between border-t border-border pt-4">
                 <div>
-                  <p className="text-2xl font-bold">{formatCurrency(room.base_rate)}</p>
+                  <p className="text-2xl font-bold">{format.number(convert(room.base_rate), { style: 'currency', currency: currency })}</p>
                   <p className="text-xs text-muted-foreground">per night</p>
                 </div>
               </div>
@@ -281,7 +285,7 @@ export default function RoomsPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <DoorOpen className="size-12 text-muted-foreground" />
-            <h3 className="mt-4 text-lg font-semibold">No rooms found</h3>
+            <h3 className="mt-4 text-lg font-semibold">{t("noRoomsFound")}</h3>
             <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
           </CardContent>
         </Card>
