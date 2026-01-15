@@ -48,6 +48,9 @@ import {
 import { cn } from "@/lib/utils"
 import { api } from "@/lib/api"
 import { useEnterNavigation } from "@/hooks/use-enter-navigation"
+import { useCurrency } from "@/hooks/use-currency"
+import { useDateFormat } from "@/hooks/use-custom-format"
+import { useTranslations } from "next-intl"
 
 interface Booking {
   id: number
@@ -98,6 +101,10 @@ export default function BookingsPage() {
   const [selectedGuestId, setSelectedGuestId] = useState<string>("")
   const formRef = useEnterNavigation()
 
+  const { convert, convertToBase, currency } = useCurrency()
+  const { formatDate } = useDateFormat()
+  const t = useTranslations("Bookings")
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -140,8 +147,11 @@ export default function BookingsPage() {
         notes: formData.get("notes") as string,
       }
 
-      const totalAmount = formData.get("totalAmount")
-      if (totalAmount) bookingData.total_amount = Number(totalAmount)
+      const totalAmountInput = formData.get("totalAmount")
+      if (totalAmountInput) {
+        // Convert the input amount (User Currency) back to Base (CZK)
+        bookingData.total_amount = convertToBase(Number(totalAmountInput))
+      }
 
       const paymentStatus = formData.get("paymentStatus")
       if (paymentStatus) bookingData.payment_status = paymentStatus
@@ -197,6 +207,8 @@ export default function BookingsPage() {
         check_out: checkOut,
         number_of_guests: numberOfGuests ? Number(numberOfGuests) : undefined,
       })
+      // API returns rate in Base Currency (CZK)
+      // We store it as is, but UI will convert it for display
       setCalculatedRate(result.total_amount || result.calculated_rate)
     } catch (err) {
       console.error("[v0] Error calculating rate:", err)
@@ -521,9 +533,9 @@ export default function BookingsPage() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="grid gap-2">
                       <Label htmlFor="totalAmount">
-                        Total Amount ($)
+                        Total Amount ({currency})
                         {calculatedRate && (
-                          <span className="ml-2 text-sm text-muted-foreground">(Calculated: ${calculatedRate})</span>
+                          <span className="ml-2 text-sm text-muted-foreground">(Calculated: {convert(calculatedRate).toFixed(2)} {currency})</span>
                         )}
                       </Label>
                       <Input
@@ -531,8 +543,8 @@ export default function BookingsPage() {
                         name="totalAmount"
                         type="number"
                         step="0.01"
-                        placeholder={calculatedRate ? calculatedRate.toString() : "0.00"}
-                        defaultValue={calculatedRate || undefined}
+                        placeholder={calculatedRate ? convert(calculatedRate).toFixed(2) : "0.00"}
+                        defaultValue={calculatedRate ? convert(calculatedRate).toFixed(2) : undefined}
                       />
                     </div>
                     <div className="grid gap-2">
@@ -681,11 +693,11 @@ export default function BookingsPage() {
                     <div className="space-y-2">
                       <p>
                         <span className="font-medium">Check-in:</span>{" "}
-                        {new Date(selectedBooking.check_in).toLocaleDateString()}
+                        {formatDate(selectedBooking.check_in)}
                       </p>
                       <p>
                         <span className="font-medium">Check-out:</span>{" "}
-                        {new Date(selectedBooking.check_out).toLocaleDateString()}
+                        {formatDate(selectedBooking.check_out)}
                       </p>
                     </div>
                   </div>
@@ -694,7 +706,7 @@ export default function BookingsPage() {
                     <div className="space-y-2">
                       {selectedBooking.total_amount && (
                         <p>
-                          <span className="font-medium">Total:</span> ${selectedBooking.total_amount}
+                          <span className="font-medium">Total:</span> {convert(selectedBooking.total_amount).toFixed(2)} {currency}
                         </p>
                       )}
                       {selectedBooking.payment_status && (
@@ -788,6 +800,8 @@ function BookingsList({
   onStatusChange: (id: number, status: string, paymentStatus?: string) => void
   onSelectBooking: (booking: Booking) => void
 }) {
+  const { convert, currency } = useCurrency()
+  const { formatDate } = useDateFormat()
   if (bookings.length === 0) {
     return (
       <Card>
@@ -830,7 +844,7 @@ function BookingsList({
                     </div>
                     {booking.total_amount && (
                       <div className="text-right">
-                        <p className="text-2xl font-bold">${booking.total_amount}</p>
+                        <p className="text-2xl font-bold">{convert(booking.total_amount).toFixed(2)} {currency}</p>
                         {booking.payment_status && (
                           <Badge
                             variant="outline"
@@ -853,14 +867,14 @@ function BookingsList({
                       <Calendar className="size-4 text-muted-foreground" />
                       <div>
                         <p className="font-medium">Check-in</p>
-                        <p className="text-muted-foreground">{new Date(booking.check_in).toLocaleDateString()}</p>
+                        <p className="text-muted-foreground">{formatDate(booking.check_in)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <Calendar className="size-4 text-muted-foreground" />
                       <div>
                         <p className="font-medium">Check-out</p>
-                        <p className="text-muted-foreground">{new Date(booking.check_out).toLocaleDateString()}</p>
+                        <p className="text-muted-foreground">{formatDate(booking.check_out)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 text-sm">

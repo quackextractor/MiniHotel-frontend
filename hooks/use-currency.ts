@@ -2,9 +2,9 @@ import { useSettings } from "@/lib/settings-context"
 
 const currencyRates: Record<string, number> = {
     CZK: 1,
-    EUR: 0.041,
-    USD: 0.044,
-    GBP: 0.035,
+    EUR: 0.041, // 1/24.4
+    USD: 0.044, // 1/22.7
+    GBP: 0.035, // 1/28.5
 }
 
 export function useCurrency() {
@@ -16,5 +16,11 @@ export function useCurrency() {
         return convertedAmount
     }
 
-    return { convert, currency: settings.currency }
+    const convertToBase = (amount: number, fromCurrency?: string) => {
+        const currency = fromCurrency || settings.currency
+        const rate = currencyRates[currency] || 1
+        return amount / rate
+    }
+
+    return { convert, convertToBase, currency: settings.currency, currencyRates }
 }

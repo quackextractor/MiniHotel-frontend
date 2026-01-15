@@ -53,7 +53,7 @@ const amenityIcons: Record<string, any> = {
 export default function RoomsPage() {
   const t = useTranslations("Rooms")
   const format = useFormatter()
-  const { convert, currency } = useCurrency()
+  const { convert, convertToBase, currency } = useCurrency()
   const [rooms, setRooms] = useState<Room[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -94,11 +94,14 @@ export default function RoomsPage() {
 
     try {
       console.log("[v0] Creating new room...")
+      const inputPrice = Number(formData.get("price"))
+      const basePrice = convertToBase(inputPrice)
+
       const newRoom = await api.createRoom({
         room_number: formData.get("number") as string,
         room_type: formData.get("type") as string,
         capacity: Number(formData.get("capacity")),
-        base_rate: Number(formData.get("price")),
+        base_rate: basePrice,
         description: formData.get("description") as string,
       })
       console.log("[v0] Room created:", newRoom)
@@ -189,8 +192,8 @@ export default function RoomsPage() {
                   </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="price">{t("pricePerNight")}</Label>
-                  <Input id="price" name="price" type="number" placeholder="120" required />
+                  <Label htmlFor="price">{t("pricePerNight")} ({currency})</Label>
+                  <Input id="price" name="price" type="number" placeholder="120" step="0.01" required />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="description">{t("description")}</Label>
