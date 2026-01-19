@@ -52,30 +52,7 @@ import { useCurrency } from "@/hooks/use-currency"
 import { useDateFormat } from "@/hooks/use-custom-format"
 import { useTranslations } from "next-intl"
 
-interface Booking {
-  id: number
-  guest_id: number
-  room_id: number
-  check_in: string
-  check_out: string
-  number_of_guests: number
-  status: string
-  payment_status?: string
-  total_amount?: number
-  notes?: string
-  guest?: {
-    first_name: string
-    last_name: string
-    email?: string
-    phone?: string
-  }
-  room?: {
-    room_number: string
-    room_type: string
-    base_rate: number
-    capacity: number
-  }
-}
+import { Booking } from "@/lib/types"
 
 const statusConfig: Record<string, { color: string; icon: any }> = {
   confirmed: { color: "bg-blue-500/10 text-blue-500 border-blue-500/20", icon: CheckCircle },

@@ -7,6 +7,7 @@ import { api } from "@/lib/api"
 import { useSettings } from "@/lib/settings-context"
 import { useAuth } from "@/contexts/AuthContext"
 import { useTranslations } from "next-intl"
+import { Booking } from "@/lib/types"
 
 interface DashboardStats {
   totalRooms: number
@@ -35,9 +36,9 @@ export default function DashboardPage() {
         const [rooms, bookings] = await Promise.all([api.getRooms(), api.getBookings()])
 
         const today = new Date().toISOString().split("T")[0]
-        const todayCheckIns = bookings.filter((b: any) => b.check_in === today).length
-        const todayCheckOuts = bookings.filter((b: any) => b.check_out === today).length
-        const occupiedRooms = bookings.filter((b: any) => b.status === "checked-in" || b.status === "confirmed").length
+        const todayCheckIns = bookings.filter((b: Booking) => b.check_in === today).length
+        const todayCheckOuts = bookings.filter((b: Booking) => b.check_out === today).length
+        const occupiedRooms = bookings.filter((b: Booking) => b.status === "checked-in" || b.status === "confirmed").length
 
         setStats({
           totalRooms: rooms.length,
