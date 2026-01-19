@@ -12,8 +12,21 @@ export async function fetchAPI(endpoint: string, options?: RequestInit) {
     },
   })
 
+  if (response.status === 401) {
+    // If we receive a 401 Unauthorized, and it's not a login attempt,
+    // it means the token is invalid/expired. Log out the user.
+    if (typeof window !== "undefined" && !endpoint.includes("/auth/login")) {
+      localStorage.removeItem("token")
+      localStorage.removeItem("username")
+      localStorage.removeItem("userId")
+      window.location.href = "/login?error=Session expired"
+      throw new Error("Session expired")
+    }
+  }
+
   if (!response.ok) {
-    throw new Error(`API Error: ${response.statusText}`)
+    const errorData = await response.json().catch(() => ({}))
+    throw new Error(errorData.message || `API Error: ${response.statusText}`)
   }
 
   return response.json()
