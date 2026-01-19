@@ -48,9 +48,12 @@ export const api = {
   updateGuest: (id: number, data: any) => fetchAPI(`/guests/${id}`, { method: "PUT", body: JSON.stringify(data) }),
 
   // Bookings
-  getBookings: (params?: Record<string, string>) => {
+  getBookings: async (params?: Record<string, string>) => {
     const queryString = params ? "?" + new URLSearchParams(params).toString() : ""
-    return fetchAPI(`/bookings${queryString}`)
+    const response = await fetchAPI(`/bookings${queryString}`)
+    // Backend returns paginated response: { items: [], total, pages, current_page }
+    // Extract items array for compatibility with existing frontend code
+    return Array.isArray(response) ? response : response.items || []
   },
   getBooking: (id: number) => fetchAPI(`/bookings/${id}`),
   createBooking: (data: any) => fetchAPI("/bookings", { method: "POST", body: JSON.stringify(data) }),
