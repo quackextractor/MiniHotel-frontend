@@ -25,6 +25,20 @@ import { api } from "@/lib/api"
 import { useEnterNavigation } from "@/hooks/use-enter-navigation"
 import { useTranslations, useFormatter } from "next-intl"
 import { useCurrency } from "@/hooks/use-currency"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
+interface RoomGroup {
+  id: number
+  name: string
+  description?: string
+  parent_group_id?: number | null
+  children?: RoomGroup[]
+}
 
 interface Room {
   id: number
@@ -55,6 +69,7 @@ export default function RoomsPage() {
   const format = useFormatter()
   const { convert, convertToBase, currency } = useCurrency()
   const [rooms, setRooms] = useState<Room[]>([])
+  const [roomGroups, setRoomGroups] = useState<RoomGroup[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
@@ -63,30 +78,27 @@ export default function RoomsPage() {
   const formRef = useEnterNavigation()
 
   useEffect(() => {
-    async function fetchRooms() {
+    async function fetchData() {
       try {
         setLoading(true)
-        console.log("[v0] Fetching rooms from API...")
-        const data = await api.getRooms()
-        console.log("[v0] Rooms received:", data)
-        setRooms(data)
+        console.log("[v0] Fetching rooms and groups...")
+        const [roomsData, groupsData] = await Promise.all([
+          api.getRooms(),
+          api.getRoomGroups()
+        ])
+        setRooms(roomsData.items || roomsData)
+        setRoomGroups(groupsData)
         setError(null)
       } catch (err) {
-        console.error("[v0] Error fetching rooms:", err)
-        setError(err instanceof Error ? err.message : "Failed to load rooms")
+        console.error("[v0] Error fetching data:", err)
+        setError(err instanceof Error ? err.message : "Failed to load data")
       } finally {
         setLoading(false)
       }
     }
 
-    fetchRooms()
+    fetchData()
   }, [])
-
-  const filteredRooms = rooms.filter((room) => {
-    const matchesSearch = room.room_number.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesType = filterType === "all" || room.room_type.toLowerCase() === filterType.toLowerCase()
-    return matchesSearch && matchesType
-  })
 
   const handleAddRoom = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -98,79 +110,177 @@ export default function RoomsPage() {
       const basePrice = convertToBase(inputPrice)
 
       const newRoom = await api.createRoom({
-        room_number: formData.get("number") as string,
-        room_type: formData.get("type") as string,
+        room_number: formData.get("roomNumber"),
+        room_type: formData.get("roomType"),
         capacity: Number(formData.get("capacity")),
         base_rate: basePrice,
-        description: formData.get("description") as string,
+        description: formData.get("description"),
+        group_id: formData.get("groupId") ? Number(formData.get("groupId")) : null
       })
+
       console.log("[v0] Room created:", newRoom)
       setRooms([...rooms, newRoom])
       setIsAddDialogOpen(false)
+      toast.success("Room created successfully")
     } catch (err) {
       console.error("[v0] Error creating room:", err)
-      toast.error("Failed to create room: " + (err instanceof Error ? err.message : "Unknown error"))
+      toast.error("Failed to create room. Please try again.")
     }
   }
 
+  // Build tree from flat groups list
+  const buildGroupTree = (groups: RoomGroup[]) => {
+    const groupMap = new Map<number, RoomGroup>()
+    const rootGroups: RoomGroup[] = []
+
+    // Pass 1: Create map and initialize children
+    groups.forEach(g => {
+      groupMap.set(g.id, { ...g, children: [] })
+    })
+
+    // Pass 2: Link children
+    groups.forEach(g => {
+      if (g.parent_group_id) {
+        const parent = groupMap.get(g.parent_group_id)
+        if (parent) {
+          parent.children?.push(groupMap.get(g.id)!)
+        }
+      } else {
+        rootGroups.push(groupMap.get(g.id)!)
+      }
+    })
+
+    return rootGroups
+  }
+
+  const renderRoomCard = (room: Room) => (
+    <Card key={room.id} className="cursor-pointer transition-all hover:shadow-md">
+      <CardHeader className="p-4 pb-2">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">Room {room.room_number}</CardTitle>
+          <Badge variant="outline" className={statusColors.available}>
+            Available
+          </Badge>
+        </div>
+        <CardDescription className="capitalize">{room.room_type}</CardDescription>
+      </CardHeader>
+      <CardContent className="p-4 pt-2">
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center text-muted-foreground">
+            <Users className="mr-1 size-4" />
+            {room.capacity} Guests
+          </div>
+          <div className="font-medium">
+            {convert(room.base_rate).toFixed(2)} {currency} / night
+          </div>
+        </div>
+        <div className="mt-3 flex gap-2">
+          {Object.entries(amenityIcons).map(([key, Icon]) => (
+            <div
+              key={key}
+              className="flex size-7 items-center justify-center rounded-full bg-secondary text-secondary-foreground"
+              title={key}
+            >
+              <Icon className="size-3.5" />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  )
+
+  // Recursive render function
+  const renderGroup = (group: RoomGroup) => {
+    const groupRooms = rooms.filter(r => r.group_id === group.id)
+    const hasContent = groupRooms.length > 0 || (group.children && group.children.length > 0)
+
+    if (!hasContent) return null
+
+    return (
+      <AccordionItem key={group.id} value={`group-${group.id}`}>
+        <AccordionTrigger className="hover:no-underline">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-lg">{group.name}</span>
+            <Badge variant="secondary" className="ml-2">{groupRooms.length} rooms</Badge>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent className="pl-4 border-l ml-2">
+          {/* Render Rooms in this group */}
+          {groupRooms.length > 0 && (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-4">
+              {groupRooms.map(renderRoomCard)}
+            </div>
+          )}
+
+          {/* Render Children Groups */}
+          {group.children && group.children.length > 0 && (
+            <Accordion type="multiple" className="w-full">
+              {group.children.map(renderGroup)}
+            </Accordion>
+          )}
+        </AccordionContent>
+      </AccordionItem>
+    )
+  }
+
+  const filteredRooms = rooms.filter((room) => {
+    const matchesSearch = room.room_number.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesType = filterType === "all" || room.room_type.toLowerCase() === filterType.toLowerCase()
+    return matchesSearch && matchesType
+  })
+
+  const ungroupedRooms = filteredRooms.filter(r => !r.group_id)
+  const groupTree = buildGroupTree(roomGroups)
+
   if (loading) {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        <div className="text-center">
-          <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
-          <p className="mt-4 text-muted-foreground">Loading rooms...</p>
-        </div>
+      <div className="flex bg-muted/40 items-center justify-center p-8">
+        <div className="text-muted-foreground">Loading rooms...</div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        <Card className="max-w-md">
-          <CardHeader>
-            <CardTitle>Error Loading Rooms</CardTitle>
-            <CardDescription>{error}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Make sure the API server is running at http://127.0.0.1:5000
-            </p>
-          </CardContent>
-        </Card>
+      <div className="flex bg-muted/40 items-center justify-center p-8">
+        <div className="text-destructive">Error: {error}</div>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4">
+    <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("rooms")}</h1>
-          <p className="text-muted-foreground">Manage your hotel rooms and their availability</p>
+          <h1 className="text-lg font-semibold md:text-2xl">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">Manage your hotel rooms and their status</p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 size-4" />
-              {t("addRoom")}
+              Add Room
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <form ref={formRef} onSubmit={handleAddRoom}>
+            <form onSubmit={handleAddRoom} ref={formRef}>
               <DialogHeader>
-                <DialogTitle>{t("addRoom")}</DialogTitle>
-                <DialogDescription>Create a new room in your hotel inventory</DialogDescription>
+                <DialogTitle>Add New Room</DialogTitle>
+                <DialogDescription>Enter the details for the new room. Click save when you're done.</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="number">{t("roomNumber")}</Label>
-                  <Input id="number" name="number" placeholder="101" required />
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="roomNumber" className="text-right">
+                    Number
+                  </Label>
+                  <Input id="roomNumber" name="roomNumber" placeholder="101" className="col-span-3" required />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="type">{t("roomType")}</Label>
-                  <Select name="type" required>
-                    <SelectTrigger>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="roomType" className="text-right">
+                    Type
+                  </Label>
+                  <Select name="roomType" required defaultValue="single">
+                    <SelectTrigger className="col-span-3">
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -181,114 +291,113 @@ export default function RoomsPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="floor">{t("floor")}</Label>
-                    <Input id="floor" name="floor" type="number" placeholder="1" required />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="capacity">{t("capacity")}</Label>
-                    <Input id="capacity" name="capacity" type="number" placeholder="2" required />
-                  </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="capacity" className="text-right">
+                    Capacity
+                  </Label>
+                  <Input
+                    id="capacity"
+                    name="capacity"
+                    type="number"
+                    min="1"
+                    defaultValue="2"
+                    className="col-span-3"
+                    required
+                  />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="price">{t("pricePerNight")} ({currency})</Label>
-                  <Input id="price" name="price" type="number" placeholder="120" step="0.01" required />
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="price" className="text-right">
+                    Price ({currency})
+                  </Label>
+                  <Input
+                    id="price"
+                    name="price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    className="col-span-3"
+                    required
+                    placeholder={`Amount in ${currency}`}
+                  />
                 </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="description">{t("description")}</Label>
-                  <Textarea id="description" name="description" placeholder="Room description..." />
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="groupId" className="text-right">
+                    Group
+                  </Label>
+                  <Select name="groupId">
+                    <SelectTrigger className="col-span-3">
+                      <SelectValue placeholder="No Group" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">No Group</SelectItem>
+                      {roomGroups.map(g => (
+                        <SelectItem key={g.id} value={String(g.id)}>{g.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="description" className="text-right">
+                    Description
+                  </Label>
+                  <Textarea id="description" name="description" className="col-span-3" />
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit">{t("addRoom")}</Button>
+                <Button type="submit">Save Room</Button>
               </DialogFooter>
             </form>
           </DialogContent>
         </Dialog>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("filters")}</CardTitle>
-          <CardDescription>Search and filter rooms</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-4 md:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
-              <Input
-                placeholder={t("searchRooms")}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8"
-              />
-            </div>
-            <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="single">Single</SelectItem>
-                <SelectItem value="double">Double</SelectItem>
-                <SelectItem value="suite">Suite</SelectItem>
-                <SelectItem value="deluxe">Deluxe</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {filteredRooms.map((room) => (
-          <Card key={room.id}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-                    <DoorOpen className="size-5 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">Room {room.room_number}</CardTitle>
-                    <CardDescription className="capitalize">{room.room_type}</CardDescription>
-                  </div>
-                </div>
-                <Badge variant="outline" className={statusColors.available}>
-                  {room.is_active ? "available" : "inactive"}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">{room.description || "No description"}</p>
-
-              <div className="flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-1">
-                  <Bed className="size-4 text-muted-foreground" />
-                  <span>Capacity</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Users className="size-4 text-muted-foreground" />
-                  <span>{room.capacity} guests</span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between border-t border-border pt-4">
-                <div>
-                  <p className="text-2xl font-bold">{format.number(convert(room.base_rate), { style: 'currency', currency: currency })}</p>
-                  <p className="text-xs text-muted-foreground">per night</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search rooms..."
+            className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value="single">Single</SelectItem>
+            <SelectItem value="double">Double</SelectItem>
+            <SelectItem value="suite">Suite</SelectItem>
+            <SelectItem value="deluxe">Deluxe</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
+
+      {/* Render Ungrouped Rooms first */}
+      {ungroupedRooms.length > 0 && (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {ungroupedRooms.map(renderRoomCard)}
+        </div>
+      )}
+
+      {/* Render Groups Accordion */}
+      {groupTree.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Room Groups</h2>
+          <Accordion type="multiple" className="w-full">
+            {groupTree.map(renderGroup)}
+          </Accordion>
+        </div>
+      )}
 
       {filteredRooms.length === 0 && (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <DoorOpen className="size-12 text-muted-foreground" />
-            <h3 className="mt-4 text-lg font-semibold">{t("noRoomsFound")}</h3>
+            <h3 className="mt-4 text-lg font-semibold">No rooms found</h3>
             <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
           </CardContent>
         </Card>

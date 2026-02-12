@@ -62,6 +62,7 @@ const statusConfig: Record<string, { color: string; icon: any }> = {
   "checked-in": { color: "bg-green-500/10 text-green-500 border-green-500/20", icon: CheckCircle },
   "checked-out": { color: "bg-gray-500/10 text-gray-500 border-gray-500/20", icon: CheckCircle },
   cancelled: { color: "bg-red-500/10 text-red-500 border-red-500/20", icon: XCircle },
+  draft: { color: "bg-gray-400/10 text-gray-400 border-dashed border-gray-400/50", icon: Clock },
 }
 
 export default function BookingsPage() {
@@ -544,6 +545,7 @@ export default function BookingsPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="draft">Draft</SelectItem>
                           <SelectItem value="pending">Pending</SelectItem>
                           <SelectItem value="confirmed">Confirmed</SelectItem>
                           <SelectItem value="checked-in">Checked In</SelectItem>

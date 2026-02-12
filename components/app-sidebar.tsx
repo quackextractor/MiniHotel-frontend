@@ -1,5 +1,5 @@
 "use client"
-import { Calendar, DoorOpen, Home, BarChart3, CalendarDays, Settings, Users, LogOut, FileText, ConciergeBell, Percent } from "lucide-react"
+import { Calendar, DoorOpen, Home, BarChart3, CalendarDays, Settings, Users, LogOut, FileText, ConciergeBell, Percent, Sparkles } from "lucide-react"
 import { useSettings } from "@/lib/settings-context"
 import { useAuth } from "@/contexts/AuthContext"
 import { useTranslations } from "next-intl"
@@ -56,6 +56,11 @@ export function AppSidebar() {
       title: "Rates", // t("rates")
       url: "/dashboard/rates",
       icon: Percent,
+    },
+    {
+      title: "Housekeeping",
+      url: "/dashboard/housekeeping",
+      icon: Sparkles,
     },
     {
       title: t("reports"), // t("reports")

@@ -58,6 +58,7 @@ const statusColors: Record<string, string> = {
   "pending payment": "bg-yellow-500/20 border-yellow-500 text-yellow-500",
   "checked-in": "bg-green-500/20 border-green-500 text-green-500",
   "checked-out": "bg-gray-500/20 border-gray-500 text-gray-500",
+  draft: "bg-gray-400/10 border-dashed border-gray-400 text-gray-500",
 }
 
 export default function CalendarPage() {
@@ -314,6 +315,10 @@ export default function CalendarPage() {
             <div className="flex items-center gap-2">
               <div className="size-4 rounded border border-border bg-muted/30" />
               <span className="text-sm">Available</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="size-4 rounded border-dashed border-gray-400 bg-gray-400/10" />
+              <span className="text-sm">Draft</span>
             </div>
           </div>
         </CardContent>
