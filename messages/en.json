@@ -31,6 +31,7 @@
         "viewCalendar": "View Calendar"
     },
     "Rooms": {
+        "title": "Rooms",
         "rooms": "Rooms",
         "searchRooms": "Search rooms...",
         "filters": "Filters",
@@ -48,6 +49,53 @@
         "status": "Status",
         "actions": "Actions",
         "noRoomsFound": "No rooms found"
+    },
+    "Rates": {
+        "title": "Seasonal Rates",
+        "subtitle": "Manage global and seasonal pricing adjustments",
+        "addRate": "Add Rate",
+        "addRateDescription": "Create a new seasonal rate to adjust pricing.",
+        "rateName": "Rate Name",
+        "rateNamePlaceholder": "e.g. Summer Season",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "multiplier": "Multiplier",
+        "multiplierHelp": "1.0 = Base Rate, 1.2 = +20%, 0.8 = -20%",
+        "roomType": "Room Type",
+        "optional": "Optional",
+        "selectRoomType": "Select Room Type",
+        "roomGroup": "Room Group",
+        "selectRoomGroup": "Select Room Group",
+        "createRate": "Create Rate",
+        "filters": "Filters",
+        "searchRates": "Search rates by name",
+        "searchPlaceholder": "Search rates...",
+        "noRatesFound": "No seasonal rates found",
+        "tryAdjustingSearch": "Try adjusting your search or add a new rate",
+        "loadingRates": "Loading rates...",
+        "errorLoading": "Error Loading Rates",
+        "rateCreated": "Rate created successfully"
+    },
+    "Services": {
+        "title": "Services",
+        "subtitle": "Manage additional services and amenities",
+        "addService": "Add Service",
+        "addServiceDescription": "Create a new service offering for your guests.",
+        "serviceName": "Service Name",
+        "serviceNamePlaceholder": "e.g. Airport Transfer",
+        "price": "Price",
+        "description": "Description",
+        "descriptionPlaceholder": "Service description...",
+        "createService": "Create Service",
+        "filters": "Filters",
+        "searchServices": "Search services by name",
+        "searchPlaceholder": "Search services...",
+        "noServicesFound": "No services found",
+        "tryAdjustingSearch": "Try adjusting your search or add a new service",
+        "loadingServices": "Loading services...",
+        "errorLoading": "Error Loading Services",
+        "serviceCreated": "Service created successfully",
+        "noDescription": "No description available"
     },
     "Bookings": {
         "newBooking": "New Booking",
@@ -96,6 +144,14 @@
         "filter": "Filter",
         "export": "Export",
         "import": "Import"
+    },
+    "Housekeeping": {
+        "title": "Housekeeping",
+        "subtitle": "Manage room cleaning status and assignments",
+        "clean": "Clean",
+        "dirty": "Dirty",
+        "processing": "Processing",
+        "maintenance": "Maintenance"
     },
     "Status": {
         "clean": "Clean",
