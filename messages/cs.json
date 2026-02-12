@@ -1,4 +1,9 @@
 {
+    "_meta": {
+        "code": "cs",
+        "name": "Čeština",
+        "flag": "🇨🇿"
+    },
     "Navigation": {
         "dashboard": "Přehled",
         "rooms": "Pokoje",

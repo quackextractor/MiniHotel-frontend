@@ -1,4 +1,9 @@
 {
+    "_meta": {
+        "code": "en",
+        "name": "English",
+        "flag": "🇺🇸"
+    },
     "Navigation": {
         "dashboard": "Dashboard",
         "rooms": "Rooms",
