@@ -31,6 +31,7 @@
         "viewCalendar": "Kalender anzeigen"
     },
     "Rooms": {
+        "title": "Zimmer",
         "rooms": "Zimmer",
         "searchRooms": "Zimmer suchen...",
         "filters": "Filter",
@@ -48,6 +49,53 @@
         "status": "Status",
         "actions": "Aktionen",
         "noRoomsFound": "Keine Zimmer gefunden"
+    },
+    "Rates": {
+        "title": "Saisonale Raten",
+        "subtitle": "Verwalten Sie globale und saisonale Preisanpassungen",
+        "addRate": "Rate hinzufügen",
+        "addRateDescription": "Erstellen Sie eine neue saisonale Rate zur Preisanpassung.",
+        "rateName": "Ratenname",
+        "rateNamePlaceholder": "z.B. Sommersaison",
+        "startDate": "Startdatum",
+        "endDate": "Enddatum",
+        "multiplier": "Multiplikator",
+        "multiplierHelp": "1.0 = Basisrate, 1.2 = +20%, 0.8 = -20%",
+        "roomType": "Zimmertyp",
+        "optional": "Optional",
+        "selectRoomType": "Zimmertyp auswählen",
+        "roomGroup": "Zimmergruppe",
+        "selectRoomGroup": "Zimmergruppe auswählen",
+        "createRate": "Rate erstellen",
+        "filters": "Filter",
+        "searchRates": "Raten nach Namen suchen",
+        "searchPlaceholder": "Raten suchen...",
+        "noRatesFound": "Keine saisonalen Raten gefunden",
+        "tryAdjustingSearch": "Versuchen Sie, Ihre Suche anzupassen oder fügen Sie eine neue Rate hinzu",
+        "loadingRates": "Raten laden...",
+        "errorLoading": "Fehler beim Laden der Raten",
+        "rateCreated": "Rate erfolgreich erstellt"
+    },
+    "Services": {
+        "title": "Dienstleistungen",
+        "subtitle": "Verwalten Sie zusätzliche Dienstleistungen und Annehmlichkeiten",
+        "addService": "Dienstleistung hinzufügen",
+        "addServiceDescription": "Erstellen Sie ein neues Serviceangebot für Ihre Gäste.",
+        "serviceName": "Dienstleistungsname",
+        "serviceNamePlaceholder": "z.B. Flughafentransfer",
+        "price": "Preis",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "Dienstleistungsbeschreibung...",
+        "createService": "Dienstleistung erstellen",
+        "filters": "Filter",
+        "searchServices": "Dienstleistungen nach Namen suchen",
+        "searchPlaceholder": "Dienstleistungen suchen...",
+        "noServicesFound": "Keine Dienstleistungen gefunden",
+        "tryAdjustingSearch": "Versuchen Sie, Ihre Suche anzupassen oder fügen Sie eine neue Dienstleistung hinzu",
+        "loadingServices": "Dienstleistungen laden...",
+        "errorLoading": "Fehler beim Laden der Dienstleistungen",
+        "serviceCreated": "Dienstleistung erfolgreich erstellt",
+        "noDescription": "Keine Beschreibung verfügbar"
     },
     "Bookings": {
         "newBooking": "Neue Buchung",
@@ -96,6 +144,14 @@
         "filter": "Filtern",
         "export": "Exportieren",
         "import": "Importieren"
+    },
+    "Housekeeping": {
+        "title": "Housekeeping",
+        "subtitle": "Verwalten Sie Zimmerreinigungsstatus und Zuweisungen",
+        "clean": "Sauber",
+        "dirty": "Schmutzig",
+        "processing": "In Bearbeitung",
+        "maintenance": "Wartung"
     },
     "Status": {
         "clean": "Sauber",

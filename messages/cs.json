@@ -31,6 +31,7 @@
         "viewCalendar": "Zobrazit kalendář"
     },
     "Rooms": {
+        "title": "Pokoje",
         "rooms": "Pokoje",
         "searchRooms": "Hledat pokoje...",
         "filters": "Filtry",
@@ -48,6 +49,53 @@
         "status": "Stav",
         "actions": "Akce",
         "noRoomsFound": "Nebyly nalezeny žádné pokoje"
+    },
+    "Rates": {
+        "title": "Sezónní sazby",
+        "subtitle": "Správa globálních a sezónních úprav cen",
+        "addRate": "Přidat sazbu",
+        "addRateDescription": "Vytvořte novou sezónní sazbu pro úpravu cen.",
+        "rateName": "Název sazby",
+        "rateNamePlaceholder": "např. Letní sezóna",
+        "startDate": "Datum zahájení",
+        "endDate": "Datum ukončení",
+        "multiplier": "Multiplikátor",
+        "multiplierHelp": "1.0 = Základní sazba, 1.2 = +20%, 0.8 = -20%",
+        "roomType": "Typ pokoje",
+        "optional": "Volitelné",
+        "selectRoomType": "Vybrat typ pokoje",
+        "roomGroup": "Skupina pokojů",
+        "selectRoomGroup": "Vybrat skupinu pokojů",
+        "createRate": "Vytvořit sazbu",
+        "filters": "Filtry",
+        "searchRates": "Hledat sazby podle názvu",
+        "searchPlaceholder": "Hledat sazby...",
+        "noRatesFound": "Nebyly nalezeny žádné sezónní sazby",
+        "tryAdjustingSearch": "Zkuste upravit hledání nebo přidejte novou sazbu",
+        "loadingRates": "Načítání sazeb...",
+        "errorLoading": "Chyba při načítání sazeb",
+        "rateCreated": "Sazba úspěšně vytvořena"
+    },
+    "Services": {
+        "title": "Služby",
+        "subtitle": "Správa doplňkových služeb a vybavení",
+        "addService": "Přidat službu",
+        "addServiceDescription": "Vytvořte novou nabídku služeb pro vaše hosty.",
+        "serviceName": "Název služby",
+        "serviceNamePlaceholder": "např. Letištní transfer",
+        "price": "Cena",
+        "description": "Popis",
+        "descriptionPlaceholder": "Popis služby...",
+        "createService": "Vytvořit službu",
+        "filters": "Filtry",
+        "searchServices": "Hledat služby podle názvu",
+        "searchPlaceholder": "Hledat služby...",
+        "noServicesFound": "Nebyly nalezeny žádné služby",
+        "tryAdjustingSearch": "Zkuste upravit hledání nebo přidejte novou službu",
+        "loadingServices": "Načítání služeb...",
+        "errorLoading": "Chyba při načítání služeb",
+        "serviceCreated": "Služba úspěšně vytvořena",
+        "noDescription": "Žádný popis není k dispozici"
     },
     "Bookings": {
         "newBooking": "Nová rezervace",
@@ -96,6 +144,14 @@
         "filter": "Filtrovat",
         "export": "Exportovat",
         "import": "Importovat"
+    },
+    "Housekeeping": {
+        "title": "Úklid",
+        "subtitle": "Správa stavu úklidu pokojů a přiřazení",
+        "clean": "Čistý",
+        "dirty": "Špinavý",
+        "processing": "Probíhá",
+        "maintenance": "Údržba"
     },
     "Status": {
         "clean": "Čistý",
