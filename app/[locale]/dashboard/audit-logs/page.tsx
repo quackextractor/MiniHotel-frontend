@@ -12,7 +12,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { api } from "@/lib/api"
+import { useTranslations } from "next-intl"
+
 export default function AuditLogsPage() {
+    const t = useTranslations("AuditLogs")
+    const commonT = useTranslations("Common")
     const [logs, setLogs] = useState<AuditLog[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -40,22 +44,22 @@ export default function AuditLogsPage() {
 
     return (
         <div className="flex flex-1 flex-col gap-4">
-            <h1 className="text-3xl font-bold tracking-tight">Audit Logs</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
             <Card>
 
                 <CardHeader>
-                    <CardTitle>Audit Logs</CardTitle>
+                    <CardTitle>{t("title")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>ID</TableHead>
-                                <TableHead>User</TableHead>
-                                <TableHead>Action</TableHead>
-                                <TableHead>Details</TableHead>
-                                <TableHead>Timestamp</TableHead>
-                                <TableHead>IP Address</TableHead>
+                                <TableHead>{t("id")}</TableHead>
+                                <TableHead>{t("user")}</TableHead>
+                                <TableHead>{t("action")}</TableHead>
+                                <TableHead>{t("details")}</TableHead>
+                                <TableHead>{t("timestamp")}</TableHead>
+                                <TableHead>{t("ipAddress")}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -71,7 +75,7 @@ export default function AuditLogsPage() {
                             ))}
                             {logs.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="text-center">No logs found</TableCell>
+                                    <TableCell colSpan={6} className="text-center">{t("noLogs")}</TableCell>
                                 </TableRow>
                             )}
                         </TableBody>

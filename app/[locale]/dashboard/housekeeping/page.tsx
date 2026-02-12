@@ -62,6 +62,8 @@ const statusColors: Record<string, string> = {
 
 export default function HousekeepingPage() {
     const t = useTranslations("Housekeeping")
+    const commonT = useTranslations("Common")
+    const statusT = useTranslations("Status")
     const [rooms, setRooms] = useState<Room[]>([])
     const [records, setRecords] = useState<HousekeepingRecord[]>([])
     const [loading, setLoading] = useState(true)
@@ -160,8 +162,8 @@ export default function HousekeepingPage() {
         <div className="flex flex-1 flex-col gap-4">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Housekeeping</h1>
-                    <p className="text-muted-foreground">Manage room cleaning status and assignments</p>
+                    <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+                    <p className="text-muted-foreground">{t("subtitle")}</p>
                 </div>
             </div>
 
@@ -171,7 +173,7 @@ export default function HousekeepingPage() {
                         <div className="relative flex-1">
                             <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
                             <Input
-                                placeholder="Search rooms or cleaners..."
+                                placeholder={t("searchPlaceholder")}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="pl-8"
@@ -180,14 +182,14 @@ export default function HousekeepingPage() {
                         <Select value={statusFilter} onValueChange={setStatusFilter}>
                             <SelectTrigger className="w-[180px]">
                                 <Filter className="mr-2 size-4" />
-                                <SelectValue placeholder="Filter Status" />
+                                <SelectValue placeholder={t("filterStatus")} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">All Statuses</SelectItem>
-                                <SelectItem value="clean">Clean</SelectItem>
-                                <SelectItem value="dirty">Dirty</SelectItem>
-                                <SelectItem value="inspecting">Inspecting</SelectItem>
-                                <SelectItem value="maintenance">Maintenance</SelectItem>
+                                <SelectItem value="all">{t("allStatuses")}</SelectItem>
+                                <SelectItem value="clean">{statusT("clean")}</SelectItem>
+                                <SelectItem value="dirty">{statusT("dirty")}</SelectItem>
+                                <SelectItem value="inspecting">{t("processing")}</SelectItem>
+                                <SelectItem value="maintenance">{statusT("maintenance")}</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -196,12 +198,12 @@ export default function HousekeepingPage() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Room</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Cleaner</TableHead>
-                                <TableHead>Last Cleaned</TableHead>
-                                <TableHead>Notes</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                                <TableHead>{t("room")}</TableHead>
+                                <TableHead>{t("statusLabel")}</TableHead>
+                                <TableHead>{t("cleaner")}</TableHead>
+                                <TableHead>{t("lastCleaned")}</TableHead>
+                                <TableHead>{t("notes")}</TableHead>
+                                <TableHead className="text-right">{t("actions")}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -214,7 +216,7 @@ export default function HousekeepingPage() {
                                         <TableCell className="font-medium">{room.room_number}</TableCell>
                                         <TableCell>
                                             <Badge variant="outline" className={statusColors[status] || "bg-secondary"}>
-                                                {status}
+                                                {statusT(status as any)}
                                             </Badge>
                                         </TableCell>
                                         <TableCell>{record?.cleaner || "-"}</TableCell>
@@ -229,7 +231,7 @@ export default function HousekeepingPage() {
                                                     size="icon"
                                                     onClick={() => openUpdateDialog(room, record, true)}
                                                     disabled={!record}
-                                                    title="Edit current details"
+                                                    title={t("editDetails")}
                                                 >
                                                     <Edit className="size-4" />
                                                 </Button>
@@ -238,7 +240,7 @@ export default function HousekeepingPage() {
                                                     size="sm"
                                                     onClick={() => openUpdateDialog(room, record, false)}
                                                 >
-                                                    Update Status
+                                                    {t("updateStatus")}
                                                 </Button>
                                             </div>
                                         </TableCell>
@@ -255,38 +257,38 @@ export default function HousekeepingPage() {
                     <form onSubmit={handleUpdateStatus}>
                         <DialogHeader>
                             <DialogTitle>
-                                {isEditMode ? "Edit Details" : "Update Status"} - Room {selectedRoom?.room_number}
+                                {isEditMode ? t("editDetails") : t("updateStatus")} - {t("room")} {selectedRoom?.room_number}
                             </DialogTitle>
                             <DialogDescription>
-                                {isEditMode ? "Modify the current housekeeping record." : "Create a new housekeeping status record."}
+                                {isEditMode ? t("modifyRecord") : t("createRecord")}
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="status">Status</Label>
+                                <Label htmlFor="status">{t("status")}</Label>
                                 <Select name="status" defaultValue={isEditMode ? currentRecord?.status : (currentRecord?.status === 'clean' ? 'dirty' : 'clean')}>
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="clean">Clean</SelectItem>
-                                        <SelectItem value="dirty">Dirty</SelectItem>
-                                        <SelectItem value="inspecting">Inspecting</SelectItem>
-                                        <SelectItem value="maintenance">Maintenance</SelectItem>
+                                        <SelectItem value="clean">{statusT("clean")}</SelectItem>
+                                        <SelectItem value="dirty">{statusT("dirty")}</SelectItem>
+                                        <SelectItem value="inspecting">{t("processing")}</SelectItem>
+                                        <SelectItem value="maintenance">{statusT("maintenance")}</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="cleaner">Cleaner Name</Label>
+                                <Label htmlFor="cleaner">{t("cleanerName")}</Label>
                                 <Input id="cleaner" name="cleaner" defaultValue={currentRecord?.cleaner || ""} placeholder="e.g. John Doe" />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="notes">Notes</Label>
+                                <Label htmlFor="notes">{t("notes")}</Label>
                                 <Input id="notes" name="notes" defaultValue={isEditMode ? currentRecord?.notes || "" : ""} />
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button type="submit">Save Changes</Button>
+                            <Button type="submit">{t("saveChanges")}</Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>

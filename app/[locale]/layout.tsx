@@ -8,6 +8,7 @@ import { AutoLogoutManager } from "@/components/auto-logout-manager"
 import { Toaster } from "@/components/ui/sonner"
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { I18nAuditLoader } from "@/components/i18n-audit-loader"
 import "../globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -38,6 +39,7 @@ export default async function RootLayout({
               <AutoLogoutManager />
               {children}
               <Toaster />
+              <I18nAuditLoader />
             </SettingsProvider>
           </AuthProvider>
           <Analytics />

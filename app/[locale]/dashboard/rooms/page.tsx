@@ -159,7 +159,7 @@ export default function RoomsPage() {
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Room {room.room_number}</CardTitle>
           <Badge variant="outline" className={statusColors.available}>
-            Available
+            {t("status.available")}
           </Badge>
         </div>
         <CardDescription className="capitalize">{room.room_type}</CardDescription>
@@ -253,47 +253,47 @@ export default function RoomsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold md:text-2xl">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">Manage your hotel rooms and their status</p>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 size-4" />
-              Add Room
+              {t("addRoom")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <form onSubmit={handleAddRoom} ref={formRef}>
               <DialogHeader>
-                <DialogTitle>Add New Room</DialogTitle>
-                <DialogDescription>Enter the details for the new room. Click save when you're done.</DialogDescription>
+                <DialogTitle>{t("addRoomTitle")}</DialogTitle>
+                <DialogDescription>{t("addRoomDescription")}</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="roomNumber" className="text-right">
-                    Number
+                    {t("form.number")}
                   </Label>
                   <Input id="roomNumber" name="roomNumber" placeholder="101" className="col-span-3" required />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="roomType" className="text-right">
-                    Type
+                    {t("form.type")}
                   </Label>
                   <Select name="roomType" required defaultValue="single">
                     <SelectTrigger className="col-span-3">
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="single">Single</SelectItem>
-                      <SelectItem value="double">Double</SelectItem>
-                      <SelectItem value="suite">Suite</SelectItem>
-                      <SelectItem value="deluxe">Deluxe</SelectItem>
+                      <SelectItem value="single">{t("types.single")}</SelectItem>
+                      <SelectItem value="double">{t("types.double")}</SelectItem>
+                      <SelectItem value="suite">{t("types.suite")}</SelectItem>
+                      <SelectItem value="deluxe">{t("types.deluxe")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="capacity" className="text-right">
-                    Capacity
+                    {t("form.capacity")}
                   </Label>
                   <Input
                     id="capacity"
@@ -307,7 +307,7 @@ export default function RoomsPage() {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="price" className="text-right">
-                    Price ({currency})
+                    {t("form.price")} ({currency})
                   </Label>
                   <Input
                     id="price"
@@ -317,19 +317,19 @@ export default function RoomsPage() {
                     step="0.01"
                     className="col-span-3"
                     required
-                    placeholder={`Amount in ${currency}`}
+                    placeholder={t("form.amountPlaceholder", { currency })}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="groupId" className="text-right">
-                    Group
+                    {t("form.group")}
                   </Label>
                   <Select name="groupId">
                     <SelectTrigger className="col-span-3">
-                      <SelectValue placeholder="No Group" />
+                      <SelectValue placeholder={t("form.noGroup")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="0">No Group</SelectItem>
+                      <SelectItem value="0">{t("form.noGroup")}</SelectItem>
                       {roomGroups.map(g => (
                         <SelectItem key={g.id} value={String(g.id)}>{g.name}</SelectItem>
                       ))}
@@ -338,13 +338,13 @@ export default function RoomsPage() {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="description" className="text-right">
-                    Description
+                    {t("form.description")}
                   </Label>
                   <Textarea id="description" name="description" className="col-span-3" />
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit">Save Room</Button>
+                <Button type="submit">{t("saveRoom")}</Button>
               </DialogFooter>
             </form>
           </DialogContent>
@@ -356,7 +356,7 @@ export default function RoomsPage() {
           <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search rooms..."
+            placeholder={t("searchRooms")}
             className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -364,14 +364,14 @@ export default function RoomsPage() {
         </div>
         <Select value={filterType} onValueChange={setFilterType}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by type" />
+            <SelectValue placeholder={t("types.filterByType")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="single">Single</SelectItem>
-            <SelectItem value="double">Double</SelectItem>
-            <SelectItem value="suite">Suite</SelectItem>
-            <SelectItem value="deluxe">Deluxe</SelectItem>
+            <SelectItem value="all">{t("types.allTypes")}</SelectItem>
+            <SelectItem value="single">{t("types.single")}</SelectItem>
+            <SelectItem value="double">{t("types.double")}</SelectItem>
+            <SelectItem value="suite">{t("types.suite")}</SelectItem>
+            <SelectItem value="deluxe">{t("types.deluxe")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -386,7 +386,7 @@ export default function RoomsPage() {
       {/* Render Groups Accordion */}
       {groupTree.length > 0 && (
         <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Room Groups</h2>
+          <h2 className="text-xl font-semibold mb-4">{t("roomGroups")}</h2>
           <Accordion type="multiple" className="w-full">
             {groupTree.map(renderGroup)}
           </Accordion>
@@ -397,8 +397,8 @@ export default function RoomsPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <DoorOpen className="size-12 text-muted-foreground" />
-            <h3 className="mt-4 text-lg font-semibold">No rooms found</h3>
-            <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
+            <h3 className="mt-4 text-lg font-semibold">{t("noRoomsFound")}</h3>
+            <p className="text-sm text-muted-foreground">{t("tryAdjustingSearch")}</p>
           </CardContent>
         </Card>
       )}

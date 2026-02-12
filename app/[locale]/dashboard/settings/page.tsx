@@ -104,7 +104,7 @@ export default function SettingsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("settings")}</h1>
-          <p className="text-muted-foreground">Configure your hotel management system</p>
+          <p className="text-muted-foreground">{t("configureSystem")}</p>
         </div>
       </div>
 
@@ -115,7 +115,7 @@ export default function SettingsPage() {
               <Globe className="size-5 text-primary" />
               <CardTitle>{t("regionalSettings")}</CardTitle>
             </div>
-            <CardDescription>Configure language, currency, and date/time formats</CardDescription>
+            <CardDescription>{t("basicInfo")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
@@ -195,7 +195,7 @@ export default function SettingsPage() {
                 <Settings className="size-5 text-primary" />
                 <CardTitle>{t("hotelInformation")}</CardTitle>
               </div>
-              <CardDescription>Basic information about your property</CardDescription>
+              <CardDescription>{t("basicInfo")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-2">
@@ -216,7 +216,7 @@ export default function SettingsPage() {
                 <Shield className="size-5 text-primary" />
                 <CardTitle>{t("securitySettings")}</CardTitle>
               </div>
-              <CardDescription>Configure session timeout and security</CardDescription>
+              <CardDescription>{t("securityDescription")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between space-x-2">
@@ -256,7 +256,7 @@ export default function SettingsPage() {
               <Lock className="size-5 text-primary" />
               <CardTitle>{t("changePassword")}</CardTitle>
             </div>
-            <CardDescription>Update your account password</CardDescription>
+            <CardDescription>{t("updateAccountPassword")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {passwordMessage && (
@@ -302,23 +302,23 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>{t("apiConfiguration")}</CardTitle>
-            <CardDescription>Information about your API connection</CardDescription>
+            <CardDescription>{t("apiInfo")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
-                <Label className="text-muted-foreground">Connection Type</Label>
+                <Label className="text-muted-foreground">{t("connectionType")}</Label>
                 <p className="text-sm font-mono">Server Proxy</p>
               </div>
               <div className="space-y-2">
-                <Label className="text-muted-foreground">Version</Label>
+                <Label className="text-muted-foreground">{t("version")}</Label>
                 <p className="text-sm">2.0.0</p>
               </div>
               <div className="space-y-2">
-                <Label className="text-muted-foreground">Status</Label>
+                <Label className="text-muted-foreground">{t("status")}</Label>
                 <div className="flex items-center gap-2">
                   <div className="size-2 rounded-full bg-green-500" />
-                  <span className="text-sm">Active</span>
+                  <span className="text-sm">{t("active")}</span>
                 </div>
               </div>
             </div>
@@ -331,13 +331,13 @@ export default function SettingsPage() {
               <Database className="size-5 text-primary" />
               <CardTitle>{t("systemManagement")}</CardTitle>
             </div>
-            <CardDescription>Manage system data and administrative tasks</CardDescription>
+            <CardDescription>{t("manageSystem")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>{t("importExampleData")}</Label>
               <p className="text-sm text-muted-foreground mb-4">
-                Populate the system with sample rooms, guests, and bookings.
+                {t("populateData")}
               </p>
               <Button onClick={handleImportData} disabled={importLoading} variant="outline">
                 {importLoading ? "Importing..." : t("importSampleData")}

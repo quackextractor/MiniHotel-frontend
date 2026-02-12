@@ -8,7 +8,11 @@ import { Bar, BarChart, Line, LineChart, XAxis, YAxis, CartesianGrid, Responsive
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { api } from "@/lib/api"
 
+import { useTranslations } from "next-intl"
+
 export default function ReportsPage() {
+  const t = useTranslations("Reports")
+  const commonT = useTranslations("Common")
   const [occupancyData, setOccupancyData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -36,7 +40,7 @@ export default function ReportsPage() {
       <div className="flex flex-1 items-center justify-center">
         <div className="text-center">
           <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
-          <p className="mt-4 text-muted-foreground">Loading statistics...</p>
+          <p className="mt-4 text-muted-foreground">{commonT("loading")}</p>
         </div>
       </div>
     )
@@ -47,7 +51,7 @@ export default function ReportsPage() {
       <div className="flex flex-1 items-center justify-center">
         <Card className="max-w-md">
           <CardHeader>
-            <h3 className="text-lg font-semibold">Error Loading Statistics</h3>
+            <h3 className="text-lg font-semibold">{commonT("error")}</h3>
             <p className="text-sm text-muted-foreground">{error}</p>
           </CardHeader>
           <CardContent>
@@ -70,18 +74,18 @@ export default function ReportsPage() {
     <div className="flex flex-1 flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Reports & Analytics</h1>
-          <p className="text-muted-foreground">Track performance and analyze trends</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
         <Select defaultValue="month">
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Time period" />
+            <SelectValue placeholder={t("timePeriod")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="week">Last 7 days</SelectItem>
-            <SelectItem value="month">Last 30 days</SelectItem>
-            <SelectItem value="quarter">Last 3 months</SelectItem>
-            <SelectItem value="year">Last 12 months</SelectItem>
+            <SelectItem value="week">{t("last7Days")}</SelectItem>
+            <SelectItem value="month">{t("last30Days")}</SelectItem>
+            <SelectItem value="quarter">{t("last3Months")}</SelectItem>
+            <SelectItem value="year">{t("last12Months")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -89,45 +93,45 @@ export default function ReportsPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("totalRevenue")}</CardTitle>
             <DollarSign className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${totalRevenue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">From API data</p>
+            <p className="text-xs text-muted-foreground">{t("fromApiData")}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("totalBookings")}</CardTitle>
             <Calendar className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalBookings}</div>
-            <p className="text-xs text-muted-foreground">Active bookings</p>
+            <p className="text-xs text-muted-foreground">{t("activeBookings")}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Occupancy</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("avgOccupancy")}</CardTitle>
             <Percent className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{avgOccupancy.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">Current period</p>
+            <p className="text-xs text-muted-foreground">{t("currentPeriod")}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unique Guests</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("uniqueGuests")}</CardTitle>
             <Users className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{uniqueGuests}</div>
-            <p className="text-xs text-muted-foreground">Total guests</p>
+            <p className="text-xs text-muted-foreground">{t("totalGuests")}</p>
           </CardContent>
         </Card>
       </div>
@@ -135,14 +139,14 @@ export default function ReportsPage() {
       {stats.daily_occupancy && stats.daily_occupancy.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Occupancy Trend</CardTitle>
-            <CardDescription>Daily occupancy rates</CardDescription>
+            <CardTitle>{t("occupancyTrend")}</CardTitle>
+            <CardDescription>{t("dailyOccupancy")}</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer
               config={{
                 rate: {
-                  label: "Occupancy %",
+                  label: t("occupancy"),
                   color: "var(--chart-1)",
                 },
               }}
@@ -176,14 +180,14 @@ export default function ReportsPage() {
       {stats.room_type_performance && stats.room_type_performance.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Room Type Performance</CardTitle>
-            <CardDescription>Bookings by room type</CardDescription>
+            <CardTitle>{t("roomPerformance")}</CardTitle>
+            <CardDescription>{t("bookingsByType")}</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer
               config={{
                 bookings: {
-                  label: "Bookings",
+                  label: t("bookings"),
                   color: "var(--chart-2)",
                 },
               }}

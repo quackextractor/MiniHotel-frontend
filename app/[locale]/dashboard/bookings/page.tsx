@@ -296,69 +296,69 @@ export default function BookingsPage() {
     <div className="flex flex-1 flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Bookings</h1>
-          <p className="text-muted-foreground">Manage reservations and guest information</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 size-4" />
-              New Booking
+              {t("newBooking")}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             {showGuestForm ? (
               <form ref={formRef} onSubmit={handleCreateGuest}>
                 <DialogHeader>
-                  <DialogTitle>Create New Guest</DialogTitle>
-                  <DialogDescription>Add a new guest to the system</DialogDescription>
+                  <DialogTitle>{t("createGuestTitle")}</DialogTitle>
+                  <DialogDescription>{t("createGuestDescription")}</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="grid gap-2">
-                      <Label htmlFor="firstName">First Name *</Label>
+                      <Label htmlFor="firstName">{t("form.firstName")} *</Label>
                       <Input id="firstName" name="firstName" required />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="lastName">Last Name *</Label>
+                      <Label htmlFor="lastName">{t("form.lastName")} *</Label>
                       <Input id="lastName" name="lastName" required />
                     </div>
                   </div>
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">{t("form.email")}</Label>
                       <Input id="email" name="email" type="email" />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="phone">Phone</Label>
+                      <Label htmlFor="phone">{t("form.phone")}</Label>
                       <Input id="phone" name="phone" />
                     </div>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="address">Address</Label>
+                    <Label htmlFor="address">{t("form.address")}</Label>
                     <Textarea id="address" name="address" />
                   </div>
                 </div>
                 <DialogFooter className="gap-2">
                   <Button type="button" variant="outline" onClick={() => setShowGuestForm(false)}>
-                    Back to Booking
+                    {t("backToBooking")}
                   </Button>
-                  <Button type="submit">Create Guest</Button>
+                  <Button type="submit">{t("createGuest")}</Button>
                 </DialogFooter>
               </form>
             ) : (
               <form ref={formRef} onSubmit={handleAddBooking}>
                 <DialogHeader>
-                  <DialogTitle>Create New Booking</DialogTitle>
-                  <DialogDescription>Add a new reservation to the system</DialogDescription>
+                  <DialogTitle>{t("createBookingTitle")}</DialogTitle>
+                  <DialogDescription>{t("createBookingDescription")}</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="guestId">Guest *</Label>
+                      <Label htmlFor="guestId">{t("form.guest")} *</Label>
                       <Button type="button" variant="outline" size="sm" onClick={() => setShowGuestForm(true)}>
                         <UserPlus className="mr-2 size-4" />
-                        New Guest
+                        {t("form.newGuest")}
                       </Button>
                     </div>
 
@@ -378,17 +378,17 @@ export default function BookingsPage() {
                               const guest = guests.find((g) => g.id.toString() === selectedGuestId)
                               return guest
                                 ? `${guest.first_name} ${guest.last_name} ${guest.email ? `(${guest.email})` : ""}`
-                                : "Select guest..."
+                                : t("form.selectGuest")
                             })()
-                            : "Select guest..."}
+                            : t("form.selectGuest")}
                           <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
                         <Command>
-                          <CommandInput placeholder="Search guest..." />
+                          <CommandInput placeholder={t("form.searchGuest")} />
                           <CommandList>
-                            <CommandEmpty>No guest found.</CommandEmpty>
+                            <CommandEmpty>{t("form.noGuestFound")}</CommandEmpty>
                             <CommandGroup>
                               {guests.map((guest) => (
                                 <CommandItem
@@ -416,7 +416,7 @@ export default function BookingsPage() {
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="roomId">Room *</Label>
+                    <Label htmlFor="roomId">{t("form.room")} *</Label>
                     <Select
                       name="roomId"
                       required
@@ -430,7 +430,7 @@ export default function BookingsPage() {
                       }}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select room" />
+                        <SelectValue placeholder={t("form.selectRoom")} />
                       </SelectTrigger>
                       <SelectContent>
                         {rooms.map((room) => (
@@ -445,7 +445,7 @@ export default function BookingsPage() {
 
                   <div className="grid gap-4 md:grid-cols-3">
                     <div className="grid gap-2">
-                      <Label htmlFor="checkIn">Check-in Date *</Label>
+                      <Label htmlFor="checkIn">{t("form.checkInDate")} *</Label>
                       <Input
                         id="checkIn"
                         name="checkIn"
@@ -462,7 +462,7 @@ export default function BookingsPage() {
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="checkOut">Check-out Date *</Label>
+                      <Label htmlFor="checkOut">{t("form.checkOutDate")} *</Label>
                       <Input
                         id="checkOut"
                         name="checkOut"
@@ -479,7 +479,7 @@ export default function BookingsPage() {
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="numberOfGuests">Number of Guests *</Label>
+                      <Label htmlFor="numberOfGuests">{t("form.numberOfGuests")} *</Label>
                       <Input
                         id="numberOfGuests"
                         name="numberOfGuests"
@@ -502,7 +502,7 @@ export default function BookingsPage() {
 
 
                   <div className="grid gap-2">
-                    <Label>Select Services (Optional)</Label>
+                    <Label>{t("selectServices")}</Label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 border rounded-md p-4 max-h-[150px] overflow-y-auto">
                       {services.map((service) => (
                         <div key={service.id} className="flex items-center space-x-2">
@@ -533,38 +533,38 @@ export default function BookingsPage() {
                           </Label>
                         </div>
                       ))}
-                      {services.length === 0 && <p className="text-sm text-muted-foreground col-span-2">No services available.</p>}
+                      {services.length === 0 && <p className="text-sm text-muted-foreground col-span-2">{t("noServicesAvailable")}</p>}
                     </div>
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="grid gap-2">
-                      <Label htmlFor="status">Booking Status *</Label>
+                      <Label htmlFor="status">{t("form.bookingStatus")} *</Label>
                       <Select name="status" defaultValue="pending" required>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="draft">Draft</SelectItem>
-                          <SelectItem value="pending">Pending</SelectItem>
-                          <SelectItem value="confirmed">Confirmed</SelectItem>
-                          <SelectItem value="checked-in">Checked In</SelectItem>
-                          <SelectItem value="checked-out">Checked Out</SelectItem>
-                          <SelectItem value="cancelled">Cancelled</SelectItem>
+                          <SelectItem value="draft">{t("status.draft")}</SelectItem>
+                          <SelectItem value="pending">{t("status.pending")}</SelectItem>
+                          <SelectItem value="confirmed">{t("status.confirmed")}</SelectItem>
+                          <SelectItem value="checked-in">{t("status.checkedIn")}</SelectItem>
+                          <SelectItem value="checked-out">{t("status.checkedOut")}</SelectItem>
+                          <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="paymentStatus">Payment Status</Label>
+                      <Label htmlFor="paymentStatus">{t("form.paymentStatus")}</Label>
                       <Select name="paymentStatus">
                         <SelectTrigger>
-                          <SelectValue placeholder="Select payment status" />
+                          <SelectValue placeholder={t("form.selectPaymentStatus")} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="pending">Pending</SelectItem>
-                          <SelectItem value="paid">Paid</SelectItem>
-                          <SelectItem value="partial">Partial</SelectItem>
-                          <SelectItem value="refunded">Refunded</SelectItem>
+                          <SelectItem value="pending">{t("paymentStatus.pending")}</SelectItem>
+                          <SelectItem value="paid">{t("paymentStatus.paid")}</SelectItem>
+                          <SelectItem value="partial">{t("paymentStatus.partial")}</SelectItem>
+                          <SelectItem value="refunded">{t("paymentStatus.refunded")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -573,9 +573,9 @@ export default function BookingsPage() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="grid gap-2">
                       <Label htmlFor="totalAmount">
-                        Total Amount ({currency})
+                        {t("form.totalAmount", { currency })}
                         {calculatedRate && (
-                          <span className="ml-2 text-sm text-muted-foreground">(Calculated: {convert(calculatedRate).toFixed(2)} {currency})</span>
+                          <span className="ml-2 text-sm text-muted-foreground">({t("calculated")}: {convert(calculatedRate).toFixed(2)} {currency})</span>
                         )}
                       </Label>
                       <Input
@@ -588,33 +588,33 @@ export default function BookingsPage() {
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="paymentMethod">Payment Method</Label>
+                      <Label htmlFor="paymentMethod">{t("form.paymentMethod")}</Label>
                       <Select name="paymentMethod">
                         <SelectTrigger>
-                          <SelectValue placeholder="Select payment method" />
+                          <SelectValue placeholder={t("form.selectPaymentMethod")} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="cash">Cash</SelectItem>
-                          <SelectItem value="card">Card</SelectItem>
-                          <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
-                          <SelectItem value="online">Online</SelectItem>
+                          <SelectItem value="cash">{t("paymentMethod.cash")}</SelectItem>
+                          <SelectItem value="card">{t("paymentMethod.card")}</SelectItem>
+                          <SelectItem value="bank_transfer">{t("paymentMethod.bankTransfer")}</SelectItem>
+                          <SelectItem value="online">{t("paymentMethod.online")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="assignedTo">Assigned To</Label>
-                    <Input id="assignedTo" name="assignedTo" placeholder="Staff member name" />
+                    <Label htmlFor="assignedTo">{t("form.assignedTo")}</Label>
+                    <Input id="assignedTo" name="assignedTo" placeholder={t("form.staffMemberName")} />
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="notes">Notes</Label>
-                    <Textarea id="notes" name="notes" placeholder="Special requests or additional information..." />
+                    <Label htmlFor="notes">{t("form.notes")}</Label>
+                    <Textarea id="notes" name="notes" placeholder={t("form.specialRequests")} />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit">Create Booking</Button>
+                  <Button type="submit">{t("createBooking")}</Button>
                 </DialogFooter>
               </form>
             )}
@@ -628,7 +628,7 @@ export default function BookingsPage() {
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
               <Input
-                placeholder="Search by guest name, booking ID, or room..."
+                placeholder={t("searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-8"
@@ -640,10 +640,10 @@ export default function BookingsPage() {
 
       <Tabs defaultValue="all" className="flex-1">
         <TabsList>
-          <TabsTrigger value="all">All Bookings</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="confirmed">Confirmed</TabsTrigger>
-          <TabsTrigger value="checked-in">Checked In</TabsTrigger>
+          <TabsTrigger value="all">{t("allBookings")}</TabsTrigger>
+          <TabsTrigger value="pending">{t("status.pending")}</TabsTrigger>
+          <TabsTrigger value="confirmed">{t("status.confirmed")}</TabsTrigger>
+          <TabsTrigger value="checked-in">{t("status.checkedIn")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
@@ -684,13 +684,13 @@ export default function BookingsPage() {
           <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Booking Details - #{selectedBooking.id}</DialogTitle>
-                <DialogDescription>Complete information for this reservation</DialogDescription>
+                <DialogTitle>{t("bookingDetailsTitle", { id: selectedBooking.id })}</DialogTitle>
+                <DialogDescription>{t("bookingDetailsDescription")}</DialogDescription>
               </DialogHeader>
               <div className="grid gap-6 py-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label className="text-muted-foreground">Guest Information</Label>
+                    <Label className="text-muted-foreground">{t("guestInformation")}</Label>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <User className="size-4 text-muted-foreground" />
@@ -713,40 +713,40 @@ export default function BookingsPage() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-muted-foreground">Room Details</Label>
+                    <Label className="text-muted-foreground">{t("roomDetails")}</Label>
                     <div className="space-y-2">
                       <p>
-                        <span className="font-medium">Room:</span> {selectedBooking.room?.room_number}
+                        <span className="font-medium">{t("form.room")}:</span> {selectedBooking.room?.room_number}
                       </p>
                       <p>
-                        <span className="font-medium">Type:</span> {selectedBooking.room?.room_type}
+                        <span className="font-medium">{t("form.type")}:</span> {selectedBooking.room?.room_type}
                       </p>
                       <p>
-                        <span className="font-medium">Guests:</span> {selectedBooking.number_of_guests}
+                        <span className="font-medium">{t("form.numberOfGuests")}:</span> {selectedBooking.number_of_guests}
                       </p>
                     </div>
                   </div>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label className="text-muted-foreground">Stay Duration</Label>
+                    <Label className="text-muted-foreground">{t("stayDuration")}</Label>
                     <div className="space-y-2">
                       <p>
-                        <span className="font-medium">Check-in:</span>{" "}
+                        <span className="font-medium">{t("form.checkInDate")}:</span>{" "}
                         {formatDate(selectedBooking.check_in)}
                       </p>
                       <p>
-                        <span className="font-medium">Check-out:</span>{" "}
+                        <span className="font-medium">{t("form.checkOutDate")}:</span>{" "}
                         {formatDate(selectedBooking.check_out)}
                       </p>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-muted-foreground">Payment</Label>
+                    <Label className="text-muted-foreground">{t("payment")}</Label>
                     <div className="space-y-2">
                       {selectedBooking.total_amount && (
                         <p>
-                          <span className="font-medium">Total:</span> {convert(selectedBooking.total_amount).toFixed(2)} {currency}
+                          <span className="font-medium">{t("total")}:</span> {convert(selectedBooking.total_amount).toFixed(2)} {currency}
                         </p>
                       )}
                       {selectedBooking.payment_status && (
@@ -769,12 +769,12 @@ export default function BookingsPage() {
                 </div>
                 {selectedBooking.notes && (
                   <div className="space-y-2">
-                    <Label className="text-muted-foreground">Notes</Label>
+                    <Label className="text-muted-foreground">{t("notes")}</Label>
                     <p className="text-sm">{selectedBooking.notes}</p>
                   </div>
                 )}
                 <div className="space-y-2">
-                  <Label>Update Status</Label>
+                  <Label>{t("updateStatus")}</Label>
                   <div className="grid gap-2">
                     <Select
                       value={selectedBooking.status}
@@ -787,11 +787,11 @@ export default function BookingsPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="confirmed">Confirmed</SelectItem>
-                        <SelectItem value="checked-in">Checked In</SelectItem>
-                        <SelectItem value="checked-out">Checked Out</SelectItem>
-                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                        <SelectItem value="pending">{t("status.pending")}</SelectItem>
+                        <SelectItem value="confirmed">{t("status.confirmed")}</SelectItem>
+                        <SelectItem value="checked-in">{t("status.checkedIn")}</SelectItem>
+                        <SelectItem value="checked-out">{t("status.checkedOut")}</SelectItem>
+                        <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
                       </SelectContent>
                     </Select>
                     <Select
@@ -805,10 +805,10 @@ export default function BookingsPage() {
                         <SelectValue placeholder="Payment status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="pending">Payment Pending</SelectItem>
-                        <SelectItem value="paid">Paid</SelectItem>
-                        <SelectItem value="partial">Partial Payment</SelectItem>
-                        <SelectItem value="refunded">Refunded</SelectItem>
+                        <SelectItem value="pending">{t("paymentStatus.pending")}</SelectItem>
+                        <SelectItem value="paid">{t("paymentStatus.paid")}</SelectItem>
+                        <SelectItem value="partial">{t("paymentStatus.partial")}</SelectItem>
+                        <SelectItem value="refunded">{t("paymentStatus.refunded")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -819,7 +819,7 @@ export default function BookingsPage() {
                     onClick={() => handleDeleteBooking(selectedBooking.id)}
                   >
                     <Trash2 className="mr-2 size-4" />
-                    Delete Booking
+                    {t("deleteBooking")}
                   </Button>
                 </DialogFooter>
               </div>
@@ -842,13 +842,14 @@ function BookingsList({
 }) {
   const { convert, currency } = useCurrency()
   const { formatDate } = useDateFormat()
+  const t = useTranslations("Bookings")
   if (bookings.length === 0) {
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-12">
           <Calendar className="size-12 text-muted-foreground" />
-          <h3 className="mt-4 text-lg font-semibold">No bookings found</h3>
-          <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
+          <h3 className="mt-4 text-lg font-semibold">{t("noBookingsFound")}</h3>
+          <p className="text-sm text-muted-foreground">{t("tryAdjustingSearch")}</p>
         </CardContent>
       </Card>
     )
@@ -860,7 +861,7 @@ function BookingsList({
         const statusKey = booking.status.toLowerCase()
         const config = statusConfig[statusKey] || statusConfig.pending
         const StatusIcon = config.icon
-        const guestName = booking.guest ? `${booking.guest.first_name} ${booking.guest.last_name}` : "Unknown Guest"
+        const guestName = booking.guest ? `${booking.guest.first_name} ${booking.guest.last_name}` : t("form.noGuestFound")
 
         return (
           <Card
@@ -877,10 +878,10 @@ function BookingsList({
                         <h3 className="text-lg font-semibold">{guestName}</h3>
                         <Badge variant="outline" className={config.color}>
                           <StatusIcon className="mr-1 size-3" />
-                          {booking.status}
+                          {t(`status.${statusKey}` as any)}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">Booking ID: #{booking.id}</p>
+                      <p className="text-sm text-muted-foreground">{t("bookingId")}: #{booking.id}</p>
                     </div>
                     {booking.total_amount && (
                       <div className="text-right">
@@ -895,7 +896,7 @@ function BookingsList({
                                 : "bg-yellow-500/10 text-yellow-500",
                             )}
                           >
-                            {booking.payment_status}
+                            {t(`paymentStatus.${booking.payment_status}` as any)}
                           </Badge>
                         )}
                       </div>
@@ -906,21 +907,21 @@ function BookingsList({
                     <div className="flex items-center gap-2 text-sm">
                       <Calendar className="size-4 text-muted-foreground" />
                       <div>
-                        <p className="font-medium">Check-in</p>
+                        <p className="font-medium">{t("form.checkInDate")}</p>
                         <p className="text-muted-foreground">{formatDate(booking.check_in)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <Calendar className="size-4 text-muted-foreground" />
                       <div>
-                        <p className="font-medium">Check-out</p>
+                        <p className="font-medium">{t("form.checkOutDate")}</p>
                         <p className="text-muted-foreground">{formatDate(booking.check_out)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <User className="size-4 text-muted-foreground" />
                       <div>
-                        <p className="font-medium">Room {booking.room?.room_number}</p>
+                        <p className="font-medium">{t("form.room")} {booking.room?.room_number}</p>
                         <p className="text-muted-foreground">{booking.room?.room_type}</p>
                       </div>
                     </div>
@@ -928,7 +929,7 @@ function BookingsList({
                       <User className="size-4 text-muted-foreground" />
                       <div>
                         <p className="font-medium">
-                          {booking.number_of_guests} Guest{booking.number_of_guests > 1 ? "s" : ""}
+                          {booking.number_of_guests} {t("form.guest")}{booking.number_of_guests > 1 ? "s" : ""}
                         </p>
                         {booking.guest?.phone && <p className="text-muted-foreground">{booking.guest.phone}</p>}
                       </div>
@@ -938,7 +939,7 @@ function BookingsList({
                   {booking.notes && (
                     <div className="rounded-md bg-muted/50 p-2">
                       <p className="text-sm text-muted-foreground">
-                        <span className="font-medium">Note:</span> {booking.notes}
+                        <span className="font-medium">{t("form.notes")}:</span> {booking.notes}
                       </p>
                     </div>
                   )}

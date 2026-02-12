@@ -93,14 +93,14 @@ export default function DashboardPage() {
     {
       title: t("totalRooms"),
       value: stats?.totalRooms.toString() || "0",
-      description: t("occupancyDescription", { available: stats?.availableRooms, occupied: stats?.occupiedRooms }),
+      description: t("occupancyDescription", { available: stats?.availableRooms || 0, occupied: stats?.occupiedRooms || 0 }),
       icon: DoorOpen,
-      trend: t("occupancyTrend", { occupied: stats?.occupiedRooms, total: stats?.totalRooms }),
+      trend: t("occupancyTrend", { occupied: stats?.occupiedRooms || 0, total: stats?.totalRooms || 0 }),
     },
     {
       title: t("todayActivity"),
       value: ((stats?.todayCheckIns || 0) + (stats?.todayCheckOuts || 0)).toString(),
-      description: t("activityDescription", { checkIns: stats?.todayCheckIns, checkOuts: stats?.todayCheckOuts }),
+      description: t("activityDescription", { checkIns: stats?.todayCheckIns || 0, checkOuts: stats?.todayCheckOuts || 0 }),
       icon: Calendar,
       trend: t("todayActivity"),
     },
@@ -109,7 +109,7 @@ export default function DashboardPage() {
       value: `${stats?.occupancyRate}%`,
       description: stats?.occupancyRate && stats.occupancyRate > 70 ? t("aboveAverage") : t("belowAverage"),
       icon: TrendingUp,
-      trend: t("occupancyTrend", { occupied: stats?.occupiedRooms, total: stats?.totalRooms }),
+      trend: t("occupancyTrend", { occupied: stats?.occupiedRooms || 0, total: stats?.totalRooms || 0 }),
     },
   ]
 
@@ -151,8 +151,8 @@ export default function DashboardPage() {
                   <Calendar className="size-4 text-primary" />
                 </div>
                 <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">New booking received</p>
-                  <p className="text-xs text-muted-foreground">Room 205 - Check-in tomorrow</p>
+                  <p className="text-sm font-medium">{t("newBooking")}</p>
+                  <p className="text-xs text-muted-foreground">{t("checkInTomorrow")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -160,8 +160,8 @@ export default function DashboardPage() {
                   <DoorOpen className="size-4 text-primary" />
                 </div>
                 <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">Room status updated</p>
-                  <p className="text-xs text-muted-foreground">Room 102 - Now available</p>
+                  <p className="text-sm font-medium">{t("roomStatusUpdated")}</p>
+                  <p className="text-xs text-muted-foreground">{t("nowAvailable")}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -169,8 +169,8 @@ export default function DashboardPage() {
                   <Users className="size-4 text-primary" />
                 </div>
                 <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">Event scheduled</p>
-                  <p className="text-xs text-muted-foreground">Conference room - Friday 2PM</p>
+                  <p className="text-sm font-medium">{t("eventScheduled")}</p>
+                  <p className="text-xs text-muted-foreground">{t("conferenceRoom")}</p>
                 </div>
               </div>
             </div>

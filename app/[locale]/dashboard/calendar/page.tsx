@@ -17,6 +17,9 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { api } from "@/lib/api"
+import { useCurrency } from "@/hooks/use-currency"
+import { useDateFormat } from "@/hooks/use-custom-format"
+import { useLocale, useTranslations } from "next-intl"
 import {
   Dialog,
   DialogContent,
@@ -62,6 +65,12 @@ const statusColors: Record<string, string> = {
 }
 
 export default function CalendarPage() {
+  const { formatDate } = useDateFormat()
+  const { convert, currency } = useCurrency()
+  const locale = useLocale()
+  const t = useTranslations("Calendar")
+  const tBookings = useTranslations("Bookings")
+  const tCommon = useTranslations("Common")
   const [currentDate, setCurrentDate] = useState(new Date())
   const [bookings, setBookings] = useState<Booking[]>([])
   const [rooms, setRooms] = useState<any[]>([])
@@ -176,7 +185,7 @@ export default function CalendarPage() {
   }
 
   const handleDeleteBooking = async (bookingId: number) => {
-    if (!confirm("Are you sure you want to delete this booking? This action cannot be undone.")) return
+    if (!confirm(tBookings("deleteConfirmation"))) return
 
     try {
       console.log("[v0] Deleting booking...", bookingId)
@@ -195,7 +204,7 @@ export default function CalendarPage() {
       <div className="flex flex-1 items-center justify-center">
         <div className="text-center">
           <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
-          <p className="mt-4 text-muted-foreground">Loading calendar...</p>
+          <p className="mt-4 text-muted-foreground">{t("loading")}</p>
         </div>
       </div>
     )
@@ -206,12 +215,12 @@ export default function CalendarPage() {
       <div className="flex flex-1 items-center justify-center">
         <Card className="max-w-md">
           <CardHeader>
-            <CardTitle>Error Loading Calendar</CardTitle>
+            <CardTitle>{t("errorLoading")}</CardTitle>
             <CardDescription>{error}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Make sure the API server is running at http://127.0.0.1:5000
+              {t("checkServer")}
             </p>
           </CardContent>
         </Card>
@@ -223,13 +232,13 @@ export default function CalendarPage() {
     <div className="flex flex-1 flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Calendar View</h1>
-          <p className="text-muted-foreground">Weekly overview of room bookings</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={goToToday}>
             <CalendarIcon className="mr-2 size-4" />
-            Today
+            {t("today")}
           </Button>
           <Button variant="outline" size="icon" onClick={goToPreviousWeek}>
             <ChevronLeft className="size-4" />
@@ -243,13 +252,13 @@ export default function CalendarPage() {
       <Card>
         <CardHeader>
           <CardTitle>{formatMonthYear(currentDate)}</CardTitle>
-          <CardDescription>Room availability and bookings</CardDescription>
+          <CardDescription>{t("subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <div className="min-w-[800px]">
               <div className="grid grid-cols-8 gap-2 border-b border-border pb-2">
-                <div className="font-semibold">Room</div>
+                <div className="font-semibold">{t("room")}</div>
                 {weekDates.map((date, index) => (
                   <div key={index} className="text-center">
                     <div className="text-sm font-semibold">{formatDayDate(date)}</div>
@@ -260,7 +269,7 @@ export default function CalendarPage() {
               <div className="mt-2 space-y-2">
                 {rooms.map((room) => (
                   <div key={room.id} className="grid grid-cols-8 gap-2">
-                    <div className="flex items-center font-medium">Room {room.room_number}</div>
+                    <div className="flex items-center font-medium">{t("room")} {room.room_number}</div>
                     {weekDates.map((date, dateIndex) => {
                       const booking = getBookingForRoomAndDate(room.id, date)
                       const isCheckIn = booking && isCheckInDate(booking, date)
@@ -302,23 +311,23 @@ export default function CalendarPage() {
           <div className="mt-6 flex items-center gap-6 border-t border-border pt-4">
             <div className="flex items-center gap-2">
               <div className="size-4 rounded border border-green-500 bg-green-500/20" />
-              <span className="text-sm">Checked In</span>
+              <span className="text-sm">{t("legend.checkedIn")}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="size-4 rounded border border-blue-500 bg-blue-500/20" />
-              <span className="text-sm">Confirmed</span>
+              <span className="text-sm">{t("legend.confirmed")}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="size-4 rounded border border-yellow-500 bg-yellow-500/20" />
-              <span className="text-sm">Pending</span>
+              <span className="text-sm">{t("legend.pending")}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="size-4 rounded border border-border bg-muted/30" />
-              <span className="text-sm">Available</span>
+              <span className="text-sm">{t("legend.available")}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="size-4 rounded border-dashed border-gray-400 bg-gray-400/10" />
-              <span className="text-sm">Draft</span>
+              <span className="text-sm">{t("legend.draft")}</span>
             </div>
           </div>
         </CardContent>
@@ -326,8 +335,8 @@ export default function CalendarPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Upcoming Check-ins</CardTitle>
-          <CardDescription>Guests arriving this week</CardDescription>
+          <CardTitle>{t("upcomingCheckins")}</CardTitle>
+          <CardDescription>{t("guestsArriving")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -355,7 +364,7 @@ export default function CalendarPage() {
                           {booking.guest?.first_name} {booking.guest?.last_name}
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          Room {booking.room?.room_number} • {new Date(booking.check_in).toLocaleDateString()}
+                          {t("room")} {booking.room?.room_number} • {new Date(booking.check_in).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
@@ -373,13 +382,13 @@ export default function CalendarPage() {
         <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Booking Details - #{selectedBooking.id}</DialogTitle>
-              <DialogDescription>Complete information for this reservation</DialogDescription>
+              <DialogTitle>{tBookings("bookingDetailsTitle", { id: selectedBooking.id })}</DialogTitle>
+              <DialogDescription>{tBookings("bookingDetailsDescription")}</DialogDescription>
             </DialogHeader>
             <div className="grid gap-6 py-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Guest Information</Label>
+                  <Label className="text-muted-foreground">{tBookings("guestInformation")}</Label>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <User className="size-4 text-muted-foreground" />
@@ -402,40 +411,40 @@ export default function CalendarPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Room Details</Label>
+                  <Label className="text-muted-foreground">{tBookings("roomDetails")}</Label>
                   <div className="space-y-2">
                     <p>
-                      <span className="font-medium">Room:</span> {selectedBooking.room?.room_number}
+                      <span className="font-medium">{tBookings("form.room")}:</span> {selectedBooking.room?.room_number}
                     </p>
                     <p>
-                      <span className="font-medium">Type:</span> {selectedBooking.room?.room_type}
+                      <span className="font-medium">{tBookings("form.type")}:</span> {selectedBooking.room?.room_type}
                     </p>
                     <p>
-                      <span className="font-medium">Guests:</span> {selectedBooking.number_of_guests}
+                      <span className="font-medium">{tBookings("form.numberOfGuests")}:</span> {selectedBooking.number_of_guests}
                     </p>
                   </div>
                 </div>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Stay Duration</Label>
+                  <Label className="text-muted-foreground">{tBookings("stayDuration")}</Label>
                   <div className="space-y-2">
                     <p>
-                      <span className="font-medium">Check-in:</span>{" "}
+                      <span className="font-medium">{tBookings("form.checkInDate")}:</span>{" "}
                       {new Date(selectedBooking.check_in).toLocaleDateString()}
                     </p>
                     <p>
-                      <span className="font-medium">Check-out:</span>{" "}
+                      <span className="font-medium">{tBookings("form.checkOutDate")}:</span>{" "}
                       {new Date(selectedBooking.check_out).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Payment</Label>
+                  <Label className="text-muted-foreground">{tBookings("payment")}</Label>
                   <div className="space-y-2">
                     {selectedBooking.total_amount && (
                       <p>
-                        <span className="font-medium">Total:</span> ${selectedBooking.total_amount}
+                        <span className="font-medium">{tBookings("total")}:</span> ${selectedBooking.total_amount}
                       </p>
                     )}
                     {selectedBooking.payment_status && (
@@ -458,12 +467,12 @@ export default function CalendarPage() {
               </div>
               {selectedBooking.notes && (
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Notes</Label>
+                  <Label className="text-muted-foreground">{tBookings("notes")}</Label>
                   <p className="text-sm">{selectedBooking.notes}</p>
                 </div>
               )}
               <div className="space-y-2">
-                <Label>Update Status</Label>
+                <Label>{tBookings("updateStatus")}</Label>
                 <div className="grid gap-2">
                   <Select
                     value={selectedBooking.status}
@@ -475,11 +484,11 @@ export default function CalendarPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="confirmed">Confirmed</SelectItem>
-                      <SelectItem value="checked-in">Checked In</SelectItem>
-                      <SelectItem value="checked-out">Checked Out</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                      <SelectItem value="pending">{tBookings("status.pending")}</SelectItem>
+                      <SelectItem value="confirmed">{tBookings("status.confirmed")}</SelectItem>
+                      <SelectItem value="checked-in">{tBookings("status.checkedIn")}</SelectItem>
+                      <SelectItem value="checked-out">{tBookings("status.checkedOut")}</SelectItem>
+                      <SelectItem value="cancelled">{tBookings("status.cancelled")}</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select
@@ -489,13 +498,13 @@ export default function CalendarPage() {
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Payment status" />
+                      <SelectValue placeholder={tBookings("form.selectPaymentStatus")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pending">Payment Pending</SelectItem>
-                      <SelectItem value="paid">Paid</SelectItem>
-                      <SelectItem value="partial">Partial Payment</SelectItem>
-                      <SelectItem value="refunded">Refunded</SelectItem>
+                      <SelectItem value="pending">{tBookings("paymentStatus.pending")}</SelectItem>
+                      <SelectItem value="paid">{tBookings("paymentStatus.paid")}</SelectItem>
+                      <SelectItem value="partial">{tBookings("paymentStatus.partial")}</SelectItem>
+                      <SelectItem value="refunded">{tBookings("paymentStatus.refunded")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -506,7 +515,7 @@ export default function CalendarPage() {
                   onClick={() => handleDeleteBooking(selectedBooking.id)}
                 >
                   <Trash2 className="mr-2 size-4" />
-                  Delete Booking
+                  {tBookings("deleteBooking")}
                 </Button>
               </DialogFooter>
             </div>

@@ -43,27 +43,27 @@ export function AppSidebar() {
       icon: CalendarDays,
     },
     {
-      title: "Audit Logs",
+      title: t("auditLogs"),
       url: "/dashboard/audit-logs",
       icon: FileText,
     },
     {
-      title: "Services", // t("services")
+      title: t("services"),
       url: "/dashboard/services",
       icon: ConciergeBell,
     },
     {
-      title: "Rates", // t("rates")
+      title: t("rates"),
       url: "/dashboard/rates",
       icon: Percent,
     },
     {
-      title: "Housekeeping",
+      title: t("housekeeping"),
       url: "/dashboard/housekeeping",
       icon: Sparkles,
     },
     {
-      title: t("reports"), // t("reports")
+      title: t("reports"),
       url: "/dashboard/reports",
       icon: BarChart3,
     },
@@ -77,8 +77,8 @@ export function AppSidebar() {
             <DoorOpen className="size-4" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold">Minihotel</span>
-            <span className="text-xs text-muted-foreground">Management</span>
+            <span className="text-sm font-semibold">{t("minihotel")}</span>
+            <span className="text-xs text-muted-foreground">{t("management")}</span>
           </div>
         </div>
       </SidebarHeader>
@@ -114,7 +114,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton onClick={() => logout()}>
               <LogOut className="size-4" />
-              <span>Logout</span>
+              <span>{t("logout")}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
