@@ -7,12 +7,14 @@ import { DollarSign, Users, Calendar, Percent } from "lucide-react"
 import { Bar, BarChart, Line, LineChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { api } from "@/lib/api"
+import { useCurrency } from "@/hooks/use-currency"
 
 import { useTranslations } from "next-intl"
 
 export default function ReportsPage() {
   const t = useTranslations("Reports")
   const commonT = useTranslations("Common")
+  const { convert, currency } = useCurrency()
   const [occupancyData, setOccupancyData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -70,6 +72,13 @@ export default function ReportsPage() {
   const totalRevenue = stats.total_revenue || 0
   const uniqueGuests = stats.unique_guests || 0
 
+  const convertedRevenue = convert(totalRevenue)
+  const formattedRevenue = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: currency,
+    maximumFractionDigits: 0,
+  }).format(convertedRevenue)
+
   return (
     <div className="flex flex-1 flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -97,7 +106,7 @@ export default function ReportsPage() {
             <DollarSign className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalRevenue.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{formattedRevenue}</div>
             <p className="text-xs text-muted-foreground">{t("fromApiData")}</p>
           </CardContent>
         </Card>
