@@ -1,5 +1,5 @@
 "use client"
-import { Calendar, DoorOpen, Home, BarChart3, CalendarDays, Settings, Users, LogOut, FileText } from "lucide-react"
+import { Calendar, DoorOpen, Home, BarChart3, CalendarDays, Settings, Users, LogOut, FileText, ConciergeBell, Percent } from "lucide-react"
 import { useSettings } from "@/lib/settings-context"
 import { useAuth } from "@/contexts/AuthContext"
 import { useTranslations } from "next-intl"
@@ -48,7 +48,17 @@ export function AppSidebar() {
       icon: FileText,
     },
     {
-      title: t("reports"),
+      title: "Services", // t("services")
+      url: "/dashboard/services",
+      icon: ConciergeBell,
+    },
+    {
+      title: "Rates", // t("rates")
+      url: "/dashboard/rates",
+      icon: Percent,
+    },
+    {
+      title: t("reports"), // t("reports")
       url: "/dashboard/reports",
       icon: BarChart3,
     },
@@ -97,7 +107,7 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={logout}>
+            <SidebarMenuButton onClick={() => logout()}>
               <LogOut className="size-4" />
               <span>Logout</span>
             </SidebarMenuButton>

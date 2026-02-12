@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -72,6 +73,8 @@ export default function BookingsPage() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
   const [rooms, setRooms] = useState<any[]>([])
   const [guests, setGuests] = useState<any[]>([])
+  const [services, setServices] = useState<any[]>([])
+  const [selectedServices, setSelectedServices] = useState<Set<number>>(new Set())
   const [showGuestForm, setShowGuestForm] = useState(false)
   const [calculatedRate, setCalculatedRate] = useState<number | null>(null)
   const [open, setOpen] = useState(false)
@@ -86,16 +89,18 @@ export default function BookingsPage() {
     async function fetchData() {
       try {
         setLoading(true)
-        console.log("[v0] Fetching bookings, rooms, and guests from API...")
-        const [bookingsData, roomsData, guestsData] = await Promise.all([
+        console.log("[v0] Fetching bookings, rooms, guests, and services from API...")
+        const [bookingsData, roomsData, guestsData, servicesData] = await Promise.all([
           api.getBookings(),
           api.getRooms(),
           api.getGuests(),
+          api.getServices(),
         ])
-        console.log("[v0] Data received:", { bookingsData, roomsData, guestsData })
-        setBookings(bookingsData)
+        console.log("[v0] Data received:", { bookingsData, roomsData, guestsData, servicesData })
+        setBookings(bookingsData.items || [])
         setRooms(roomsData)
         setGuests(guestsData)
+        setServices(servicesData)
         setError(null)
       } catch (err) {
         console.error("[v0] Error fetching data:", err)
@@ -107,6 +112,13 @@ export default function BookingsPage() {
 
     fetchData()
   }, [])
+
+  useEffect(() => {
+    if (!isAddDialogOpen) {
+      setSelectedServices(new Set())
+      setCalculatedRate(null)
+    }
+  }, [isAddDialogOpen])
 
   const handleAddBooking = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -138,6 +150,8 @@ export default function BookingsPage() {
 
       const assignedTo = formData.get("assignedTo")
       if (assignedTo) bookingData.assigned_to = assignedTo
+
+      bookingData.services = Array.from(selectedServices)
 
       const newBooking = await api.createBooking(bookingData)
       console.log("[v0] Booking created:", newBooking)
@@ -174,8 +188,16 @@ export default function BookingsPage() {
     }
   }
 
-  const handleCalculateRate = async (roomId: string, checkIn: string, checkOut: string, numberOfGuests: string) => {
+  const handleCalculateRate = async (
+    roomId: string,
+    checkIn: string,
+    checkOut: string,
+    numberOfGuests: string,
+    currentSelectedServices?: Set<number>
+  ) => {
     if (!roomId || !checkIn || !checkOut) return
+
+    const servicesToUse = currentSelectedServices || selectedServices
 
     try {
       const result = await api.calculateRate({
@@ -183,6 +205,7 @@ export default function BookingsPage() {
         check_in: checkIn,
         check_out: checkOut,
         number_of_guests: numberOfGuests ? Number(numberOfGuests) : undefined,
+        service_ids: Array.from(servicesToUse),
       })
       // API returns rate in Base Currency (CZK)
       // We store it as is, but UI will convert it for display
@@ -472,6 +495,44 @@ export default function BookingsPage() {
                           }
                         }}
                       />
+                    </div>
+                  </div>
+
+
+
+                  <div className="grid gap-2">
+                    <Label>Select Services (Optional)</Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 border rounded-md p-4 max-h-[150px] overflow-y-auto">
+                      {services.map((service) => (
+                        <div key={service.id} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`service-${service.id}`}
+                            checked={selectedServices.has(service.id)}
+                            onCheckedChange={(checked) => {
+                              const newSelected = new Set(selectedServices)
+                              if (checked) {
+                                newSelected.add(service.id)
+                              } else {
+                                newSelected.delete(service.id)
+                              }
+                              setSelectedServices(newSelected)
+
+                              // Trigger calculation
+                              const roomId = (document.querySelector('[name="roomId"]') as any)?.value
+                              const checkIn = (document.getElementById("checkIn") as HTMLInputElement)?.value
+                              const checkOut = (document.getElementById("checkOut") as HTMLInputElement)?.value
+                              const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
+                              if (roomId && checkIn && checkOut) {
+                                handleCalculateRate(roomId, checkIn, checkOut, numberOfGuests, newSelected)
+                              }
+                            }}
+                          />
+                          <Label htmlFor={`service-${service.id}`} className="text-sm font-normal cursor-pointer">
+                            {service.name} ({convert(service.price).toFixed(2)} {currency})
+                          </Label>
+                        </div>
+                      ))}
+                      {services.length === 0 && <p className="text-sm text-muted-foreground col-span-2">No services available.</p>}
                     </div>
                   </div>
 
