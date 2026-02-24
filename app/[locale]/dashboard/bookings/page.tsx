@@ -598,6 +598,7 @@ export default function BookingsPage() {
                         name="totalAmount"
                         type="number"
                         step="0.01"
+                        min="0"
                         placeholder={calculatedRate ? convert(calculatedRate).toFixed(2) : "0.00"}
                         defaultValue={calculatedRate ? convert(calculatedRate).toFixed(2) : undefined}
                       />
