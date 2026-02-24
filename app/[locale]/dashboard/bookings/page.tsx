@@ -453,10 +453,25 @@ export default function BookingsPage() {
                         required
                         onChange={(e) => {
                           const roomId = (document.querySelector('[name="roomId"]') as any)?.value
-                          const checkOut = (document.getElementById("checkOut") as HTMLInputElement)?.value
+                          const checkOutInput = document.getElementById("checkOut") as HTMLInputElement
                           const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
-                          if (roomId && checkOut) {
-                            handleCalculateRate(roomId, e.target.value, checkOut, numberOfGuests)
+
+                          if (checkOutInput) {
+                            const checkInDate = new Date(e.target.value)
+                            if (!isNaN(checkInDate.getTime())) {
+                              // Set min checkout to check in + 1 day
+                              const minCheckOut = new Date(checkInDate.getTime() + 86400000)
+                              const minCheckOutStr = minCheckOut.toISOString().split('T')[0]
+                              checkOutInput.min = minCheckOutStr
+
+                              if (checkOutInput.value && checkOutInput.value < minCheckOutStr) {
+                                checkOutInput.value = minCheckOutStr
+                              }
+                            }
+                          }
+
+                          if (roomId && checkOutInput?.value) {
+                            handleCalculateRate(roomId, e.target.value, checkOutInput.value, numberOfGuests)
                           }
                         }}
                       />
