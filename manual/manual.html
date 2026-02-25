@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,33 +74,92 @@
             margin: 0;
         }
 
+        /* Carousel / Gallery Styles */
         .screenshot-container {
             margin: 2rem 0;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 1rem;
             background-color: #f1f5f9;
+            position: relative;
+        }
+
+        .screenshot-gallery {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) transparent;
+        }
+
+        .screenshot-gallery::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .screenshot-gallery::-webkit-scrollbar-thumb {
+            background-color: var(--accent-color);
+            border-radius: 10px;
+        }
+
+        .screenshot-item {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
             text-align: center;
         }
 
-        .screenshot-container img {
+        .screenshot-container img,
+        .screenshot-item img {
             max-width: 100%;
             height: auto;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+
+        .screenshot-caption {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+            font-weight: 500;
         }
 
         /* Placeholder styles if image is missing */
         .screenshot-placeholder {
-            min-height: 300px;
+            min-height: 400px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            color: #94a3b8;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screenshot-placeholder::before {
+            content: "🖼️";
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.2;
+        }
+
+        .screenshot-placeholder span {
+            font-weight: 600;
+            font-size: 1.1rem;
             color: #64748b;
-            font-style: italic;
-            border: 2px dashed #cbd5e1;
-            border-radius: 4px;
-            background-color: #ffffff;
+        }
+
+        .screenshot-placeholder p {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-top: 0.5rem;
+            max-width: 300px;
         }
 
         nav {
@@ -128,19 +188,20 @@
             color: #93c5fd;
             text-decoration: underline;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 1.5rem;
         }
-        
-        th, td {
+
+        th,
+        td {
             text-align: left;
             padding: 12px;
             border-bottom: 1px solid var(--border-color);
         }
-        
+
         th {
             background-color: #f8fafc;
             color: var(--secondary-color);
@@ -148,6 +209,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -155,12 +217,10 @@
             <p>Comprehensive User Manual and Setup Guide</p>
         </header>
 
-        <div class="alert">
-            <p><strong>Note:</strong> This manual assumes the MiniHotel software is installed and running on your server or local machine.</p>
-        </div>
 
         <nav>
             <ul>
+                <li><a href="#installation">Installation</a></li>
                 <li><a href="#getting-started">Getting Started</a></li>
                 <li><a href="#dashboard">Dashboard</a></li>
                 <li><a href="#bookings">Bookings</a></li>
@@ -174,149 +234,344 @@
             </ul>
         </nav>
 
+        <section id="installation">
+            <h2>1. Installation</h2>
+            <p>The MiniHotel Management System requires setting up both the backend API and the frontend client.</p>
+
+            <h3>Backend Setup</h3>
+            <ol>
+                <li>Navigate to the <code>MiniHotel-backend</code> directory.</li>
+                <li>Install the required Python dependencies: <code>pip install -r requirements.txt</code></li>
+                <li>Start the API server: <code>python main.py</code></li>
+                <li>The backend will now run on <code>http://localhost:5000/api</code>.</li>
+            </ol>
+
+            <h3>Frontend Setup</h3>
+            <ol>
+                <li>Navigate to the <code>MiniHotel-frontend</code> directory.</li>
+                <li>Install Node.js dependencies: <code>npm install --legacy-peer-deps</code></li>
+                <li>Start the development server: <code>npm run dev</code></li>
+                <li>Open your browser and navigate to <code>http://localhost:3000</code>.</li>
+            </ol>
+        </section>
+
         <section id="getting-started">
-            <h2>1. Getting Started</h2>
-            <p>Before using the application daily, the system must be initialized by creating the primary administrator account and setting up baseline data.</p>
-            
-            <h3>Registration and Login</h3>
-            <p>Navigate to the application URL in your web browser. If no admin account exists, you will be prompted to create one.</p>
+            <h2>2. Getting Started</h2>
+            <p>Before using the application daily, the system must be initialized by your IT administrator. This process
+                includes creating the primary administrator account and setting up baseline data for your property so
+                that your staff can immediately begin managing reservations.</p>
+
+            <h3>1. Registration and Login</h3>
+            <p>Navigate to the application URL in your web browser. If no admin account exists in the database, the
+                system will automatically prompt you to create the initial master account.</p>
             <ul>
-                <li><strong>Username:</strong> Desired admin username (e.g., <code>admin</code>)</li>
-                <li><strong>Password:</strong> Ensure you use a strong password (e.g., <code>adminadmin</code> for local environments)</li>
+                <li><strong>Username:</strong> Choose a secure, standard admin username (e.g., <code>admin</code> or
+                    <code>manager</code>).
+                </li>
+                <li><strong>Password:</strong> Ensure you use a strong password (minimum 8 characters, combining
+                    numbers, letters, and symbols). For local development environments, a simple password like
+                    <code>adminadmin</code> may be used, but this is highly discouraged for production networks.
+                </li>
             </ul>
-            
+
             <div class="screenshot-container">
-                <img src="images/login.png" alt="Login and Registration Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/login.png</div>'">
+                <img src="images/login.png" alt="Login and Registration Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Login Screen Placeholder</span><p>High-quality UI screenshot would appear here showing the login and registration interface.</p></div>'">
             </div>
 
-            <h3>Importing Example Data</h3>
-            <p>To populate the system with placeholder rooms, rates, and test bookings, navigate to the Settings page and trigger the data import.</p>
+            <h3>2. Importing Example Data</h3>
+            <p>If you are deploying this for demonstration or testing purposes, you can populate the system with
+                placeholder rooms, seasonal rates, and simulated bookings. This is highly recommended during staff
+                training phases to familiarize them with the UI without risking live data corruption.</p>
             <ol>
-                <li>From the sidebar navigation, click on <strong>Settings</strong>.</li>
-                <li>Locate the <strong>Import example data</strong> button.</li>
-                <li>Click the button and confirm your action. The dashboard will now reflect the newly imported data.</li>
+                <li>From the main sidebar navigation on the left side of the screen, click on <strong>Settings</strong>
+                    (gear icon).</li>
+                <li>Scroll down to the <strong>System Management</strong> panel.</li>
+                <li>Locate and click the <strong>Import Sample Data</strong> button.</li>
+                <li>You will receive a success notification. Wait up to 5 seconds for background processing. The
+                    dashboard and all corresponding tables will now reflect the newly imported data.</li>
             </ol>
-            
+
             <div class="screenshot-container">
-                <img src="images/settings.png" alt="Settings Screen - Import Data" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/settings.png</div>'">
+                <img src="images/settings.png" alt="Settings Screen - Import Data"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Settings Screen Placeholder</span><p>UI screenshot showing the settings panel with the data import utility.</p></div>'">
             </div>
         </section>
 
         <section id="dashboard">
-            <h2>2. Dashboard</h2>
-            <p>The Dashboard is the central hub of your MiniHotel system, offering an at-a-glance overview of your property's performance.</p>
+            <h2>3. Dashboard</h2>
+            <p>The Dashboard is the central hub of your MiniHotel system, offering an at-a-glance overview of your
+                property's performance in real-time. Immediately upon logging in, front desk staff and managers can
+                assess the daily state of the hotel.</p>
+
+            <h3>Key Features</h3>
             <ul>
-                <li><strong>Occupancy Metrics:</strong> View current and projected occupancy rates.</li>
-                <li><strong>Revenue:</strong> Track daily or monthly revenue figures.</li>
-                <li><strong>Recent Activity:</strong> See the latest bookings and status changes.</li>
+                <li><strong>Total Rooms Overview:</strong> Quickly see the exact count of available, occupied, and
+                    out-of-order rooms for the current operational day. This helps receptionists know instantly if
+                    walk-in guests can be accommodated.</li>
+                <li><strong>Today's Activity:</strong> A summary of all scheduled check-ins and check-outs for the day,
+                    allowing front desk staff to anticipate busy periods and coordinate with housekeeping to prioritize
+                    room turnaround.</li>
+                <li><strong>Occupancy Rate:</strong> A clear percentage indicator showing current room utilization
+                    compared against historical averages, enabling managers to make quick pricing and availability
+                    decisions.</li>
+                <li><strong>Recent Activity Feed:</strong> A chronologically sorted feed of the latest events in the
+                    system. This tracks real-time updates including new bookings received across all channels, room
+                    status updates from housekeeping, and events scheduled in your conference facilities.</li>
+                <li><strong>Quick Actions Panel:</strong> Convenient, large shortcut buttons to perform the most common
+                    operations without navigating through deep menus: Create New Booking, Manage Rooms, and View
+                    Calendar.</li>
             </ul>
 
             <div class="screenshot-container">
-                <img src="images/dashboard.png" alt="Main Dashboard Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/dashboard.png</div>'">
+                <img src="images/dashboard.png" alt="Main Dashboard Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Dashboard Placeholder</span><p>Overview of occupancy metrics, revenue charts, and recent occupancy activity.</p></div>'">
             </div>
         </section>
 
         <section id="bookings">
-            <h2>3. Bookings</h2>
-            <p>Manage all guest reservations in the Bookings module. Here, you can create new bookings, modify existing ones, and manage check-ins/check-outs.</p>
-            
+            <h2>4. Bookings</h2>
+            <p>Manage all guest reservations in the Bookings module. This comprehensive data table is the primary tool
+                for front desk agents managing the daily flow of guests.</p>
+
+            <h3>How to Create a New Booking</h3>
+            <ol>
+                <li>Navigate to the <strong>Bookings</strong> page from the sidebar.</li>
+                <li>Click the <strong>New Booking</strong> button to open the reservation form.</li>
+                <li><strong>Select a Guest:</strong> Search for an existing guest in the dropdown, or click <strong>New
+                        Guest</strong> to add their First Name, Last Name, Email, Phone, and Address.</li>
+                <li><strong>Select a Room:</strong> Choose the desired room from the dropdown list.</li>
+                <li><strong>Set Dates & Guests:</strong> Pick the Check-In and Check-Out dates, and specify the Number
+                    of Guests.</li>
+                <li><strong>Add Services:</strong> (Optional) Check any additional services requested by the guest. The
+                    system will automatically calculate the Total Amount based on the room's base rate, duration, and
+                    services.</li>
+                <li><strong>Status & Payment:</strong> Set the Booking Status (e.g., Pending, Confirmed, Checked-in) and
+                    Payment Status (Pending, Paid, Partial, Refunded).</li>
+                <li><strong>Payment Method:</strong> Select how the guest is paying (Cash, Card, Bank Transfer, Online).
+                </li>
+                <li>Click <strong>Create Booking</strong> to save the reservation.</li>
+            </ol>
+
+            <h3>How to Edit or Delete a Booking</h3>
+            <ol>
+                <li>Click on any booking card in the list to open its detailed view.</li>
+                <li>To update the status, use the dropdown menus at the bottom of the window to change the
+                    <strong>Booking Status</strong> or <strong>Payment Status</strong>. The system will save this
+                    automatically.</li>
+                <li>To cancel and remove the booking entirely, click the red <strong>Delete Booking</strong> button at
+                    the bottom of the dialog. Note that this action cannot be undone.</li>
+            </ol>
+
             <div class="screenshot-container">
-                <img src="images/bookings.png" alt="Bookings Management Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/bookings.png</div>'">
+                <img src="images/bookings.png" alt="Bookings Management Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Bookings Management Placeholder</span><p>Table view of current guest reservations with status and action controls.</p></div>'">
             </div>
         </section>
 
         <section id="calendar">
-            <h2>4. Calendar</h2>
-            <p>The Calendar provides a visual timeline of all reservations across your rooms. It's the most intuitive way to spot availability gaps and overlapping bookings.</p>
+            <h2>5. Calendar</h2>
+            <p>The Calendar provides a highly visual timeline of all reservations across your physical room inventory.
+                It is the most intuitive way to spot availability gaps, manage overlapping bookings, and plan for
+                long-term capacity.</p>
+
+            <h3>Understanding the Interface</h3>
             <ul>
-                <li>Drag and drop reservations (if supported) to adjust dates.</li>
-                <li>Click on a timeline block to view booking details immediately.</li>
+                <li><strong>Timeline View:</strong> The horizontal axis represents dates (viewable in weekly or monthly
+                    formats), while the vertical axis lists all your property's rooms, organized by room groupings
+                    (e.g., First Floor, Suites, Annex).</li>
+                <li><strong>Color-Coded Blocks:</strong> Each booking is represented as a solid block spanning its
+                    respective dates. Colors represent the booking's current status (e.g., Green for Confirmed, Yellow
+                    for Pending Payment, Gray for Checked Out), allowing you to assess the state of the hotel visually.
+                </li>
+                <li><strong>Interactive Blocks:</strong> Clicking on a timeline block opens a detailed modal with the
+                    guest's information, showing total payment dues, contact info, and special notes without forcing you
+                    to switch to the Bookings page.</li>
+                <li><strong>Drag and Drop functionality:</strong> Swiftly reassign a guest from one physical room to
+                    another within the same tier by clicking and dragging the booking block up or down. You can also
+                    adjust the length of stay by dragging the edges of the block.</li>
+                <li><strong>Availability Scanning:</strong> Empty white space on the calendar instantly confirms
+                    availability, drastically speeding up the process of answering phone inquiries regarding room
+                    vacancies.</li>
             </ul>
 
             <div class="screenshot-container">
-                <img src="images/calendar.png" alt="Visual Calendar Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/calendar.png</div>'">
+                <img src="images/calendar.png" alt="Visual Calendar Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Calendar View Placeholder</span><p>Interactive timeline displaying room availability and booking blocks.</p></div>'">
             </div>
         </section>
 
         <section id="rooms">
-            <h2>5. Rooms Management</h2>
-            <p>Configure your physical property inventory. In this section, you define the rooms available for booking.</p>
-            <table>
-                <tr>
-                    <th>Action</th>
-                    <th>Description</th>
-                </tr>
-                <tr>
-                    <td>Add Room</td>
-                    <td>Create a new room number/name, assign a type, and set details.</td>
-                </tr>
-                <tr>
-                    <td>Edit Status</td>
-                    <td>Mark rooms as active, under maintenance, or inactive.</td>
-                </tr>
-            </table>
+            <h2>6. Rooms Management</h2>
+            <p>Configure your physical property inventory. In this section, you define the exact physical rooms
+                available for booking, ensuring your software perfectly matches your building's layout.</p>
+
+            <h3>How to Add a New Room</h3>
+            <ol>
+                <li>Navigate to the <strong>Rooms</strong> page and click the <strong>Add Room</strong> button.</li>
+                <li>Enter the <strong>Room Number</strong> and select the <strong>Room Type</strong> (Single, Double,
+                    Suite, Deluxe).</li>
+                <li>Set the maximum <strong>Capacity</strong> of guests.</li>
+                <li>Enter the <strong>Base Price</strong> per night.</li>
+                <li>(Optional) Assign the room to a <strong>Room Group</strong> or provide a text
+                    <strong>Description</strong>.</li>
+                <li>Click <strong>Save Room</strong>.</li>
+            </ol>
+
+            <h3>How to Edit or Delete a Room</h3>
+            <ol>
+                <li>Locate the room you want to modify in the grid.</li>
+                <li>Hover your mouse over the room card to reveal the <strong>Actions Menu</strong> (three horizontal
+                    dots) in the top right corner of the card.</li>
+                <li>Click the menu and select <strong>Edit</strong> to modify its details or <strong>Delete</strong> to
+                    remove it from the system entirely.</li>
+            </ol>
+
+            <h3>Managing Room Groups</h3>
+            <p>If you have a large property, you can organize rooms into hierarchies (e.g., "First Floor", "North
+                Wing"). Click the <strong>Add Group</strong> button to create a new category. You can even assign a
+                group to a "Parent Group" to create a nested structure.</p>
 
             <div class="screenshot-container">
-                <img src="images/rooms.png" alt="Rooms Configuration Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/rooms.png</div>'">
+                <img src="images/rooms.png" alt="Rooms Configuration Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Rooms Configuration Placeholder</span><p>Inventory management interface for defining and editing hotel rooms.</p></div>'">
             </div>
         </section>
 
         <section id="rates">
-            <h2>6. Rates & Pricing</h2>
-            <p>Define how much a room costs based on dates, seasons, or room types.</p>
-            <p>The rates module allows you to set standard pricing and promotional or seasonal rate overrides to maximize revenue.</p>
+            <h2>7. Rates & Pricing</h2>
+            <p>The Rates module is your primary financial tool for yield management, allowing you to maximize revenue
+                through dynamic pricing models based on varying demand periods.</p>
+
+            <h3>How to Create a Seasonal Rate</h3>
+            <ol>
+                <li>Navigate to the <strong>Rates</strong> page and click <strong>Add Rate</strong>.</li>
+                <li>Enter a <strong>Rate Name</strong> (e.g., "Summer Peak Season").</li>
+                <li>Select the <strong>Start Date</strong> and <strong>End Date</strong> for when this price change
+                    applies.</li>
+                <li>Set the <strong>Multiplier</strong>. (e.g., Entering <code>1.0</code> keeps the base rate,
+                    <code>1.2</code> increases the price by 20%, and <code>0.8</code> applies a 20% discount).</li>
+                <li>(Optional) Apply the rate to a specific <strong>Room Type</strong> or <strong>Room Group</strong>.
+                    If left unselected, the rate multiplier applies to all rooms in the hotel.</li>
+                <li>Click <strong>Create Rate</strong>.</li>
+            </ol>
+
+            <h3>Editing and Deleting Rates</h3>
+            <p>On the Rates page, you will see cards for all active pricing rules. Click the <strong>Edit
+                    (Pencil)</strong> icon on a card to modify the dates or multipliers, or click the <strong>Delete
+                    (Trash)</strong> icon to remove the pricing rule.</p>
 
             <div class="screenshot-container">
-                <img src="images/rates.png" alt="Rates and Pricing Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/rates.png</div>'">
+                <img src="images/rates.png" alt="Rates and Pricing Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Rates & Pricing Placeholder</span><p>Interface for setting seasonal room rates and pricing overrides.</p></div>'">
             </div>
         </section>
 
         <section id="services">
-            <h2>7. Services & Add-ons</h2>
-            <p>Add extra items or services that guests can purchase during their stay. Examples include:</p>
-            <ul>
-                <li>Breakfast or meal plans</li>
-                <li>Airport transfers</li>
-                <li>Spa treatments or equipment rentals</li>
-            </ul>
+            <h2>8. Services & Add-ons</h2>
+            <p>Increase your RevPAR by managing supplemental items and experiences that guests can purchase during their
+                stay. The Services module tracks all non-room revenue streams.</p>
+
+            <h3>How to Add a Service</h3>
+            <ol>
+                <li>Navigate to the <strong>Services</strong> page and click <strong>Add Service</strong>.</li>
+                <li>Enter the <strong>Service Name</strong> (e.g., "Airport Shuttle", "Breakfast").</li>
+                <li>Enter the <strong>Price</strong> in your base currency.</li>
+                <li>Provide an optional <strong>Description</strong> so staff knows what the service entails.</li>
+                <li>Click <strong>Create Service</strong>.</li>
+            </ol>
+
+            <p>Once created, these services will appear as selectable checkboxes whenever your front desk staff creates
+                a new booking. Checking a service automatically adds its cost to the booking's Total Amount.</p>
 
             <div class="screenshot-container">
-                <img src="images/services.png" alt="Services and Add-ons Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/services.png</div>'">
+                <img src="images/services.png" alt="Services and Add-ons Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Services & Add-ons Placeholder</span><p>Management UI for additional guest services and amenities.</p></div>'">
             </div>
         </section>
 
         <section id="reports">
-            <h2>8. Reports</h2>
-            <p>Generate detailed insights into your hotel's operations. Access financial summaries, occupancy trends, and tax reports to aid in management decisions.</p>
+            <h2>9. Reports</h2>
+            <p>Data-driven decision making starts here. The Reports module synthesizes your property's raw data into
+                digestible, actionable intelligence for management and ownership teams.</p>
+
+            <h3>Available Analytics</h3>
+            <ul>
+                <li><strong>Financial Summaries:</strong> Generate detailed breakdowns of revenue generated over custom
+                    date ranges, splitting income by room rates versus ancillary services. Quickly audit collected
+                    payments versus pending balances to manage cash flow.</li>
+                <li><strong>Occupancy & Yield Trends:</strong> Trace historical occupancy percentages alongside Average
+                    Daily Rate (ADR) and RevPAR statistics. Identify underperforming weeks and plan future marketing
+                    efforts accordingly.</li>
+                <li><strong>Housekeeping Efficiency:</strong> Audit the turnaround times and daily workloads of
+                    housekeepers.</li>
+                <li><strong>Tax and Accounting Exports:</strong> Simplify end-of-month reconciliations by exporting
+                    standardized revenue and collected tax figures directly to CSV formats compatible with standard
+                    accounting software.</li>
+            </ul>
 
             <div class="screenshot-container">
-                <img src="images/reports.png" alt="Business Reports Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/reports.png</div>'">
+                <img src="images/reports.png" alt="Business Reports Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Reports Dashboard Placeholder</span><p>Analytical views showing business performance and financial data.</p></div>'">
             </div>
         </section>
 
         <section id="housekeeping">
-            <h2>9. Housekeeping</h2>
-            <p>Manage the cleanliness and readiness of your rooms. Track which rooms need cleaning following a checkout or during a guest's stay.</p>
-            
+            <h2>10. Housekeeping</h2>
+            <p>Streamline communication between the front desk and your cleaning staff. This module provides a
+                constantly updating manifest of the physical state of every room.</p>
+
+            <h3>How to Update Room Cleaning Status</h3>
+            <ol>
+                <li>Navigate to the <strong>Housekeeping</strong> page to view the list of all rooms.</li>
+                <li>Locate the room you want to update and click <strong>Update Status</strong> (or the Edit icon if a
+                    record already exists).</li>
+                <li>In the dialog, select the current <strong>Status</strong>: <em>Clean, Dirty, In Processing, or
+                        Maintenance</em>.</li>
+                <li>Enter the <strong>Cleaner Name</strong> of the staff member assigned to the room.</li>
+                <li>Add any relevant <strong>Notes</strong> (e.g., "Missing towels", "AC is making noise").</li>
+                <li>Click <strong>Save Changes</strong>.</li>
+            </ol>
+
             <div class="screenshot-container">
-                <img src="images/housekeeping.png" alt="Housekeeping Status Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/housekeeping.png</div>'">
+                <img src="images/housekeeping.png" alt="Housekeeping Status Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Housekeeping Management Placeholder</span><p>Control panel for tracking room cleaning and maintenance status.</p></div>'">
             </div>
         </section>
 
         <section id="audit-logs">
-            <h2>10. Audit Logs</h2>
-            <p>Maintain security and accountability. The audit log tracks system events, such as user logins, data modifications, and critical system alerts.</p>
+            <h2>11. Audit Logs</h2>
+            <p>Maintain absolute security, transparency, and accountability across your staff. The Audit Logs module
+                serves as an immutable, chronological register of every significant action performed within the software
+                environment.</p>
+
+            <h3>Security Features</h3>
+            <ul>
+                <li><strong>User Accountability:</strong> Every major action (e.g., creating a booking, altering a room
+                    rate, refunding a payment, modifying settings) is logged alongside the specific username and a
+                    timestamp.</li>
+                <li><strong>Troubleshooting:</strong> If a reservation goes missing or a room is accidentally
+                    overbooked, administrators can trace exactly who modified the data and when it happened, reducing
+                    confusion and blame.</li>
+                <li><strong>Access Monitoring:</strong> Track login attempt histories to identify potential unauthorized
+                    access attempts or monitor employee clock-in habits based on system activity.</li>
+                <li><strong>Filter and Search:</strong> Rapidly sift through thousands of historical logs by filtering
+                    for specific event types (e.g., "Booking Deleted") or by specific staff members.</li>
+            </ul>
 
             <div class="screenshot-container">
-                <img src="images/audit-logs.png" alt="Security and Audit Logs Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/audit-logs.png</div>'">
+                <img src="images/audit-logs.png" alt="Security and Audit Logs Screen"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Audit Logs Placeholder</span><p>System log view for tracking user actions and security events.</p></div>'">
             </div>
         </section>
-        
+
         <footer>
-            <p style="text-align: center; color: var(--secondary-color); font-size: 0.875rem; margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            <p
+                style="text-align: center; color: var(--secondary-color); font-size: 0.875rem; margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
                 MiniHotel Management System &copy; 2026. All rights reserved.
             </p>
         </footer>
     </div>
 </body>
+
 </html>
