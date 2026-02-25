@@ -104,6 +104,8 @@ export const api = {
   // Room Groups
   getRoomGroups: () => fetchAPI("/room-groups"),
   createRoomGroup: (data: any) => fetchAPI("/room-groups", { method: "POST", body: JSON.stringify(data) }),
+  updateRoomGroup: (id: number, data: any) => fetchAPI(`/room-groups/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteRoomGroup: (id: number) => fetchAPI(`/room-groups/${id}`, { method: "DELETE" }),
 
   // Seasonal Rates
   getSeasonalRates: () => fetchAPI("/seasonal-rates"),

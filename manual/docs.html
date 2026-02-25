@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniHotel - User Manual</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #334155;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --accent-color: #2563eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            min-height: 100vh;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 1.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .alert p {
+            margin: 0;
+        }
+
+        .screenshot-container {
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            background-color: #f1f5f9;
+            text-align: center;
+        }
+
+        .screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Placeholder styles if image is missing */
+        .screenshot-placeholder {
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-style: italic;
+            border: 2px dashed #cbd5e1;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+
+        nav {
+            background-color: var(--primary-color);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: #f8fafc;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MiniHotel Management System</h1>
+            <p>Comprehensive User Manual and Setup Guide</p>
+        </header>
+
+        <div class="alert">
+            <p><strong>Note:</strong> This manual assumes the MiniHotel software is installed and running on your server or local machine.</p>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#bookings">Bookings</a></li>
+                <li><a href="#calendar">Calendar</a></li>
+                <li><a href="#rooms">Rooms</a></li>
+                <li><a href="#rates">Rates</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#reports">Reports</a></li>
+                <li><a href="#housekeeping">Housekeeping</a></li>
+                <li><a href="#audit-logs">Audit Logs</a></li>
+            </ul>
+        </nav>
+
+        <section id="getting-started">
+            <h2>1. Getting Started</h2>
+            <p>Before using the application daily, the system must be initialized by creating the primary administrator account and setting up baseline data.</p>
+            
+            <h3>Registration and Login</h3>
+            <p>Navigate to the application URL in your web browser. If no admin account exists, you will be prompted to create one.</p>
+            <ul>
+                <li><strong>Username:</strong> Desired admin username (e.g., <code>admin</code>)</li>
+                <li><strong>Password:</strong> Ensure you use a strong password (e.g., <code>adminadmin</code> for local environments)</li>
+            </ul>
+            
+            <div class="screenshot-container">
+                <img src="images/login.png" alt="Login and Registration Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/login.png</div>'">
+            </div>
+
+            <h3>Importing Example Data</h3>
+            <p>To populate the system with placeholder rooms, rates, and test bookings, navigate to the Settings page and trigger the data import.</p>
+            <ol>
+                <li>From the sidebar navigation, click on <strong>Settings</strong>.</li>
+                <li>Locate the <strong>Import example data</strong> button.</li>
+                <li>Click the button and confirm your action. The dashboard will now reflect the newly imported data.</li>
+            </ol>
+            
+            <div class="screenshot-container">
+                <img src="images/settings.png" alt="Settings Screen - Import Data" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/settings.png</div>'">
+            </div>
+        </section>
+
+        <section id="dashboard">
+            <h2>2. Dashboard</h2>
+            <p>The Dashboard is the central hub of your MiniHotel system, offering an at-a-glance overview of your property's performance.</p>
+            <ul>
+                <li><strong>Occupancy Metrics:</strong> View current and projected occupancy rates.</li>
+                <li><strong>Revenue:</strong> Track daily or monthly revenue figures.</li>
+                <li><strong>Recent Activity:</strong> See the latest bookings and status changes.</li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="images/dashboard.png" alt="Main Dashboard Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/dashboard.png</div>'">
+            </div>
+        </section>
+
+        <section id="bookings">
+            <h2>3. Bookings</h2>
+            <p>Manage all guest reservations in the Bookings module. Here, you can create new bookings, modify existing ones, and manage check-ins/check-outs.</p>
+            
+            <div class="screenshot-container">
+                <img src="images/bookings.png" alt="Bookings Management Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/bookings.png</div>'">
+            </div>
+        </section>
+
+        <section id="calendar">
+            <h2>4. Calendar</h2>
+            <p>The Calendar provides a visual timeline of all reservations across your rooms. It's the most intuitive way to spot availability gaps and overlapping bookings.</p>
+            <ul>
+                <li>Drag and drop reservations (if supported) to adjust dates.</li>
+                <li>Click on a timeline block to view booking details immediately.</li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="images/calendar.png" alt="Visual Calendar Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/calendar.png</div>'">
+            </div>
+        </section>
+
+        <section id="rooms">
+            <h2>5. Rooms Management</h2>
+            <p>Configure your physical property inventory. In this section, you define the rooms available for booking.</p>
+            <table>
+                <tr>
+                    <th>Action</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Add Room</td>
+                    <td>Create a new room number/name, assign a type, and set details.</td>
+                </tr>
+                <tr>
+                    <td>Edit Status</td>
+                    <td>Mark rooms as active, under maintenance, or inactive.</td>
+                </tr>
+            </table>
+
+            <div class="screenshot-container">
+                <img src="images/rooms.png" alt="Rooms Configuration Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/rooms.png</div>'">
+            </div>
+        </section>
+
+        <section id="rates">
+            <h2>6. Rates & Pricing</h2>
+            <p>Define how much a room costs based on dates, seasons, or room types.</p>
+            <p>The rates module allows you to set standard pricing and promotional or seasonal rate overrides to maximize revenue.</p>
+
+            <div class="screenshot-container">
+                <img src="images/rates.png" alt="Rates and Pricing Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/rates.png</div>'">
+            </div>
+        </section>
+
+        <section id="services">
+            <h2>7. Services & Add-ons</h2>
+            <p>Add extra items or services that guests can purchase during their stay. Examples include:</p>
+            <ul>
+                <li>Breakfast or meal plans</li>
+                <li>Airport transfers</li>
+                <li>Spa treatments or equipment rentals</li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="images/services.png" alt="Services and Add-ons Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/services.png</div>'">
+            </div>
+        </section>
+
+        <section id="reports">
+            <h2>8. Reports</h2>
+            <p>Generate detailed insights into your hotel's operations. Access financial summaries, occupancy trends, and tax reports to aid in management decisions.</p>
+
+            <div class="screenshot-container">
+                <img src="images/reports.png" alt="Business Reports Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/reports.png</div>'">
+            </div>
+        </section>
+
+        <section id="housekeeping">
+            <h2>9. Housekeeping</h2>
+            <p>Manage the cleanliness and readiness of your rooms. Track which rooms need cleaning following a checkout or during a guest's stay.</p>
+            
+            <div class="screenshot-container">
+                <img src="images/housekeeping.png" alt="Housekeeping Status Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/housekeeping.png</div>'">
+            </div>
+        </section>
+
+        <section id="audit-logs">
+            <h2>10. Audit Logs</h2>
+            <p>Maintain security and accountability. The audit log tracks system events, such as user logins, data modifications, and critical system alerts.</p>
+
+            <div class="screenshot-container">
+                <img src="images/audit-logs.png" alt="Security and Audit Logs Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'>Placeholder: Replace with images/audit-logs.png</div>'">
+            </div>
+        </section>
+        
+        <footer>
+            <p style="text-align: center; color: var(--secondary-color); font-size: 0.875rem; margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                MiniHotel Management System &copy; 2026. All rights reserved.
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
