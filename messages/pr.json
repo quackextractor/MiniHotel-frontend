@@ -125,11 +125,7 @@
         "noRoomsInGroup": "No cabins in this deck",
         "addGroup": "Add Fleet",
         "save": "Secure Changes",
-        "saveGroup": "Commission Fleet",
-        "amenities": "Treasures",
-        "amenities_wifi": "Sky-Signals",
-        "amenities_tv": "Magic-Box",
-        "amenities_coffee": "Grog Maker"
+        "saveGroup": "Commission Fleet"
     },
     "Rates": {
         "title": "Seasonal Bounties",

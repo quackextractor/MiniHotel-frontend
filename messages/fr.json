@@ -125,11 +125,7 @@
         "noRoomsInGroup": "Aucune chambre dans ce groupe",
         "addGroup": "Ajouter un Groupe",
         "save": "Enregistrer les Modifications",
-        "saveGroup": "Créer un Groupe",
-        "amenities": "Équipements",
-        "amenities_wifi": "WiFi",
-        "amenities_tv": "Télévision",
-        "amenities_coffee": "Machine à Café"
+        "saveGroup": "Créer un Groupe"
     },
     "Rates": {
         "title": "Tarifs Saisonniers",

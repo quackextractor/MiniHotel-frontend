@@ -123,11 +123,7 @@
         "noRoomsInGroup": "No boxez here",
         "addGroup": "Add Pile",
         "save": "Keepz",
-        "saveGroup": "Make Pile",
-        "amenities": "Treasurez",
-        "amenities_wifi": "Elecktrick Air",
-        "amenities_tv": "Magic Screen",
-        "amenities_coffee": "Bean Juice"
+        "saveGroup": "Make Pile"
     },
     "Rates": {
         "title": "Sezonal Costz",

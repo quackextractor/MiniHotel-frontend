@@ -125,11 +125,7 @@
         "noRoomsInGroup": "No hay habitaciones en este grupo",
         "addGroup": "Añadir Grupo",
         "save": "Guardar Cambios",
-        "saveGroup": "Crear Grupo",
-        "amenities": "Comodidades",
-        "amenities_wifi": "WiFi",
-        "amenities_tv": "TV",
-        "amenities_coffee": "Cafetera"
+        "saveGroup": "Crear Grupo"
     },
     "Rates": {
         "title": "Tarifas Estacionales",

@@ -125,11 +125,7 @@
         "noRoomsInGroup": "No rooms in this group",
         "addGroup": "Add Group",
         "save": "Save Changes",
-        "saveGroup": "Create Group",
-        "amenities": "Amenities",
-        "amenities_wifi": "WiFi",
-        "amenities_tv": "TV",
-        "amenities_coffee": "Coffee Maker"
+        "saveGroup": "Create Group"
     },
     "Rates": {
         "title": "Seasonal Rates",

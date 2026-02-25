@@ -125,11 +125,7 @@
         "noRoomsInGroup": "No chambers dwell within this cluster",
         "addGroup": "Add Cluster",
         "save": "Consecrate",
-        "saveGroup": "Forge Cluster",
-        "amenities": "Indulgences",
-        "amenities_wifi": "Ethereal Whispers",
-        "amenities_tv": "The Viewing Glass",
-        "amenities_coffee": "Nectar of Vigilance"
+        "saveGroup": "Forge Cluster"
     },
     "Rates": {
         "title": "Seasonal Plunder",

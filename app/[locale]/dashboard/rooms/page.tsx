@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { DoorOpen, Plus, Search, Bed, Users, Wifi, Tv, Coffee, MoreHorizontal, Edit, Trash, ChevronRight } from "lucide-react"
+import { DoorOpen, Plus, Search, Bed, Users, MoreHorizontal, Edit, Trash, ChevronRight } from "lucide-react"
 import { api } from "@/lib/api"
 import { useEnterNavigation } from "@/hooks/use-enter-navigation"
 import { useTranslations, useFormatter } from "next-intl"
@@ -55,7 +55,6 @@ interface Room {
   description?: string
   group_id?: number
   is_active: boolean
-  amenities?: string
 }
 
 const statusColors = {
@@ -63,14 +62,6 @@ const statusColors = {
   occupied: "bg-blue-500/10 text-blue-500 border-blue-500/20",
   maintenance: "bg-orange-500/10 text-orange-500 border-orange-500/20",
   cleaning: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
-}
-
-const ALL_AMENITIES = ["wifi", "tv", "coffee"]
-
-const amenityIcons: Record<string, any> = {
-  wifi: Wifi,
-  tv: Tv,
-  coffee: Coffee,
 }
 
 export default function RoomsPage() {
@@ -87,7 +78,6 @@ export default function RoomsPage() {
   // Room Dialog State
   const [isRoomDialogOpen, setIsRoomDialogOpen] = useState(false)
   const [editingRoom, setEditingRoom] = useState<Room | null>(null)
-  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([])
   const formRef = useEnterNavigation()
 
   // Room Group Dialog State
@@ -119,13 +109,11 @@ export default function RoomsPage() {
 
   const openAddRoomDialog = () => {
     setEditingRoom(null)
-    setSelectedAmenities([])
     setIsRoomDialogOpen(true)
   }
 
   const openEditRoomDialog = (room: Room) => {
     setEditingRoom(room)
-    setSelectedAmenities(room.amenities ? room.amenities.split(",").filter(Boolean) : [])
     setIsRoomDialogOpen(true)
   }
 
@@ -143,8 +131,7 @@ export default function RoomsPage() {
         capacity: Number(formData.get("capacity")),
         base_rate: basePrice,
         description: formData.get("description"),
-        group_id: formData.get("groupId") && formData.get("groupId") !== "0" ? Number(formData.get("groupId")) : null,
-        amenities: selectedAmenities.join(",")
+        group_id: formData.get("groupId") && formData.get("groupId") !== "0" ? Number(formData.get("groupId")) : null
       }
 
       if (editingRoom) {
@@ -248,15 +235,7 @@ export default function RoomsPage() {
     return rootGroups
   }
 
-  const toggleAmenity = (amenity: string) => {
-    setSelectedAmenities(prev =>
-      prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
-    )
-  }
-
   const renderRoomCard = (room: Room) => {
-    const roomAmenities = room.amenities ? room.amenities.split(",").filter(Boolean) : []
-
     return (
       <Card key={room.id} className="transition-all hover:shadow-md relative group">
         <CardHeader className="p-4 pb-2 pr-10">
@@ -297,23 +276,6 @@ export default function RoomsPage() {
               {convert(room.base_rate).toFixed(2)} {currency} / night
             </div>
           </div>
-          {roomAmenities.length > 0 && (
-            <div className="mt-3 flex gap-2">
-              {roomAmenities.map((amenity) => {
-                const Icon = amenityIcons[amenity]
-                if (!Icon) return null
-                return (
-                  <div
-                    key={amenity}
-                    className="flex size-7 items-center justify-center rounded-full bg-secondary text-secondary-foreground"
-                    title={amenity}
-                  >
-                    <Icon className="size-3.5" />
-                  </div>
-                )
-              })}
-            </div>
-          )}
         </CardContent>
       </Card>
     )
@@ -545,28 +507,6 @@ export default function RoomsPage() {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label className="text-right pt-2">
-                  {t("amenities", { fallback: "Amenities" })}
-                </Label>
-                <div className="col-span-3 flex flex-wrap gap-4 mt-1">
-                  {ALL_AMENITIES.map(amenity => (
-                    <div key={amenity} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`amenity-${amenity}`}
-                        checked={selectedAmenities.includes(amenity)}
-                        onCheckedChange={() => toggleAmenity(amenity)}
-                      />
-                      <label
-                        htmlFor={`amenity-${amenity}`}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize cursor-pointer"
-                      >
-                        {t(`amenities_${amenity}`, { fallback: amenity })}
-                      </label>
-                    </div>
-                  ))}
-                </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="description" className="text-right">

@@ -125,11 +125,7 @@
         "noRoomsInGroup": "V této skupině nejsou žádné pokoje",
         "addGroup": "Přidat skupinu",
         "save": "Uložit změny",
-        "saveGroup": "Vytvořit skupinu",
-        "amenities": "Vybavení",
-        "amenities_wifi": "Wi-Fi",
-        "amenities_tv": "TV",
-        "amenities_coffee": "Kávovar"
+        "saveGroup": "Vytvořit skupinu"
     },
     "Rates": {
         "title": "Sezónní ceny",

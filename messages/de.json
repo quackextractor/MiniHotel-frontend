@@ -125,11 +125,7 @@
         "noRoomsInGroup": "Keine Zimmer in dieser Gruppe",
         "addGroup": "Gruppe hinzufügen",
         "save": "Änderungen speichern",
-        "saveGroup": "Gruppe erstellen",
-        "amenities": "Ausstattung",
-        "amenities_wifi": "WLAN",
-        "amenities_tv": "Fernsehen",
-        "amenities_coffee": "Kaffeemaschine"
+        "saveGroup": "Gruppe erstellen"
     },
     "Rates": {
         "title": "Saisonale Preise",
