@@ -136,7 +136,7 @@ export default function ServicesPage() {
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="price">{t("price")} ({currency})</Label>
-                                    <Input id="price" name="price" type="number" placeholder="0.00" step="0.01" required />
+                                    <Input id="price" name="price" type="number" placeholder="0.00" step="0.01" min="0" required />
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="description">{t("description")}</Label>
