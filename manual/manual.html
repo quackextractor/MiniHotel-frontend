@@ -4,239 +4,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniHotel - User Manual</title>
+    <title>MiniHotel - Technicky Projekt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary-color: #0f172a;
-            --secondary-color: #334155;
-            --bg-color: #f8fafc;
+            --secondary-color: #475569;
+            --bg-gradient-start: #f8fafc;
+            --bg-gradient-end: #e2e8f0;
             --text-color: #1e293b;
-            --border-color: #e2e8f0;
-            --accent-color: #2563eb;
+            --border-color: #cbd5e1;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --card-bg: #ffffff;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
             color: var(--text-color);
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
         }
 
         .container {
             max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-            background-color: #ffffff;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            min-height: 100vh;
+            margin: 3rem auto;
+            padding: 4rem;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
         }
 
-        header {
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
+        /* --- Cover Page Styles --- */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: calc(100vh - 8rem);
             text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid transparent;
+        }
+
+        .cover-header {
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .school-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-type {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cover-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 4rem 0;
+        }
+
+        .project-title {
+            font-size: 5.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin: 0 0 1.5rem 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .project-subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--secondary-color);
+            max-width: 80%;
+            line-height: 1.5;
+            margin: 0 auto;
+        }
+
+        .cover-footer {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .author-info {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0.25rem 0;
+        }
+
+        .author-field,
+        .project-year {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin: 0.25rem 0;
+        }
+
+        .page-break {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 4rem 0;
+            border: none;
+        }
+
+        /* --- Manual Styles --- */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
         }
 
         h1 {
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            font-weight: 800;
             font-size: 2.5rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
         }
 
         h2 {
-            color: var(--secondary-color);
-            border-bottom: 1px solid var(--border-color);
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 3.5rem;
+            margin-bottom: 1rem;
             padding-bottom: 0.5rem;
-            margin-top: 2.5rem;
+            border-bottom: 2px solid #f1f5f9;
         }
 
         h3 {
-            color: var(--secondary-color);
-            margin-top: 1.5rem;
+            color: var(--accent-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 2rem;
         }
 
-        p {
-            margin-bottom: 1rem;
+        p,
+        li {
+            font-size: 1.05rem;
+        }
+
+        ul,
+        ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        strong {
+            color: var(--primary-color);
+        }
+
+        code {
+            background-color: #f1f5f9;
+            color: #ec4899;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
         }
 
         .alert {
             background-color: #eff6ff;
             border-left: 4px solid var(--accent-color);
-            padding: 1rem;
-            margin: 1.5rem 0;
-            border-radius: 0 4px 4px 0;
-        }
-
-        .alert p {
-            margin: 0;
-        }
-
-        /* Carousel / Gallery Styles */
-        .screenshot-container {
+            padding: 1.25rem;
             margin: 2rem 0;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1rem;
-            background-color: #f1f5f9;
-            position: relative;
+            border-radius: 0 8px 8px 0;
         }
 
-        .screenshot-gallery {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            gap: 1rem;
-            padding-bottom: 1rem;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-color) transparent;
-        }
-
-        .screenshot-gallery::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .screenshot-gallery::-webkit-scrollbar-thumb {
-            background-color: var(--accent-color);
-            border-radius: 10px;
-        }
-
-        .screenshot-item {
-            flex: 0 0 100%;
-            scroll-snap-align: start;
-            text-align: center;
-        }
-
-        .screenshot-container img,
-        .screenshot-item img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff;
-        }
-
-        .screenshot-caption {
-            margin-top: 0.75rem;
-            font-size: 0.875rem;
-            color: var(--secondary-color);
-            font-weight: 500;
-        }
-
-        /* Placeholder styles if image is missing */
-        .screenshot-placeholder {
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .screenshot-placeholder::before {
-            content: "[Image]";
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-            font-weight: bold;
-        }
-
-        .screenshot-placeholder span {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #64748b;
-        }
-
-        .screenshot-placeholder p {
-            font-size: 0.875rem;
-            color: #94a3b8;
-            margin-top: 0.5rem;
-            max-width: 300px;
-        }
-
+        /* Navigation / TOC */
         nav {
-            background-color: var(--primary-color);
-            padding: 1rem;
-            margin-bottom: 2rem;
-            border-radius: 8px;
+            background: #f8fafc;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        nav .toc-title {
+            display: block;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-bottom: none;
+            color: var(--primary-color);
         }
 
         nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1rem;
         }
 
         nav ul li a {
-            color: #ffffff;
+            color: var(--secondary-color);
             text-decoration: none;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s ease;
         }
 
         nav ul li a:hover {
-            color: #93c5fd;
-            text-decoration: underline;
+            color: var(--accent-color);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1.5rem;
+        nav ul li a::before {
+            content: "→";
+            margin-right: 0.5rem;
+            color: var(--border-color);
+            transition: color 0.2s ease, transform 0.2s ease;
         }
 
-        th,
-        td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
+        nav ul li a:hover::before {
+            color: var(--accent-color);
+            transform: translateX(4px);
         }
 
-        th {
-            background-color: #f8fafc;
-            color: var(--secondary-color);
+        /* Images */
+        .screenshot-container {
+            margin: 2.5rem 0;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 0.5rem;
+            background-color: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+        }
+
+        .screenshot-placeholder {
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            background: #f8fafc;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .screenshot-placeholder::before {
+            content: "[Image]";
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            letter-spacing: 2px;
+        }
+
+        .screenshot-placeholder span {
             font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--secondary-color);
         }
 
+        /* Buttons */
         .export-btn {
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, var(--accent-color) 0%, #1d4ed8 100%);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
             font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 1rem;
-            font-weight: 500;
-            display: inline-block;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            position: absolute;
+            top: 0;
+            right: 0;
         }
 
         .export-btn:hover {
-            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
         }
 
-        .toc-title {
-            display: none;
+        .export-btn:active {
+            transform: translateY(0);
         }
 
         .back-to-toc {
             display: none;
         }
 
+        footer {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-top: 5rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+        }
+
+        /* --- Print Styles for PDF Generation --- */
         @media print {
             body {
-                background-color: white;
+                background: white;
+                margin: 0;
+                padding: 0;
             }
 
             .container {
@@ -244,6 +350,28 @@
                 margin: 0;
                 padding: 0;
                 max-width: 100%;
+                border-radius: 0;
+            }
+
+            /* Cover Page Printing */
+            .cover-page {
+                min-height: 100vh;
+                padding: 2rem;
+                box-sizing: border-box;
+                page-break-after: always;
+                justify-content: center;
+            }
+
+            .cover-header {
+                margin-top: 4rem;
+            }
+
+            .cover-footer {
+                margin-bottom: 4rem;
+            }
+
+            .page-break {
+                display: none;
             }
 
             .export-btn {
@@ -253,37 +381,29 @@
             section {
                 page-break-before: always;
                 break-before: page;
+                padding-top: 2rem;
                 position: relative;
             }
 
             .screenshot-container {
                 page-break-inside: avoid;
                 break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
             }
 
             .screenshot-container img {
-                max-height: 850px;
+                max-height: 800px;
                 width: auto;
                 object-fit: contain;
             }
 
             nav {
                 background-color: transparent;
-                color: black;
-                border-radius: 0;
+                border: none;
                 padding: 0;
+                margin-top: 2rem;
                 page-break-after: always;
-                break-after: page;
-            }
-
-            .toc-title {
-                display: block;
-                color: var(--primary-color);
-                margin-top: 0;
-                margin-bottom: 1rem;
-                padding-bottom: 0.5rem;
-                border-bottom: 1px solid var(--border-color);
-                font-size: 2rem;
             }
 
             nav ul {
@@ -291,8 +411,7 @@
             }
 
             nav ul li {
-                margin-bottom: 0.75rem;
-                font-size: 1.1rem;
+                margin-bottom: 1rem;
             }
 
             nav ul li a {
@@ -300,11 +419,13 @@
                 border-bottom: 1px dotted #cbd5e1;
                 display: block;
                 padding-bottom: 0.25rem;
-                text-decoration: none;
                 width: 100%;
             }
 
-            /* Adds leader dots and page numbers for supported PDF generators */
+            nav ul li a::before {
+                display: none;
+            }
+
             nav ul li a::after {
                 content: leader('.') target-counter(attr(href), page);
                 float: right;
@@ -312,7 +433,6 @@
 
             h2[id] {
                 display: block;
-                padding-top: 1rem;
             }
 
             .back-to-toc {
@@ -330,12 +450,33 @@
 
 <body>
     <div class="container">
+
+        <div class="cover-page">
+            <div class="cover-header">
+                <div class="school-name">Střední průmyslová škola elektrotechnická, Praha 2, Ječná 30</div>
+                <div class="doc-type">Technický Projekt</div>
+            </div>
+
+            <div class="cover-body">
+                <h1 class="project-title">MiniHotel</h1>
+                <div class="project-subtitle">Návrh a realizace full-stack informačního systému MiniHotel pro správu
+                    ubytovacích zařízení</div>
+            </div>
+
+            <div class="cover-footer">
+                <div class="author-info">Miro Slezák</div>
+                <div class="author-field">Informační technologie</div>
+                <div class="project-year">2026</div>
+            </div>
+        </div>
+
+        <hr class="page-break">
+
         <header>
-            <h1>MiniHotel Management System</h1>
-            <p>Comprehensive User Manual and Setup Guide</p>
+            <h1>User Manual and Setup Guide</h1>
+            <p style="color: var(--secondary-color); font-size: 1.1rem;">System Administration and Daily Operations</p>
             <button class="export-btn" onclick="window.print()">Export to PDF</button>
         </header>
-
 
         <nav id="toc">
             <h2 class="toc-title">Table of Contents</h2>
@@ -354,8 +495,8 @@
             </ul>
         </nav>
 
-        <section>
-            <h2 id="installation">1. Installation</h2>
+        <section id="installation">
+            <h2>1. Installation</h2>
             <p>The MiniHotel Management System requires setting up both the backend API and the frontend client.</p>
 
             <h3>Backend Setup</h3>
@@ -376,8 +517,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="getting-started">2. Getting Started</h2>
+        <section id="getting-started">
+            <h2>2. Getting Started</h2>
             <p>Before using the application daily, the system must be initialized by your IT administrator. This process
                 includes creating the primary administrator account and setting up baseline data for your property so
                 that your staff can immediately begin managing reservations.</p>
@@ -420,8 +561,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="dashboard">3. Dashboard</h2>
+        <section id="dashboard">
+            <h2>3. Dashboard</h2>
             <p>The Dashboard is the central hub of your MiniHotel system, offering an at-a-glance overview of your
                 property's performance in real-time. Immediately upon logging in, front desk staff and managers can
                 assess the daily state of the hotel.</p>
@@ -452,8 +593,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="bookings">4. Bookings</h2>
+        <section id="bookings">
+            <h2>4. Bookings</h2>
             <p>Manage all guest reservations in the Bookings module. This comprehensive data table is the primary tool
                 for front desk agents managing the daily flow of guests.</p>
 
@@ -494,8 +635,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="calendar">5. Calendar</h2>
+        <section id="calendar">
+            <h2>5. Calendar</h2>
             <p>The Calendar provides a highly visual timeline of all reservations across your physical room inventory.
                 It is the most intuitive way to spot availability gaps, manage overlapping bookings, and plan for
                 long-term capacity.</p>
@@ -527,8 +668,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="rooms">6. Rooms Management</h2>
+        <section id="rooms">
+            <h2>6. Rooms Management</h2>
             <p>Configure your physical property inventory. In this section, you define the exact physical rooms
                 available for booking, ensuring your software perfectly matches your building's layout.</p>
 
@@ -566,8 +707,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="rates">7. Rates & Pricing</h2>
+        <section id="rates">
+            <h2>7. Rates & Pricing</h2>
             <p>The Rates module is your primary financial tool for yield management, allowing you to maximize revenue
                 through dynamic pricing models based on varying demand periods.</p>
 
@@ -597,8 +738,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="services">8. Services & Add-ons</h2>
+        <section id="services">
+            <h2>8. Services & Add-ons</h2>
             <p>Increase your RevPAR by managing supplemental items and experiences that guests can purchase during their
                 stay. The Services module tracks all non-room revenue streams.</p>
 
@@ -621,8 +762,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="reports">9. Reports</h2>
+        <section id="reports">
+            <h2>9. Reports</h2>
             <p>Data-driven decision making starts here. The Reports module synthesizes your property's raw data into
                 digestible, actionable intelligence for management and ownership teams.</p>
 
@@ -648,8 +789,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="housekeeping">10. Housekeeping</h2>
+        <section id="housekeeping">
+            <h2>10. Housekeeping</h2>
             <p>Streamline communication between the front desk and your cleaning staff. This module provides a
                 constantly updating manifest of the physical state of every room.</p>
 
@@ -672,8 +813,8 @@
             <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section>
-            <h2 id="audit-logs">11. Audit Logs</h2>
+        <section id="audit-logs">
+            <h2>11. Audit Logs</h2>
             <p>Maintain absolute security, transparency, and accountability across your staff. The Audit Logs module
                 serves as an immutable, chronological register of every significant action performed within the software
                 environment.</p>
@@ -700,8 +841,7 @@
         </section>
 
         <footer>
-            <p
-                style="text-align: center; color: var(--secondary-color); font-size: 0.875rem; margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+            <p>
                 MiniHotel Management System &copy; 2026. All rights reserved.
             </p>
         </footer>
