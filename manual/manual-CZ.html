@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniHotel - Technický projekt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #475569;
+            --bg-gradient-start: #f8fafc;
+            --bg-gradient-end: #e2e8f0;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background: var(--bg-gradient-start);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 4rem;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- Styl titulní strany --- */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: calc(100vh - 8rem);
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid transparent;
+        }
+
+        .cover-header {
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .school-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .doc-type {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cover-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 4rem 0;
+        }
+
+        .project-title {
+            font-size: 5.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin: 0 0 1.5rem 0;
+            color: var(--primary-color);
+            line-height: 1.1;
+        }
+
+        .project-subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--secondary-color);
+            max-width: 80%;
+            line-height: 1.5;
+            margin: 0 auto;
+        }
+
+        .cover-footer {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .author-info {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0.25rem 0;
+        }
+
+        .author-field,
+        .project-year {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin: 0.25rem 0;
+        }
+
+        .page-break {
+            height: 2px;
+            background: var(--border-color);
+            margin: 4rem 0;
+            border: none;
+        }
+
+        /* --- Styly manuálu --- */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 2.5rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 3.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        h3 {
+            color: var(--accent-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 2rem;
+        }
+
+        p,
+        li {
+            font-size: 1.05rem;
+        }
+
+        ul,
+        ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        strong {
+            color: var(--primary-color);
+        }
+
+        code {
+            background-color: #f1f5f9;
+            color: #ec4899;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .alert {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent-color);
+            padding: 1.25rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Navigace / Obsah */
+        nav {
+            background: #f8fafc;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        nav .toc-title {
+            display: block;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-bottom: none;
+            color: var(--primary-color);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        nav ul li a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        nav ul li a::before {
+            content: "→";
+            margin-right: 0.5rem;
+            color: var(--border-color);
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        nav ul li a:hover::before {
+            color: var(--accent-color);
+            transform: translateX(4px);
+        }
+
+        /* Obrázky */
+        .screenshot-container {
+            margin: 2.5rem 0;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 0.5rem;
+            background-color: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+        }
+
+        .screenshot-placeholder {
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            background: #f8fafc;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .screenshot-placeholder::before {
+            content: "[Obrázek]";
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            letter-spacing: 2px;
+        }
+
+        .screenshot-placeholder span {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+        }
+
+        /* Tlačítka */
+        .export-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        .export-btn:active {
+            transform: translateY(0);
+        }
+
+        .back-to-toc {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-top: 5rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+        }
+
+        /* --- Tiskové styly pro generování PDF --- */
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+
+            p {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+                border-radius: 0;
+            }
+
+            /* Tisk titulní strany */
+            .cover-page {
+                min-height: 100vh;
+                padding: 2rem;
+                box-sizing: border-box;
+                page-break-after: always;
+                justify-content: center;
+            }
+
+            .cover-header {
+                margin-top: 4rem;
+            }
+
+            .cover-footer {
+                margin-bottom: 4rem;
+            }
+
+            .page-break {
+                display: none;
+            }
+
+            .export-btn {
+                display: none;
+            }
+
+            section {
+                page-break-before: always;
+                break-before: page;
+                padding-top: 2rem;
+                position: relative;
+            }
+
+            .screenshot-container {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+
+            .screenshot-container img {
+                max-height: 800px;
+                width: auto;
+                object-fit: contain;
+            }
+
+            nav {
+                background-color: transparent;
+                border: none;
+                padding: 0;
+                margin-top: 2rem;
+                page-break-after: always;
+            }
+
+            nav ul {
+                display: block;
+            }
+
+            nav ul li {
+                margin-bottom: 1rem;
+            }
+
+            nav ul li a {
+                color: var(--primary-color);
+                border-bottom: 1px dotted #cbd5e1;
+                display: block;
+                padding-bottom: 0.25rem;
+                width: 100%;
+            }
+
+            nav ul li a::before {
+                display: none;
+            }
+
+            nav ul li a::after {
+                content: leader('.') target-counter(attr(href), page);
+                float: right;
+            }
+
+            h2[id] {
+                display: block;
+            }
+
+            .back-to-toc {
+                display: inline-block;
+                margin-top: 2rem;
+                margin-bottom: 1rem;
+                color: var(--accent-color);
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="cover-page">
+            <div class="cover-header">
+                <div class="school-name">Střední průmyslová škola elektrotechnická, Praha 2, Ječná 30</div>
+                <div class="doc-type">Technický Projekt</div>
+            </div>
+
+            <div class="cover-body">
+                <h1 class="project-title">MiniHotel</h1>
+                <div class="project-subtitle">Návrh a realizace full-stack informačního systému MiniHotel pro správu
+                    ubytovacích zařízení</div>
+            </div>
+
+            <div class="cover-footer">
+                <div class="author-info">Miro Slezák</div>
+                <div class="author-field">Informační technologie</div>
+                <div class="project-year">2026</div>
+            </div>
+        </div>
+
+        <hr class="page-break">
+
+        <header>
+            <h1>Uživatelská příručka a průvodce nastavením</h1>
+            <p style="color: var(--secondary-color); font-size: 1.1rem;">Správa systému a každodenní provoz</p>
+            <button class="export-btn" onclick="window.print()">Exportovat do PDF</button>
+        </header>
+
+        <nav id="toc">
+            <h2 class="toc-title">Obsah</h2>
+            <ul>
+                <li><a href="#installation">Instalace</a></li>
+                <li><a href="#getting-started">Začínáme</a></li>
+                <li><a href="#dashboard">Hlavní panel</a></li>
+                <li><a href="#bookings">Rezervace</a></li>
+                <li><a href="#calendar">Kalendář</a></li>
+                <li><a href="#rooms">Pokoje</a></li>
+                <li><a href="#rates">Ceny</a></li>
+                <li><a href="#services">Služby</a></li>
+                <li><a href="#reports">Reporty</a></li>
+                <li><a href="#housekeeping">Úklid</a></li>
+                <li><a href="#audit-logs">Auditní záznamy</a></li>
+            </ul>
+        </nav>
+
+        <section id="installation">
+            <h2>1. Instalace</h2>
+            <p>Systém pro správu MiniHotel vyžaduje nastavení backendového API i frontendového klienta.</p>
+
+            <h3>Nastavení Backendem</h3>
+            <ol>
+                <li>Přejděte do adresáře <code>MiniHotel-backend</code>.</li>
+                <li>Nainstalujte požadované závislosti Pythonu: <code>pip install -r requirements.txt</code></li>
+                <li>Spusťte server API: <code>python main.py</code></li>
+                <li>Backend nyní poběží na adrese <code>http://localhost:5000/api</code>.</li>
+            </ol>
+
+            <h3>Nastavení Frontendu</h3>
+            <ol>
+                <li>Přejděte do adresáře <code>MiniHotel-frontend</code>.</li>
+                <li>Nainstalujte závislosti Node.js: <code>npm install --legacy-peer-deps</code></li>
+                <li>Spusťte vývojový server: <code>npm run dev</code></li>
+                <li>Otevřete prohlížeč a přejděte na adresu <code>http://localhost:3000</code>.</li>
+            </ol>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="getting-started">
+            <h2>2. Začínáme</h2>
+            <p>Před každodenním používáním aplikace musí být systém inicializován správcem IT. Tento proces zahrnuje
+                vytvoření primárního administrátorského účtu a nastavení základních údajů o vašem ubytovacím zařízení,
+                aby vaši zaměstnanci mohli okamžitě začít spravovat rezervace.</p>
+
+            <h3>1. Registrace a přihlášení</h3>
+            <p>V prohlížeči přejděte na URL adresu aplikace. Pokud v databázi neexistuje žádný administrátorský účet,
+                systém vás automaticky vyzve k vytvoření prvního hlavního účtu.</p>
+            <ul>
+                <li><strong>Uživatelské jméno:</strong> Zvolte bezpečné standardní administrátorské jméno (např.
+                    <code>admin</code> nebo
+                    <code>spravce</code>).
+                </li>
+                <li><strong>Heslo:</strong> Ujistěte se, že používáte silné heslo (minimálně 8 znaků, kombinace čísel,
+                    písmen a symbolů). V lokálním vývojovém prostředí lze použít jednoduché heslo jako
+                    <code>adminadmin</code>, ale to je důrazně nedoporučeno pro produkční sítě.
+                </li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="images/login.png" alt="Obrazovka přihlášení a registrace"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled přihlášení</span><p>Zde by se zobrazil snímek uživatelského rozhraní s rozhraním pro přihlášení a registraci.</p></div>'">
+            </div>
+
+            <h3>2. Import ukázkových dat</h3>
+            <p>Pokud systém nasazujete pro účely předvádění nebo testování, můžete jej naplnit ukázkovými pokoji,
+                sezónními cenami a simulovanými rezervacemi. To je vysoce doporučeno během fáze zaškolování personálu,
+                aby se seznámili s uživatelským rozhraním bez rizika poškození reálných dat.</p>
+            <ol>
+                <li>V hlavním postranním navigačním panelu na levé straně obrazovky klikněte na
+                    <strong>Nastavení</strong>
+                    (ikona ozubeného kola).</li>
+                <li>Přejděte dolů k panelu <strong>Správa systému</strong>.</li>
+                <li>Najděte a klikněte na tlačítko <strong>Importovat ukázková data</strong>.</li>
+                <li>Obdržíte oznámení o úspěchu. Počkejte až 5 sekund na zpracování na pozadí. Hlavní panel
+                    a všechny odpovídající tabulky nyní budou odrážet nově importovaná data.</li>
+            </ol>
+
+            <div class="screenshot-container">
+                <img src="images/settings.png" alt="Obrazovka nastavení - Import dat"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled nastavení</span><p>Snímek obrazovky zobrazující panel nastavení s nástrojem pro import dat.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="dashboard">
+            <h2>3. Hlavní panel</h2>
+            <p>Hlavní panel je centrálním bodem vašeho systému MiniHotel a nabízí okamžitý přehled o výkonu vašeho
+                zařízení v reálném čase. Ihned po přihlášení mohou pracovníci recepce a manažeři posoudit aktuální
+                stav hotelu.</p>
+
+            <h3>Klíčové funkce</h3>
+            <ul>
+                <li><strong>Přehled pokojů:</strong> Rychle uvidíte přesný počet dostupných, obsazených a
+                    mimo provoz pokojů pro aktuální den. To pomáhá recepčním okamžitě vědět, zda lze ubytovat
+                    hosty bez předchozí rezervace.</li>
+                <li><strong>Dnešní aktivita:</strong> Souhrn všech plánovaných příjezdů (check-in) a odjezdů (check-out)
+                    na daný den, což umožňuje personálu recepce předvídat rušná období a koordinovat se s úklidem
+                    pro prioritizaci přípravy pokojů.</li>
+                <li><strong>Míra obsazenosti:</strong> Jasný procentuální ukazatel zobrazující aktuální využití pokojů
+                    v porovnání s historickými průměry, což manažerům umožňuje rychlá rozhodnutí o cenách a dostupnosti.
+                </li>
+                <li><strong>Přehled nedávné aktivity:</strong> Chronologicky seřazený výpis nejnovějších událostí v
+                    systému.
+                    Sleduje aktualizace v reálném čase, včetně nových rezervací ze všech kanálů, aktualizací stavu
+                    pokojů
+                    od úklidu a událostí naplánovaných ve vašich konferenčních prostorách.</li>
+                <li><strong>Panel rychlých akcí:</strong> Pohodlná velká tlačítka pro nejčastější operace bez nutnosti
+                    procházet hluboká menu: Vytvořit novou rezervaci, Spravovat pokoje a Zobrazit kalendář.</li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="images/dashboard.png" alt="Hlavní obrazovka panelu"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled hlavního panelu</span><p>Přehled metrik obsazenosti, grafy tržeb a nedávná aktivita.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="bookings">
+            <h2>4. Rezervace</h2>
+            <p>V modulu Rezervace spravujete všechny rezervace hostů. Tato komplexní tabulka dat je primárním nástrojem
+                pro recepční spravující každodenní tok hostů.</p>
+
+            <h3>Jak vytvořit novou rezervaci</h3>
+            <ol>
+                <li>Přejděte na stránku <strong>Rezervace</strong> z postranního panelu.</li>
+                <li>Kliknutím na tlačítko <strong>Nová rezervace</strong> otevřete rezervační formulář.</li>
+                <li><strong>Vyberte hosta:</strong> Vyhledejte existujícího hosta v rozevíracím seznamu nebo klikněte na
+                    <strong>Nový
+                        host</strong> a přidejte Jméno, Příjmení, E-mail, Telefon a Adresu.</li>
+                <li><strong>Vyberte pokoj:</strong> Vyberte požadovaný pokoj z rozevíracího seznamu.</li>
+                <li><strong>Nastavte data a počet osob:</strong> Vyberte datum příjezdu a odjezdu a zadejte Počet hostů.
+                </li>
+                <li><strong>Přidejte služby:</strong> (Volitelné) Zaškrtněte jakékoli doplňkové služby požadované
+                    hostem.
+                    Systém automaticky vypočítá celkovou částku na základě základní ceny pokoje, délky pobytu
+                    a služeb.</li>
+                <li><strong>Stav a platba:</strong> Nastavte Stav rezervace (např. Čekající, Potvrzená, Ubytován) a
+                    Stav platby (Čekající, Zaplaceno, Částečně, Vráceno).</li>
+                <li><strong>Způsob platby:</strong> Vyberte, jak host platí (Hotovost, Karta, Bankovní převod, Online).
+                </li>
+                <li>Kliknutím na <strong>Vytvořit rezervaci</strong> uložte rezervaci.</li>
+            </ol>
+
+            <h3>Jak upravit nebo smazat rezervaci</h3>
+            <ol>
+                <li>Kliknutím na jakoukoli kartu rezervace v seznamu otevřete její detailní zobrazení.</li>
+                <li>Chcete-li aktualizovat stav, použijte rozevírací menu v dolní části okna pro změnu
+                    <strong>Stavu rezervace</strong> nebo <strong>Stavu platby</strong>. Systém to automaticky uloží.
+                </li>
+                <li>Chcete-li rezervaci zcela zrušit a odstranit, klikněte na červené tlačítko <strong>Smazat
+                        rezervaci</strong> v
+                    dolní části dialogu. Upozorňujeme, že tuto akci nelze vrátit zpět.</li>
+            </ol>
+
+            <div class="screenshot-container">
+                <img src="images/bookings.png" alt="Obrazovka správy rezervací"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled správy rezervací</span><p>Tabulkové zobrazení aktuálních rezervací hostů se stavy a ovládacími prvky.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="calendar">
+            <h2>5. Kalendář</h2>
+            <p>Kalendář poskytuje vysoce vizuální časovou osu všech rezervací napříč vaší fyzickou inventurou pokojů.
+                Představuje nejintuitivnější způsob, jak odhalit mezery v obsazenosti, spravovat překrývající se
+                rezervace
+                a plánovat dlouhodobou kapacitu.</p>
+
+            <h3>Pochopení rozhraní</h3>
+            <ul>
+                <li><strong>Zobrazení časové osy:</strong> Horizontální osa představuje data (v týdenních nebo měsíčních
+                    formátech), zatímco vertikální osa uvádí všechny pokoje vašeho zařízení, uspořádané podle skupin
+                    (např. První patro, Apartmány, Přístavba).</li>
+                <li><strong>Barevně odlišené bloky:</strong> Každá rezervace je znázorněna jako plný blok pokrývající
+                    příslušná data. Barvy představují aktuální stav rezervace (např. zelená pro Potvrzeno, žlutá
+                    pro čekající platbu, šedá pro odhlášení), což vám umožňuje vizuálně posoudit stav hotelu.
+                </li>
+                <li><strong>Interaktivní bloky:</strong> Kliknutím na blok na časové ose se otevře detailní okno s
+                    informacemi
+                    o hostovi, zobrazující celkovou dlužnou částku, kontaktní údaje a speciální poznámky, aniž byste
+                    museli
+                    přecházet na stránku Rezervace.</li>
+                <li><strong>Funkce Drag and Drop:</strong> Rychle přesuňte hosta z jednoho fyzického pokoje do jiného
+                    v rámci stejné kategorie kliknutím a přetažením bloku rezervace nahoru nebo dolů. Délku pobytu
+                    můžete také upravit přetažením okrajů bloku.</li>
+                <li><strong>Zjišťování dostupnosti:</strong> Prázdné bílé místo v kalendáři okamžitě potvrzuje
+                    dostupnost, což výrazně urychluje proces vyřizování telefonických dotazů ohledně volných pokojů.
+                </li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="images/calendar.png" alt="Vizuální obrazovka kalendáře"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled kalendáře</span><p>Interaktivní časová osa zobrazující dostupnost pokojů a bloky rezervací.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="rooms">
+            <h2>6. Správa pokojů</h2>
+            <p>Konfigurujte fyzickou inventuru svého objektu. V této sekci definujete přesné fyzické pokoje
+                dostupné k rezervaci a zajišťujete, aby váš software dokonale odpovídal rozložení vaší budovy.</p>
+
+            <h3>Jak přidat nový pokoj</h3>
+            <ol>
+                <li>Přejděte na stránku <strong>Pokoje</strong> a klikněte na tlačítko <strong>Přidat pokoj</strong>.
+                </li>
+                <li>Zadejte <strong>Číslo pokoje</strong> a vyberte <strong>Typ pokoje</strong> (Jednolůžkový,
+                    Dvoulůžkový,
+                    Apartmá, Deluxe).</li>
+                <li>Nastavte maximální <strong>Kapacitu</strong> hostů.</li>
+                <li>Zadejte <strong>Základní cenu</strong> za noc.</li>
+                <li>(Volitelné) Přiřaďte pokoj do <strong>Skupiny pokojů</strong> nebo zadejte textový
+                    <strong>Popis</strong>.
+                </li>
+                <li>Klikněte na <strong>Uložit pokoj</strong>.</li>
+            </ol>
+
+            <h3>Jak upravit nebo smazat pokoj</h3>
+            <ol>
+                <li>Najděte pokoj, který chcete upravit, v tabulce.</li>
+                <li>Najeďte myší na kartu pokoje, čímž zobrazíte <strong>Menu akcí</strong> (tři vodorovné
+                    tečky) v pravém horním rohu karty.</li>
+                <li>Klikněte na menu a vyberte <strong>Upravit</strong> pro změnu podrobností nebo
+                    <strong>Smazat</strong>
+                    pro úplné odstranění ze systému.</li>
+            </ol>
+
+            <h3>Správa skupin pokojů</h3>
+            <p>Pokud máte velký objekt, můžete pokoje organizovat do hierarchií (např. "První patro", "Severní
+                křídlo"). Kliknutím na tlačítko <strong>Přidat skupinu</strong> vytvoříte novou kategorii. Skupinu
+                můžete
+                dokonce přiřadit k "Nadřazené skupině" a vytvořit tak vnořenou strukturu.</p>
+
+            <div class="screenshot-container">
+                <img src="images/rooms.png" alt="Obrazovka konfigurace pokojů"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled konfigurace pokojů</span><p>Rozhraní pro správu inventáře pro definování a úpravu hotelových pokojů.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="rates">
+            <h2>7. Ceny a tarify</h2>
+            <p>Modul Ceny je vaším hlavním finančním nástrojem pro řízení výnosů, který vám umožňuje maximalizovat
+                příjmy
+                prostřednictvím dynamických cenových modelů založených na měnících se obdobích poptávky.</p>
+
+            <h3>Jak vytvořit sezónní cenu</h3>
+            <ol>
+                <li>Přejděte na stránku <strong>Ceny</strong> a klikněte na <strong>Přidat cenu</strong>.</li>
+                <li>Zadejte <strong>Název ceny</strong> (např. "Letní hlavní sezóna").</li>
+                <li>Vyberte <strong>Datum zahájení</strong> a <strong>Datum ukončení</strong>, kdy tato změna ceny
+                    platí.</li>
+                <li>Nastavte <strong>Násobitel</strong>. (Např. zadáním <code>1.0</code> zachováte základní cenu,
+                    <code>1.2</code> zvýšíte cenu o 20 % a <code>0.8</code> uplatníte 20% slevu).
+                </li>
+                <li>(Volitelné) Použijte cenu na konkrétní <strong>Typ pokoje</strong> nebo <strong>Skupinu
+                        pokojů</strong>.
+                    Pokud není vybráno, násobitel ceny se použije pro všechny pokoje v hotelu.</li>
+                <li>Klikněte na <strong>Vytvořit cenu</strong>.</li>
+            </ol>
+
+            <h3>Úprava a mazání cen</h3>
+            <p>Na stránce Ceny uvidíte karty všech aktivních cenových pravidel. Kliknutím na ikonu <strong>Upravit
+                    (Tužka)</strong> na kartě změníte data nebo násobitele, nebo kliknutím na ikonu <strong>Smazat
+                    (Popelnice)</strong> cenové pravidlo odstraníte.</p>
+
+            <div class="screenshot-container">
+                <img src="images/rates.png" alt="Obrazovka cen a tarifů"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled cen a tarifů</span><p>Rozhraní pro nastavení sezónních cen pokojů a cenových výjimek.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="services">
+            <h2>8. Služby a doplňky</h2>
+            <p>Zvyšte svůj RevPAR správou doplňkových položek a zážitků, které si hosté mohou během svého
+                pobytu zakoupit. Modul Služby sleduje všechny toky příjmů mimo ubytování.</p>
+
+            <h3>Jak přidat službu</h3>
+            <ol>
+                <li>Přejděte na stránku <strong>Služby</strong> a klikněte na <strong>Přidat službu</strong>.</li>
+                <li>Zadejte <strong>Název služby</strong> (např. "Transfer na letiště", "Snídaně").</li>
+                <li>Zadejte <strong>Cenu</strong> ve vaší základní měně.</li>
+                <li>Uveďte volitelný <strong>Popis</strong>, aby personál věděl, co služba obnáší.</li>
+                <li>Klikněte na <strong>Vytvořit službu</strong>.</li>
+            </ol>
+
+            <p>Jakmile jsou tyto služby vytvořeny, objeví se jako zaškrtávací políčka, kdykoli personál recepce vytvoří
+                novou rezervaci. Zaškrtnutí služby automaticky přičte její cenu k celkové částce rezervace.</p>
+
+            <div class="screenshot-container">
+                <img src="images/services.png" alt="Obrazovka služeb a doplňků"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled služeb a doplňků</span><p>Uživatelské rozhraní pro správu dalších služeb a vybavení pro hosty.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="reports">
+            <h2>9. Reporty</h2>
+            <p>Rozhodování založené na datech začíná zde. Modul Reporty syntetizuje nezpracovaná data vašeho zařízení
+                do srozumitelných a využitelných informací pro management a majitele.</p>
+
+            <h3>Dostupné analýzy</h3>
+            <ul>
+                <li><strong>Finanční souhrny:</strong> Generujte podrobné rozpisy příjmů vytvořených za vlastní
+                    období, s rozdělením příjmů podle sazeb za pokoje versus doplňkové služby. Rychle kontrolujte
+                    vybrané
+                    platby oproti čekajícím zůstatkům pro řízení cash flow.</li>
+                <li><strong>Trendy obsazenosti a výnosů:</strong> Sledujte historická procenta obsazenosti spolu se
+                    statistikami
+                    průměrné denní sazby (ADR) a RevPAR. Identifikujte slabší týdny a podle toho plánujte budoucí
+                    marketingové úsilí.</li>
+                <li><strong>Efektivita úklidu:</strong> Kontrolujte časy přípravy pokojů a denní pracovní vytížení
+                    pokojských.</li>
+                <li><strong>Exporty pro daně a účetnictví:</strong> Zjednodušte měsíční vyúčtování exportem
+                    standardizovaných údajů o tržbách a vybraných daních přímo do formátů CSV kompatibilních s běžným
+                    účetním softwarem.</li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="images/reports.png" alt="Obrazovka obchodních reportů"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled reportů</span><p>Analytické pohledy zobrazující obchodní výkonnost a finanční data.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="housekeeping">
+            <h2>10. Úklid</h2>
+            <p>Zefektivněte komunikaci mezi recepcí a úklidovým personálem. Tento modul poskytuje
+                neustále se aktualizující přehled o fyzickém stavu každého pokoje.</p>
+
+            <h3>Jak aktualizovat stav úklidu pokoje</h3>
+            <ol>
+                <li>Přejděte na stránku <strong>Úklid</strong> pro zobrazení seznamu všech pokojů.</li>
+                <li>Najděte pokoj, který chcete aktualizovat, a klikněte na <strong>Aktualizovat stav</strong> (nebo na
+                    ikonu Upravit,
+                    pokud již záznam existuje).</li>
+                <li>V dialogovém okně vyberte aktuální <strong>Stav</strong>: <em>Uklizeno, Špinavé, Probíhá úklid nebo
+                        Údržba</em>.</li>
+                <li>Zadejte <strong>Jméno pokojské</strong> (zaměstnance přiřazeného k pokoji).</li>
+                <li>Přidejte jakékoli relevantní <strong>Poznámky</strong> (např. "Chybí ručníky", "Klimatizace je
+                    hlučná").</li>
+                <li>Klikněte na <strong>Uložit změny</strong>.</li>
+            </ol>
+
+            <div class="screenshot-container">
+                <img src="images/housekeeping.png" alt="Obrazovka stavu úklidu"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled správy úklidu</span><p>Ovládací panel pro sledování stavu čištění a údržby pokojů.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+        <section id="audit-logs">
+            <h2>11. Auditní záznamy</h2>
+            <p>Udržujte absolutní bezpečnost, transparentnost a odpovědnost svého personálu. Modul Auditní záznamy
+                slouží jako neměnný chronologický registr každé významné akce provedené v softwarovém
+                prostředí.</p>
+
+            <h3>Bezpečnostní funkce</h3>
+            <ul>
+                <li><strong>Odpovědnost uživatelů:</strong> Každá důležitá akce (např. vytvoření rezervace, změna ceny
+                    pokoje, vrácení platby, úprava nastavení) je zaznamenána spolu s konkrétním uživatelským jménem a
+                    časovým razítkem.</li>
+                <li><strong>Řešení problémů:</strong> Pokud zmizí rezervace nebo dojde k náhodnému překročení kapacity
+                    pokoje, správci mohou přesně zjistit, kdo data upravil a kdy se tak stalo, což snižuje
+                    zmatky a obviňování.</li>
+                <li><strong>Sledování přístupu:</strong> Sledujte historii pokusů o přihlášení, abyste identifikovali
+                    potenciální
+                    pokusy o neoprávněný přístup nebo sledovali docházku zaměstnanců na základě aktivity v systému.</li>
+                <li><strong>Filtrování a vyhledávání:</strong> Rychle procházejte tisíce historických záznamů
+                    filtrováním
+                    podle konkrétních typů událostí (např. "Rezervace smazána") nebo podle konkrétních zaměstnanců.</li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="images/audit-logs.png" alt="Obrazovka bezpečnostních a auditních záznamů"
+                    onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Náhled auditních záznamů</span><p>Zobrazení systémového protokolu pro sledování akcí uživatelů a bezpečnostních událostí.</p></div>'">
+            </div>
+            <a href="#toc" class="back-to-toc">Zpět na obsah</a>
+        </section>
+
+
+    </div>
+</body>
+
+</html>
