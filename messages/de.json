@@ -124,7 +124,13 @@
         "tryAdjustingSearch": "Versuchen Sie, Ihre Suche anzupassen oder fügen Sie einen neuen Preis hinzu",
         "loadingRates": "Lade Preise...",
         "errorLoading": "Fehler beim Laden der Preise",
-        "rateCreated": "Preis erfolgreich erstellt"
+        "rateCreated": "Preis erfolgreich erstellt",
+        "editRate": "Preis bearbeiten",
+        "updateRate": "Preis aktualisieren",
+        "deleteRate": "Preis löschen",
+        "rateUpdated": "Preis erfolgreich aktualisiert",
+        "rateDeleted": "Preis erfolgreich gelöscht",
+        "deleteConfirmMessage": "Sind Sie sicher, dass Sie diesen Preis löschen möchten?"
     },
     "Services": {
         "title": "Dienstleistungen",

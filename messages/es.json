@@ -124,7 +124,13 @@
         "tryAdjustingSearch": "Intente ajustar su búsqueda o añada una nueva tarifa",
         "loadingRates": "Cargando tarifas...",
         "errorLoading": "Error Cargando Tarifas",
-        "rateCreated": "Tarifa creada con éxito"
+        "rateCreated": "Tarifa creada con éxito",
+        "editRate": "Editar Tarifa",
+        "updateRate": "Actualizar Tarifa",
+        "deleteRate": "Eliminar Tarifa",
+        "rateUpdated": "Tarifa actualizada con éxito",
+        "rateDeleted": "Tarifa eliminada con éxito",
+        "deleteConfirmMessage": "¿Estás seguro de que deseas eliminar esta tarifa?"
     },
     "Services": {
         "title": "Servicios",

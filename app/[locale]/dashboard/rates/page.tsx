@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Percent, Plus, Search, Calendar } from "lucide-react"
+import { Percent, Plus, Search, Calendar, Edit2, Trash2 } from "lucide-react"
 import { api } from "@/lib/api"
 import { useTranslations, useFormatter } from "next-intl"
 
@@ -45,6 +45,7 @@ export default function RatesPage() {
     const [error, setError] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState("")
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+    const [selectedRate, setSelectedRate] = useState<SeasonalRate | null>(null)
 
     useEffect(() => {
         async function fetchData() {
@@ -72,7 +73,7 @@ export default function RatesPage() {
         rate.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
-    const handleAddRate = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSaveRate = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
 
@@ -82,22 +83,54 @@ export default function RatesPage() {
                 throw new Error("Invalid multiplier")
             }
 
-            const newRate = await api.createSeasonalRate({
+            const payload = {
                 name: formData.get("name") as string,
                 start_date: formData.get("startDate") as string,
                 end_date: formData.get("endDate") as string,
                 rate_multiplier: multiplier,
                 room_type: formData.get("roomType") as string || null,
                 room_group_id: formData.get("roomGroupId") ? Number(formData.get("roomGroupId")) : null
-            })
+            }
 
-            setRates([...rates, newRate])
+            if (selectedRate) {
+                const updatedRate = await api.updateSeasonalRate(selectedRate.id, payload)
+                setRates(rates.map(r => r.id === selectedRate.id ? updatedRate : r))
+                toast.success(t("rateUpdated") || "Rate updated successfully")
+            } else {
+                const newRate = await api.createSeasonalRate(payload)
+                setRates([...rates, newRate])
+                toast.success(t("rateCreated"))
+            }
+
             setIsAddDialogOpen(false)
-            toast.success(t("rateCreated"))
+            setSelectedRate(null)
         } catch (err) {
-            console.error("Error creating rate:", err)
-            toast.error("Failed to create rate: " + (err instanceof Error ? err.message : "Unknown error"))
+            console.error("Error saving rate:", err)
+            toast.error("Failed to save rate: " + (err instanceof Error ? err.message : "Unknown error"))
         }
+    }
+
+    const handleDeleteRate = async (id: number) => {
+        if (!confirm(t("deleteConfirmMessage") || "Are you sure you want to delete this rate?")) return
+
+        try {
+            await api.deleteSeasonalRate(id)
+            setRates(rates.filter((r) => r.id !== id))
+            toast.success(t("rateDeleted") || "Rate deleted successfully")
+        } catch (err) {
+            console.error("Error deleting rate:", err)
+            toast.error("Failed to delete rate: " + (err instanceof Error ? err.message : "Unknown error"))
+        }
+    }
+
+    const openEditDialog = (rate: SeasonalRate) => {
+        setSelectedRate(rate)
+        setIsAddDialogOpen(true)
+    }
+
+    const openAddDialog = () => {
+        setSelectedRate(null)
+        setIsAddDialogOpen(true)
     }
 
     if (loading) {
@@ -133,31 +166,71 @@ export default function RatesPage() {
                 </div>
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button>
+                        <Button onClick={openAddDialog}>
                             <Plus className="mr-2 size-4" />
                             {t("addRate")}
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <form onSubmit={handleAddRate}>
+                        <form onSubmit={handleSaveRate}>
                             <DialogHeader>
-                                <DialogTitle>{t("addRate")}</DialogTitle>
+                                <DialogTitle>{selectedRate ? (t("editRate") || "Edit Rate") : t("addRate")}</DialogTitle>
                                 <DialogDescription>{t("addRateDescription")}</DialogDescription>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                                 <div className="grid gap-2">
                                     <Label htmlFor="name">{t("rateName")}</Label>
-                                    <Input id="name" name="name" placeholder={t("rateNamePlaceholder")} required />
+                                    <Input id="name" name="name" defaultValue={selectedRate?.name || ""} placeholder={t("rateNamePlaceholder")} required />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="grid gap-2">
                                         <Label htmlFor="startDate">{t("startDate")}</Label>
-                                        <Input id="startDate" name="startDate" type="date" required />
+                                        <Input
+                                            id="startDate"
+                                            name="startDate"
+                                            type="date"
+                                            defaultValue={selectedRate?.start_date || ""}
+                                            required
+                                            onChange={(e) => {
+                                                const endDateInput = document.getElementById("endDate") as HTMLInputElement
+                                                if (endDateInput) {
+                                                    const startDate = new Date(e.target.value)
+                                                    if (!isNaN(startDate.getTime())) {
+                                                        const minEndDate = new Date(startDate.getTime() + 86400000)
+                                                        const minEndDateStr = minEndDate.toISOString().split('T')[0]
+                                                        endDateInput.min = minEndDateStr
+
+                                                        if (endDateInput.value && endDateInput.value < minEndDateStr) {
+                                                            endDateInput.value = minEndDateStr
+                                                        }
+                                                    }
+                                                }
+                                            }}
+                                        />
                                     </div>
                                     <div className="grid gap-2">
                                         <Label htmlFor="endDate">{t("endDate")}</Label>
-                                        <Input id="endDate" name="endDate" type="date" required />
+                                        <Input
+                                            id="endDate"
+                                            name="endDate"
+                                            type="date"
+                                            defaultValue={selectedRate?.end_date || ""}
+                                            required
+                                            onChange={(e) => {
+                                                const startDateInput = document.getElementById("startDate") as HTMLInputElement
+                                                if (startDateInput && startDateInput.value && e.target.value) {
+                                                    const startDate = new Date(startDateInput.value)
+                                                    const endDate = new Date(e.target.value)
+                                                    if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+                                                        if (endDate <= startDate) {
+                                                            const minEndDate = new Date(startDate.getTime() + 86400000)
+                                                            e.target.value = minEndDate.toISOString().split('T')[0]
+                                                        }
+                                                    }
+                                                }
+                                            }}
+                                        />
                                     </div>
                                 </div>
 
@@ -168,6 +241,7 @@ export default function RatesPage() {
                                         name="multiplier"
                                         type="number"
                                         placeholder="1.0"
+                                        defaultValue={selectedRate?.rate_multiplier || ""}
                                         step="0.01"
                                         min="0"
                                         required
@@ -177,7 +251,7 @@ export default function RatesPage() {
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="roomType">{t("roomType")} ({t("optional")})</Label>
-                                    <Select name="roomType">
+                                    <Select name="roomType" defaultValue={selectedRate?.room_type || undefined}>
                                         <SelectTrigger>
                                             <SelectValue placeholder={t("selectRoomType")} />
                                         </SelectTrigger>
@@ -192,7 +266,7 @@ export default function RatesPage() {
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="roomGroupId">{t("roomGroup")} ({t("optional")})</Label>
-                                    <Select name="roomGroupId">
+                                    <Select name="roomGroupId" defaultValue={selectedRate?.room_group_id?.toString() || undefined}>
                                         <SelectTrigger>
                                             <SelectValue placeholder={t("selectRoomGroup")} />
                                         </SelectTrigger>
@@ -208,7 +282,7 @@ export default function RatesPage() {
 
                             </div>
                             <DialogFooter>
-                                <Button type="submit">{t("createRate")}</Button>
+                                <Button type="submit">{selectedRate ? (t("updateRate") || "Update Rate") : t("createRate")}</Button>
                             </DialogFooter>
                         </form>
                     </DialogContent>
@@ -249,8 +323,17 @@ export default function RatesPage() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center justify-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground">
-                                    x{rate.rate_multiplier}
+                                <div className="flex items-center gap-2">
+                                    <div className="flex items-center justify-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground">
+                                        x{rate.rate_multiplier}
+                                    </div>
+                                    <Button variant="ghost" size="icon" onClick={() => openEditDialog(rate)}>
+                                        <Edit2 className="size-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" className="text-destructive 
+hover:bg-destructive/10 hover:text-destructive" onClick={() => handleDeleteRate(rate.id)}>
+                                        <Trash2 className="size-4" />
+                                    </Button>
                                 </div>
                             </div>
                         </CardHeader>

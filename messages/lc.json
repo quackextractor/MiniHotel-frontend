@@ -124,7 +124,13 @@
         "tryAdjustingSearch": "Search again or make new one",
         "loadingRates": "Gettin rulez...",
         "errorLoading": "O Noes! Error.",
-        "rateCreated": "Rule made!"
+        "rateCreated": "Rule made!",
+        "editRate": "Edit Rule",
+        "updateRate": "Update Rule",
+        "deleteRate": "Delete Rule",
+        "rateUpdated": "Rule updated bigly",
+        "rateDeleted": "Rule deleted completely",
+        "deleteConfirmMessage": "U sure u wanna delete this rule?"
     },
     "Services": {
         "title": "Treetz",

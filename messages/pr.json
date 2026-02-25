@@ -124,7 +124,13 @@
         "tryAdjustingSearch": "Adjust yer hunt or set a new rule",
         "loadingRates": "Haulin' rates...",
         "errorLoading": "Blight upon the Rates",
-        "rateCreated": "Bounty set in stone"
+        "rateCreated": "Bounty set in stone",
+        "editRate": "Modify Bounty",
+        "updateRate": "Update Bounty",
+        "deleteRate": "Scrap Bounty",
+        "rateUpdated": "Bounty modified successfully",
+        "rateDeleted": "Bounty scrapped to the depths",
+        "deleteConfirmMessage": "Ye sure ye want to abandon this bounty?"
     },
     "Services": {
         "title": "Extras & Loot",

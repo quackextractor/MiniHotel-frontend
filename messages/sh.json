@@ -124,7 +124,13 @@
         "tryAdjustingSearch": "Alter thy quest or forge a new tax",
         "loadingRates": "Consulting the treasury...",
         "errorLoading": "Treason! The tolls fail to load.",
-        "rateCreated": "The levy is cast in iron"
+        "rateCreated": "The levy is cast in iron",
+        "editRate": "Edit Toll",
+        "updateRate": "Update Toll",
+        "deleteRate": "Vanquish Toll",
+        "rateUpdated": "Toll updated fittingly",
+        "rateDeleted": "Toll vanquished",
+        "deleteConfirmMessage": "Are you certain you wish to vanquish this toll?"
     },
     "Services": {
         "title": "Royal Favours",

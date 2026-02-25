@@ -108,6 +108,8 @@ export const api = {
   // Seasonal Rates
   getSeasonalRates: () => fetchAPI("/seasonal-rates"),
   createSeasonalRate: (data: any) => fetchAPI("/seasonal-rates", { method: "POST", body: JSON.stringify(data) }),
+  updateSeasonalRate: (id: number, data: any) => fetchAPI(`/seasonal-rates/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteSeasonalRate: (id: number) => fetchAPI(`/seasonal-rates/${id}`, { method: "DELETE" }),
 
   // services
   getServices: () => fetchAPI("/services"),

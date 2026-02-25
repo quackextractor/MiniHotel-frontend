@@ -124,7 +124,13 @@
         "tryAdjustingSearch": "Try adjusting your search or add a new rate",
         "loadingRates": "Loading rates...",
         "errorLoading": "Error Loading Rates",
-        "rateCreated": "Rate created successfully"
+        "rateCreated": "Rate created successfully",
+        "editRate": "Edit Rate",
+        "updateRate": "Update Rate",
+        "deleteRate": "Delete Rate",
+        "rateUpdated": "Rate updated successfully",
+        "rateDeleted": "Rate deleted successfully",
+        "deleteConfirmMessage": "Are you sure you want to delete this rate?"
     },
     "Services": {
         "title": "Services",

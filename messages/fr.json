@@ -124,7 +124,13 @@
         "tryAdjustingSearch": "Essayez d'ajuster votre recherche ou ajoutez un nouveau tarif",
         "loadingRates": "Chargement des tarifs...",
         "errorLoading": "Erreur Chargement Tarifs",
-        "rateCreated": "Tarif créé avec succès"
+        "rateCreated": "Tarif créé avec succès",
+        "editRate": "Modifier le Tarif",
+        "updateRate": "Mettre à jour le Tarif",
+        "deleteRate": "Supprimer le Tarif",
+        "rateUpdated": "Tarif mis à jour avec succès",
+        "rateDeleted": "Tarif supprimé avec succès",
+        "deleteConfirmMessage": "Êtes-vous sûr de vouloir supprimer ce tarif ?"
     },
     "Services": {
         "title": "Services",

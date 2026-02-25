@@ -124,7 +124,13 @@
         "tryAdjustingSearch": "Zkuste upravit hledání nebo přidejte novou sazbu",
         "loadingRates": "Načítání sazeb...",
         "errorLoading": "Chyba při načítání sazeb",
-        "rateCreated": "Sazba úspěšně vytvořena"
+        "rateCreated": "Sazba úspěšně vytvořena",
+        "editRate": "Upravit sazbu",
+        "updateRate": "Aktualizovat sazbu",
+        "deleteRate": "Smazat sazbu",
+        "rateUpdated": "Sazba úspěšně aktualizována",
+        "rateDeleted": "Sazba úspěšně smazána",
+        "deleteConfirmMessage": "Opravdu chcete tuto sazbu smazat?"
     },
     "Services": {
         "title": "Služby",
