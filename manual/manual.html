@@ -143,10 +143,11 @@
         }
 
         .screenshot-placeholder::before {
-            content: "🖼️";
-            font-size: 4rem;
+            content: "[Image]";
+            font-size: 2rem;
             margin-bottom: 1rem;
-            opacity: 0.2;
+            opacity: 0.5;
+            font-weight: bold;
         }
 
         .screenshot-placeholder span {
@@ -207,6 +208,123 @@
             color: var(--secondary-color);
             font-weight: 600;
         }
+
+        .export-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .export-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .toc-title {
+            display: none;
+        }
+
+        .back-to-toc {
+            display: none;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            .export-btn {
+                display: none;
+            }
+
+            section {
+                page-break-before: always;
+                break-before: page;
+                position: relative;
+            }
+
+            .screenshot-container {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .screenshot-container img {
+                max-height: 850px;
+                width: auto;
+                object-fit: contain;
+            }
+
+            nav {
+                background-color: transparent;
+                color: black;
+                border-radius: 0;
+                padding: 0;
+                page-break-after: always;
+                break-after: page;
+            }
+
+            .toc-title {
+                display: block;
+                color: var(--primary-color);
+                margin-top: 0;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid var(--border-color);
+                font-size: 2rem;
+            }
+
+            nav ul {
+                display: block;
+            }
+
+            nav ul li {
+                margin-bottom: 0.75rem;
+                font-size: 1.1rem;
+            }
+
+            nav ul li a {
+                color: var(--primary-color);
+                border-bottom: 1px dotted #cbd5e1;
+                display: block;
+                padding-bottom: 0.25rem;
+                text-decoration: none;
+                width: 100%;
+            }
+
+            /* Adds leader dots and page numbers for supported PDF generators */
+            nav ul li a::after {
+                content: leader('.') target-counter(attr(href), page);
+                float: right;
+            }
+
+            h2[id] {
+                display: block;
+                padding-top: 1rem;
+            }
+
+            .back-to-toc {
+                display: inline-block;
+                margin-top: 2rem;
+                margin-bottom: 1rem;
+                color: var(--accent-color);
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 
@@ -215,10 +333,12 @@
         <header>
             <h1>MiniHotel Management System</h1>
             <p>Comprehensive User Manual and Setup Guide</p>
+            <button class="export-btn" onclick="window.print()">Export to PDF</button>
         </header>
 
 
-        <nav>
+        <nav id="toc">
+            <h2 class="toc-title">Table of Contents</h2>
             <ul>
                 <li><a href="#installation">Installation</a></li>
                 <li><a href="#getting-started">Getting Started</a></li>
@@ -234,8 +354,8 @@
             </ul>
         </nav>
 
-        <section id="installation">
-            <h2>1. Installation</h2>
+        <section>
+            <h2 id="installation">1. Installation</h2>
             <p>The MiniHotel Management System requires setting up both the backend API and the frontend client.</p>
 
             <h3>Backend Setup</h3>
@@ -253,10 +373,11 @@
                 <li>Start the development server: <code>npm run dev</code></li>
                 <li>Open your browser and navigate to <code>http://localhost:3000</code>.</li>
             </ol>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="getting-started">
-            <h2>2. Getting Started</h2>
+        <section>
+            <h2 id="getting-started">2. Getting Started</h2>
             <p>Before using the application daily, the system must be initialized by your IT administrator. This process
                 includes creating the primary administrator account and setting up baseline data for your property so
                 that your staff can immediately begin managing reservations.</p>
@@ -296,10 +417,11 @@
                 <img src="images/settings.png" alt="Settings Screen - Import Data"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Settings Screen Placeholder</span><p>UI screenshot showing the settings panel with the data import utility.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="dashboard">
-            <h2>3. Dashboard</h2>
+        <section>
+            <h2 id="dashboard">3. Dashboard</h2>
             <p>The Dashboard is the central hub of your MiniHotel system, offering an at-a-glance overview of your
                 property's performance in real-time. Immediately upon logging in, front desk staff and managers can
                 assess the daily state of the hotel.</p>
@@ -327,10 +449,11 @@
                 <img src="images/dashboard.png" alt="Main Dashboard Screen"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Dashboard Placeholder</span><p>Overview of occupancy metrics, revenue charts, and recent occupancy activity.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="bookings">
-            <h2>4. Bookings</h2>
+        <section>
+            <h2 id="bookings">4. Bookings</h2>
             <p>Manage all guest reservations in the Bookings module. This comprehensive data table is the primary tool
                 for front desk agents managing the daily flow of guests.</p>
 
@@ -358,7 +481,8 @@
                 <li>Click on any booking card in the list to open its detailed view.</li>
                 <li>To update the status, use the dropdown menus at the bottom of the window to change the
                     <strong>Booking Status</strong> or <strong>Payment Status</strong>. The system will save this
-                    automatically.</li>
+                    automatically.
+                </li>
                 <li>To cancel and remove the booking entirely, click the red <strong>Delete Booking</strong> button at
                     the bottom of the dialog. Note that this action cannot be undone.</li>
             </ol>
@@ -367,10 +491,11 @@
                 <img src="images/bookings.png" alt="Bookings Management Screen"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Bookings Management Placeholder</span><p>Table view of current guest reservations with status and action controls.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="calendar">
-            <h2>5. Calendar</h2>
+        <section>
+            <h2 id="calendar">5. Calendar</h2>
             <p>The Calendar provides a highly visual timeline of all reservations across your physical room inventory.
                 It is the most intuitive way to spot availability gaps, manage overlapping bookings, and plan for
                 long-term capacity.</p>
@@ -399,10 +524,11 @@
                 <img src="images/calendar.png" alt="Visual Calendar Screen"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Calendar View Placeholder</span><p>Interactive timeline displaying room availability and booking blocks.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="rooms">
-            <h2>6. Rooms Management</h2>
+        <section>
+            <h2 id="rooms">6. Rooms Management</h2>
             <p>Configure your physical property inventory. In this section, you define the exact physical rooms
                 available for booking, ensuring your software perfectly matches your building's layout.</p>
 
@@ -414,7 +540,8 @@
                 <li>Set the maximum <strong>Capacity</strong> of guests.</li>
                 <li>Enter the <strong>Base Price</strong> per night.</li>
                 <li>(Optional) Assign the room to a <strong>Room Group</strong> or provide a text
-                    <strong>Description</strong>.</li>
+                    <strong>Description</strong>.
+                </li>
                 <li>Click <strong>Save Room</strong>.</li>
             </ol>
 
@@ -436,10 +563,11 @@
                 <img src="images/rooms.png" alt="Rooms Configuration Screen"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Rooms Configuration Placeholder</span><p>Inventory management interface for defining and editing hotel rooms.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="rates">
-            <h2>7. Rates & Pricing</h2>
+        <section>
+            <h2 id="rates">7. Rates & Pricing</h2>
             <p>The Rates module is your primary financial tool for yield management, allowing you to maximize revenue
                 through dynamic pricing models based on varying demand periods.</p>
 
@@ -450,7 +578,8 @@
                 <li>Select the <strong>Start Date</strong> and <strong>End Date</strong> for when this price change
                     applies.</li>
                 <li>Set the <strong>Multiplier</strong>. (e.g., Entering <code>1.0</code> keeps the base rate,
-                    <code>1.2</code> increases the price by 20%, and <code>0.8</code> applies a 20% discount).</li>
+                    <code>1.2</code> increases the price by 20%, and <code>0.8</code> applies a 20% discount).
+                </li>
                 <li>(Optional) Apply the rate to a specific <strong>Room Type</strong> or <strong>Room Group</strong>.
                     If left unselected, the rate multiplier applies to all rooms in the hotel.</li>
                 <li>Click <strong>Create Rate</strong>.</li>
@@ -465,10 +594,11 @@
                 <img src="images/rates.png" alt="Rates and Pricing Screen"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Rates & Pricing Placeholder</span><p>Interface for setting seasonal room rates and pricing overrides.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="services">
-            <h2>8. Services & Add-ons</h2>
+        <section>
+            <h2 id="services">8. Services & Add-ons</h2>
             <p>Increase your RevPAR by managing supplemental items and experiences that guests can purchase during their
                 stay. The Services module tracks all non-room revenue streams.</p>
 
@@ -488,10 +618,11 @@
                 <img src="images/services.png" alt="Services and Add-ons Screen"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Services & Add-ons Placeholder</span><p>Management UI for additional guest services and amenities.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="reports">
-            <h2>9. Reports</h2>
+        <section>
+            <h2 id="reports">9. Reports</h2>
             <p>Data-driven decision making starts here. The Reports module synthesizes your property's raw data into
                 digestible, actionable intelligence for management and ownership teams.</p>
 
@@ -514,10 +645,11 @@
                 <img src="images/reports.png" alt="Business Reports Screen"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Reports Dashboard Placeholder</span><p>Analytical views showing business performance and financial data.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="housekeeping">
-            <h2>10. Housekeeping</h2>
+        <section>
+            <h2 id="housekeeping">10. Housekeeping</h2>
             <p>Streamline communication between the front desk and your cleaning staff. This module provides a
                 constantly updating manifest of the physical state of every room.</p>
 
@@ -537,10 +669,11 @@
                 <img src="images/housekeeping.png" alt="Housekeeping Status Screen"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Housekeeping Management Placeholder</span><p>Control panel for tracking room cleaning and maintenance status.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
-        <section id="audit-logs">
-            <h2>11. Audit Logs</h2>
+        <section>
+            <h2 id="audit-logs">11. Audit Logs</h2>
             <p>Maintain absolute security, transparency, and accountability across your staff. The Audit Logs module
                 serves as an immutable, chronological register of every significant action performed within the software
                 environment.</p>
@@ -563,6 +696,7 @@
                 <img src="images/audit-logs.png" alt="Security and Audit Logs Screen"
                     onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Audit Logs Placeholder</span><p>System log view for tracking user actions and security events.</p></div>'">
             </div>
+            <a href="#toc" class="back-to-toc">Back to Table of Contents</a>
         </section>
 
         <footer>
