@@ -231,6 +231,7 @@
             "searchGuest": "Hledat hosta...",
             "noGuestFound": "Host nenalezen.",
             "room": "Pokoj",
+            "type": "Typ pokoje",
             "selectRoom": "Vybrat pokoj",
             "checkInDate": "Datum příjezdu",
             "checkOutDate": "Datum odjezdu",

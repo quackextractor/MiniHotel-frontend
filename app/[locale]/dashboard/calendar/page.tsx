@@ -5,6 +5,8 @@ import { toast } from "sonner"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,7 +15,10 @@ import {
   Mail,
   Phone,
   CreditCard,
-  Trash2
+  Trash2,
+  Edit2,
+  Save,
+  X
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { api } from "@/lib/api"
@@ -77,6 +82,8 @@ export default function CalendarPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editFormData, setEditFormData] = useState<Partial<Booking>>({})
 
   useEffect(() => {
     async function fetchCalendarData() {
@@ -139,6 +146,39 @@ export default function CalendarPage() {
     return dateOnly >= checkInOnly && dateOnly < checkOutOnly
   }
 
+  const handleEditChange = (field: keyof Booking | "room_id", value: any) => {
+    setEditFormData({ ...editFormData, [field]: value })
+  }
+
+  const handleSaveEdit = async () => {
+    if (!selectedBooking) return
+    try {
+      console.log("[v0] Saving booking edits...")
+
+      const payload: any = {
+        check_in: editFormData.check_in,
+        check_out: editFormData.check_out,
+        number_of_guests: Number(editFormData.number_of_guests),
+        room_id: Number(editFormData.room_id),
+        notes: editFormData.notes
+      }
+
+      await api.updateBooking(selectedBooking.id, payload)
+      const updatedBookings = await api.getBookings()
+      setBookings(Array.isArray(updatedBookings) ? updatedBookings : updatedBookings.items || [])
+
+      const updatedBooking = (Array.isArray(updatedBookings) ? updatedBookings : updatedBookings.items || []).find((b: Booking) => b.id === selectedBooking.id)
+      if (updatedBooking) {
+        setSelectedBooking(updatedBooking)
+      }
+      setIsEditing(false)
+      toast.success("Booking updated successfully")
+    } catch (err) {
+      console.error("[v0] Error updating booking:", err)
+      toast.error("Failed to update booking: " + (err instanceof Error ? err.message : "Unknown error"))
+    }
+  }
+
   const getBookingForRoomAndDate = (roomId: number, date: Date) => {
     return bookings.find(
       (booking) => booking.room_id === roomId && isDateInRange(date, booking.check_in, booking.check_out),
@@ -192,6 +232,7 @@ export default function CalendarPage() {
       await api.deleteBooking(bookingId)
       setBookings(bookings.filter((b) => b.id !== bookingId))
       setSelectedBooking(null)
+      setIsEditing(false)
       toast.success("Booking deleted successfully")
     } catch (err) {
       console.error("[v0] Error deleting booking:", err)
@@ -286,6 +327,7 @@ export default function CalendarPage() {
                           onClick={() => {
                             if (booking) {
                               setSelectedBooking(booking)
+                              setIsEditing(false)
                             }
                           }}
                         >
@@ -353,7 +395,10 @@ export default function CalendarPage() {
                   <div
                     key={booking.id}
                     className="cursor-pointer flex items-center justify-between rounded-lg border border-border p-3 hover:bg-accent/50 transition-colors"
-                    onClick={() => setSelectedBooking(booking)}
+                    onClick={() => {
+                      setSelectedBooking(booking)
+                      setIsEditing(false)
+                    }}
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
@@ -413,15 +458,49 @@ export default function CalendarPage() {
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">{tBookings("roomDetails")}</Label>
                   <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">{tBookings("form.room")}:</span> {selectedBooking.room?.room_number}
-                    </p>
-                    <p>
-                      <span className="font-medium">{tBookings("form.type")}:</span> {selectedBooking.room?.room_type}
-                    </p>
-                    <p>
-                      <span className="font-medium">{tBookings("form.numberOfGuests")}:</span> {selectedBooking.number_of_guests}
-                    </p>
+                    {isEditing ? (
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <Label className="self-center w-24">{tBookings("form.room")}</Label>
+                          <Select
+                            value={editFormData.room_id ? editFormData.room_id.toString() : ""}
+                            onValueChange={(value) => handleEditChange("room_id", Number(value))}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder={tBookings("form.selectRoom")} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {rooms.map((room) => (
+                                <SelectItem key={room.id} value={room.id.toString()}>
+                                  Room {room.room_number} - {room.room_type}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="flex gap-2">
+                          <Label className="self-center w-24">{tBookings("form.numberOfGuests")}</Label>
+                          <Input
+                            type="number"
+                            min="1"
+                            value={editFormData.number_of_guests || ""}
+                            onChange={(e) => handleEditChange("number_of_guests", e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <p>
+                          <span className="font-medium">{tBookings("form.room")}:</span> {selectedBooking.room?.room_number}
+                        </p>
+                        <p>
+                          <span className="font-medium">{tBookings("form.type")}:</span> {selectedBooking.room?.room_type}
+                        </p>
+                        <p>
+                          <span className="font-medium">{tBookings("form.numberOfGuests")}:</span> {selectedBooking.number_of_guests}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -429,14 +508,37 @@ export default function CalendarPage() {
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">{tBookings("stayDuration")}</Label>
                   <div className="space-y-2">
-                    <p>
-                      <span className="font-medium">{tBookings("form.checkInDate")}:</span>{" "}
-                      {new Date(selectedBooking.check_in).toLocaleDateString()}
-                    </p>
-                    <p>
-                      <span className="font-medium">{tBookings("form.checkOutDate")}:</span>{" "}
-                      {new Date(selectedBooking.check_out).toLocaleDateString()}
-                    </p>
+                    {isEditing ? (
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <Label className="self-center w-24">{tBookings("form.checkInDate")}</Label>
+                          <Input
+                            type="date"
+                            value={editFormData.check_in ? editFormData.check_in.substring(0, 10) : ""}
+                            onChange={(e) => handleEditChange("check_in", e.target.value)}
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <Label className="self-center w-24">{tBookings("form.checkOutDate")}</Label>
+                          <Input
+                            type="date"
+                            value={editFormData.check_out ? editFormData.check_out.substring(0, 10) : ""}
+                            onChange={(e) => handleEditChange("check_out", e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <p>
+                          <span className="font-medium">{tBookings("form.checkInDate")}:</span>{" "}
+                          {new Date(selectedBooking.check_in).toLocaleDateString()}
+                        </p>
+                        <p>
+                          <span className="font-medium">{tBookings("form.checkOutDate")}:</span>{" "}
+                          {new Date(selectedBooking.check_out).toLocaleDateString()}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -444,7 +546,7 @@ export default function CalendarPage() {
                   <div className="space-y-2">
                     {selectedBooking.total_amount && (
                       <p>
-                        <span className="font-medium">{tBookings("total")}:</span> ${selectedBooking.total_amount}
+                        <span className="font-medium">{tBookings("total")}:</span> {convert(selectedBooking.total_amount).toFixed(2)} {currency}
                       </p>
                     )}
                     {selectedBooking.payment_status && (
@@ -465,12 +567,20 @@ export default function CalendarPage() {
                   </div>
                 </div>
               </div>
-              {selectedBooking.notes && (
+              {isEditing || selectedBooking.notes ? (
                 <div className="space-y-2">
                   <Label className="text-muted-foreground">{tBookings("notes")}</Label>
-                  <p className="text-sm">{selectedBooking.notes}</p>
+                  {isEditing ? (
+                    <Textarea
+                      value={editFormData.notes || ""}
+                      onChange={(e) => handleEditChange("notes", e.target.value)}
+                      placeholder={tBookings("form.specialRequests")}
+                    />
+                  ) : (
+                    <p className="text-sm">{selectedBooking.notes}</p>
+                  )}
                 </div>
-              )}
+              ) : null}
               <div className="space-y-2">
                 <Label>{tBookings("updateStatus")}</Label>
                 <div className="grid gap-2">
@@ -509,7 +619,7 @@ export default function CalendarPage() {
                   </Select>
                 </div>
               </div>
-              <DialogFooter>
+              <DialogFooter className="flex justify-between sm:justify-between w-full">
                 <Button
                   variant="destructive"
                   onClick={() => handleDeleteBooking(selectedBooking.id)}
@@ -517,6 +627,26 @@ export default function CalendarPage() {
                   <Trash2 className="mr-2 size-4" />
                   {tBookings("deleteBooking")}
                 </Button>
+                {isEditing ? (
+                  <div className="flex gap-2">
+                    <Button variant="outline" onClick={() => setIsEditing(false)}>
+                      <X className="mr-2 size-4" />
+                      {tCommon("cancel")}
+                    </Button>
+                    <Button onClick={handleSaveEdit}>
+                      <Save className="mr-2 size-4" />
+                      {tCommon("save")}
+                    </Button>
+                  </div>
+                ) : (
+                  <Button onClick={() => {
+                    setEditFormData(selectedBooking)
+                    setIsEditing(true)
+                  }}>
+                    <Edit2 className="mr-2 size-4" />
+                    {tCommon("edit")}
+                  </Button>
+                )}
               </DialogFooter>
             </div>
           </DialogContent>

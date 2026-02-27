@@ -231,6 +231,7 @@
             "searchGuest": "Hunt for Wanderer...",
             "noGuestFound": "The Wanderer is a ghost.",
             "room": "The Chamber",
+            "type": "Lineage of Chamber",
             "selectRoom": "Assign Chamber",
             "checkInDate": "Day of Coming",
             "checkOutDate": "Day of Going",

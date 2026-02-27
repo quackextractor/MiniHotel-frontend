@@ -231,6 +231,7 @@
             "searchGuest": "Buscar huésped...",
             "noGuestFound": "No se encontró el huésped.",
             "room": "Habitación",
+            "type": "Tipo de habitación",
             "selectRoom": "Seleccionar habitación",
             "checkInDate": "Fecha de Entrada",
             "checkOutDate": "Fecha de Salida",

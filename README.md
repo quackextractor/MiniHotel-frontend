@@ -3,14 +3,14 @@
 ### Installation
 
 1. **Install dependencies**
-   \`\`\`bash
+   ```bash
    npm install --legacy-peer-deps
-   \`\`\`
+   ```
 
 2. **Start development server**
-   \`\`\`bash
+   ```bash
    npm run dev
-   \`\`\`
+   ```
 
 3. **Open in browser**
    Navigate to `http://localhost:3000`
@@ -20,9 +20,15 @@ A comprehensive user manual is available in the `manual` directory:
 - [English Manual](./manual/manual-EN.html)
 - [Czech Manual](./manual/manual-CZ.html)
 
+### Developing & Translating
+When adding new translations or components, run the internationalization linter to check for missing keys:
+```bash
+npm run lint:i18n
+```
+
 ### Building for Production
 
-\`\`\`bash
+```bash
 npm run build
 npm start
-\`\`\`
+```

@@ -231,6 +231,7 @@
             "searchGuest": "Rechercher client...",
             "noGuestFound": "Aucun client trouvé.",
             "room": "Chambre",
+            "type": "Type de chambre",
             "selectRoom": "Sélectionner chambre",
             "checkInDate": "Date d'Arrivée",
             "checkOutDate": "Date de Départ",

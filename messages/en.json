@@ -231,6 +231,7 @@
             "searchGuest": "Search guest...",
             "noGuestFound": "No guest found.",
             "room": "Room",
+            "type": "Room Type",
             "selectRoom": "Select room",
             "checkInDate": "Check-in Date",
             "checkOutDate": "Check-out Date",

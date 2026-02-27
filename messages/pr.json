@@ -231,6 +231,7 @@
             "searchGuest": "Hunt fer soul...",
             "noGuestFound": "No soul spotted.",
             "room": "Cabin",
+            "type": "Cabin Class",
             "selectRoom": "Pick a cabin",
             "checkInDate": "Arrival Tide",
             "checkOutDate": "Departure Tide",

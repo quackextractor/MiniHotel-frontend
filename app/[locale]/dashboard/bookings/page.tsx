@@ -98,7 +98,7 @@ export default function BookingsPage() {
           api.getServices(),
         ])
         console.log("[v0] Data received:", { bookingsData, roomsData, guestsData, servicesData })
-        setBookings(bookingsData.items || [])
+        setBookings(bookingsData || [])
         setRooms(roomsData)
         setGuests(guestsData)
         setServices(servicesData)

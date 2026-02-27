@@ -2,8 +2,13 @@ const fs = require('fs');
 const path = require('path');
 
 const messagesDir = path.join(__dirname, 'messages');
-const requiredLanguages = ['cs', 'de'];
 const baseLanguage = 'en';
+
+// Dynamically get all target languages from the messages directory
+const files = fs.readdirSync(messagesDir);
+const requiredLanguages = files
+    .filter(file => file.endsWith('.json') && file !== `${baseLanguage}.json`)
+    .map(file => file.replace('.json', ''));
 
 function flattenKeys(obj, prefix = '') {
     let keys = [];
