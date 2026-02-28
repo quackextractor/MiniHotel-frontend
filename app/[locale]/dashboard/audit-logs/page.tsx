@@ -14,6 +14,18 @@ import { Loader2 } from "lucide-react"
 import { api } from "@/lib/api"
 import { useTranslations } from "next-intl"
 
+interface AuditLog {
+    id: number;
+    user_id: number;
+    action: string;
+    details: string;
+    timestamp: string;
+    ip_address: string;
+    user?: {
+        username: string;
+    }
+}
+
 export default function AuditLogsPage() {
     const t = useTranslations("AuditLogs")
     const commonT = useTranslations("Common")

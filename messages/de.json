@@ -362,7 +362,26 @@
         "status": "Status",
         "active": "Aktiv",
         "manageSystem": "Systemdaten verwalten und administrative Aufgaben",
-        "populateData": "Das System mit Beispielzimmern, Gästen und Buchungen füllen."
+        "populateData": "Das System mit Beispielzimmern, Gästen und Buchungen füllen.",
+        "trackNewCurrency": "Neue Währung verfolgen",
+        "trackNewCurrencyDesc": "Fügen Sie einen 3-stelligen Währungscode hinzu (z. B. JPY, AUD), um Live-Kurse abzurufen und zu verfolgen.",
+        "currencyCodeExp": "z. B. JPY",
+        "currencyCodeInvalid": "Bitte geben Sie einen gültigen 3-stelligen Währungscode ein (z. B. JPY, AUD)",
+        "currencyTrackSuccess": "{currency} wird jetzt verfolgt.",
+        "currencyTrackError": "Währung konnte nicht zum Tracker hinzugefügt werden",
+        "autoLogout": "Automatisches Abmelden",
+        "autoLogoutDesc": "Automatisch nach Inaktivität abmelden",
+        "timeoutMinutes": "Zeitlimit (Minuten)",
+        "passwordsDoNotMatch": "Neue Passwörter stimmen nicht überein",
+        "currentPasswordRequired": "Aktuelles Passwort ist erforderlich",
+        "passwordUpdatedSuccess": "Passwort erfolgreich aktualisiert",
+        "failedUpdatePassword": "Passwortaktualisierung fehlgeschlagen",
+        "importWarning": "Hiermit werden Beispieldaten importiert. Vorhandene Daten mit denselben IDs/E-Mails werden übersprungen.",
+        "importSuccess": "Daten erfolgreich importiert",
+        "importFailed": "Datenimport fehlgeschlagen:",
+        "importing": "Importieren...",
+        "serverProxy": "Server-Proxy",
+        "lastRefreshed": "Last refreshed"
     },
     "AuditLogs": {
         "title": "Audit-Protokolle",
@@ -409,7 +428,8 @@
         "search": "Suchen",
         "filter": "Filtern",
         "export": "Exportieren",
-        "import": "Importieren"
+        "import": "Importieren",
+        "add": "Hinzufügen"
     },
     "Housekeeping": {
         "title": "Reinigung",

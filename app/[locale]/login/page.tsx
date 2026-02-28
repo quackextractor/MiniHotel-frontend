@@ -54,7 +54,7 @@ export default function LoginPage() {
         // Check if system is initialized
         async function checkInit() {
             try {
-                const res = await fetch('http://localhost:5000/api/auth/status')
+                const res = await fetch('/api/auth/status')
                 const data = await res.json()
                 if (!data.initialized) {
                     router.push('/register')
@@ -78,7 +78,7 @@ export default function LoginPage() {
         setLoading(true)
         setError(null)
         try {
-            const res = await fetch('http://localhost:5000/api/auth/login', {
+            const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export default function LoginPage() {
             const payload = JSON.parse(atob(data.token.split('.')[1]))
             const userId = payload.user_id
 
-            login(data.token, data.username, userId)
+            login(data.username, userId)
 
         } catch (err: any) {
             setError(err.message)

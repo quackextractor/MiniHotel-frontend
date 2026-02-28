@@ -12,8 +12,7 @@ interface User {
 // Define the shape of the context
 interface AuthContextType {
     user: User | null
-    token: string | null
-    login: (token: string, username: string, userId: number) => void
+    login: (username: string, userId: number) => void
     logout: (reason?: string) => void
     isAuthenticated: boolean
     loading: boolean
@@ -25,38 +24,36 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 // Create the provider component
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null)
-    const [token, setToken] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
     const router = useRouter()
     const pathname = usePathname()
 
     useEffect(() => {
         // Check for token in localStorage on mount
-        const storedToken = localStorage.getItem('token')
         const storedUsername = localStorage.getItem('username')
         const storedUserId = localStorage.getItem('userId')
 
-        if (storedToken && storedUsername && storedUserId) {
-            setToken(storedToken)
+        if (storedUsername && storedUserId) {
             setUser({ id: parseInt(storedUserId), username: storedUsername })
         }
         setLoading(false)
     }, [])
 
-    const login = (newToken: string, newUsername: string, newUserId: number) => {
-        localStorage.setItem('token', newToken)
+    const login = (newUsername: string, newUserId: number) => {
         localStorage.setItem('username', newUsername)
         localStorage.setItem('userId', newUserId.toString())
-        setToken(newToken)
         setUser({ id: newUserId, username: newUsername })
         router.push('/')
     }
 
-    const logout = (reason?: string) => {
-        localStorage.removeItem('token')
+    const logout = async (reason?: string) => {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' })
+        } catch (e) {
+            console.error("Failed to logout remotely", e)
+        }
         localStorage.removeItem('username')
         localStorage.removeItem('userId')
-        setToken(null)
         setUser(null)
         if (reason) {
             router.push(`/login?error=${encodeURIComponent(reason)}`)
@@ -65,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }
 
-    const isAuthenticated = !!token
+    const isAuthenticated = !!user
 
     // Protected routes logic handled here or in middleware.
     // We'll use this context to conditionally render or redirect as a fail-safe.
@@ -76,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [loading, isAuthenticated, pathname, router])
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated, loading }}>
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated, loading }}>
             {children}
         </AuthContext.Provider>
     )

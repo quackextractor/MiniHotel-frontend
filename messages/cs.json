@@ -362,7 +362,26 @@
         "status": "Stav",
         "active": "Aktivní",
         "manageSystem": "Správa systémových dat a administrativní úkoly",
-        "populateData": "Naplnit systém vzorovými pokoji, hosty a rezervacemi."
+        "populateData": "Naplnit systém vzorovými pokoji, hosty a rezervacemi.",
+        "trackNewCurrency": "Sledovat novou měnu",
+        "trackNewCurrencyDesc": "Přidejte 3písmenný kód měny (např. JPY, AUD) pro načítání a sledování aktuálních kurzů.",
+        "currencyCodeExp": "např. JPY",
+        "currencyCodeInvalid": "Zadejte platný 3písmenný kód měny (např. JPY, AUD)",
+        "currencyTrackSuccess": "Měna {currency} je nyní sledována.",
+        "currencyTrackError": "Nepodařilo se přidat měnu do sledování.",
+        "autoLogout": "Automatické odhlášení",
+        "autoLogoutDesc": "Automaticky odhlásit po nečinnosti",
+        "timeoutMinutes": "Časový limit (minuty)",
+        "passwordsDoNotMatch": "Nová hesla se neshodují",
+        "currentPasswordRequired": "Je vyžadováno aktuální heslo",
+        "passwordUpdatedSuccess": "Heslo bylo úspěšně aktualizováno",
+        "failedUpdatePassword": "Aktualizace hesla se nezdařila",
+        "importWarning": "Tímto se importují ukázková data. Existující data se stejnými ID/e-maily budou přeskočena.",
+        "importSuccess": "Data byla úspěšně importována",
+        "importFailed": "Import dat se nezdařil:",
+        "importing": "Importování...",
+        "serverProxy": "Proxy serveru",
+        "lastRefreshed": "Last refreshed"
     },
     "AuditLogs": {
         "title": "Auditní logy",
@@ -409,7 +428,8 @@
         "search": "Hledat",
         "filter": "Filtrovat",
         "export": "Exportovat",
-        "import": "Importovat"
+        "import": "Importovat",
+        "add": "Přidat"
     },
     "Housekeeping": {
         "title": "Úklid",

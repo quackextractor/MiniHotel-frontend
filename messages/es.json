@@ -362,7 +362,26 @@
         "status": "Estado",
         "active": "Activo",
         "manageSystem": "Gestione datos del sistema y tareas administrativas",
-        "populateData": "Llene el sistema con habitaciones, huéspedes y reservas de muestra."
+        "populateData": "Llene el sistema con habitaciones, huéspedes y reservas de muestra.",
+        "trackNewCurrency": "Rastrear Nueva Moneda",
+        "trackNewCurrencyDesc": "Agregue un código de moneda de 3 letras (por ejemplo, JPY, AUD) para obtener y rastrear tasas en vivo.",
+        "currencyCodeExp": "ej. JPY",
+        "currencyCodeInvalid": "Por favor ingrese un código de moneda válido de 3 letras (por ejemplo, JPY, AUD)",
+        "currencyTrackSuccess": "{currency} ahora está siendo rastreado.",
+        "currencyTrackError": "Error al agregar la moneda al rastreador",
+        "autoLogout": "Cierre de sesión automático",
+        "autoLogoutDesc": "Cerrar sesión automáticamente después de la inactividad",
+        "timeoutMinutes": "Tiempo de espera (minutos)",
+        "passwordsDoNotMatch": "Las nuevas contraseñas no coinciden",
+        "currentPasswordRequired": "Se requiere la contraseña actual",
+        "passwordUpdatedSuccess": "Contraseña actualizada con éxito",
+        "failedUpdatePassword": "Error al actualizar la contraseña",
+        "importWarning": "Esto importará datos de ejemplo. Se omitirán los datos existentes con las mismas identificaciones/correos electrónicos.",
+        "importSuccess": "Datos importados con éxito",
+        "importFailed": "Error al importar datos:",
+        "importing": "Importando...",
+        "serverProxy": "Proxy del servidor",
+        "lastRefreshed": "Last refreshed"
     },
     "AuditLogs": {
         "title": "Registros de Auditoría",
@@ -409,7 +428,8 @@
         "search": "Buscar",
         "filter": "Filtrar",
         "export": "Exportar",
-        "import": "Importar"
+        "import": "Importar",
+        "add": "Añadir"
     },
     "Housekeeping": {
         "title": "Limpieza",

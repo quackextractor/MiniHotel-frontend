@@ -362,7 +362,26 @@
         "status": "Status",
         "active": "Active",
         "manageSystem": "Manage system data and administrative tasks",
-        "populateData": "Populate the system with sample rooms, guests, and bookings."
+        "populateData": "Populate the system with sample rooms, guests, and bookings.",
+        "trackNewCurrency": "Track New Currency",
+        "trackNewCurrencyDesc": "Add a 3-letter currency code (e.g. JPY, AUD) to fetch and track live rates.",
+        "currencyCodeExp": "e.g. JPY",
+        "currencyCodeInvalid": "Please enter a valid 3-letter currency code (e.g. JPY, AUD)",
+        "currencyTrackSuccess": "{currency} is now being tracked.",
+        "currencyTrackError": "Failed to add currency to tracker",
+        "autoLogout": "Auto Logout",
+        "autoLogoutDesc": "Automatically log out after inactivity",
+        "timeoutMinutes": "Timeout (minutes)",
+        "passwordsDoNotMatch": "New passwords do not match",
+        "currentPasswordRequired": "Current password is required",
+        "passwordUpdatedSuccess": "Password updated successfully",
+        "failedUpdatePassword": "Failed to update password",
+        "importWarning": "This will import example data. Existing data with same IDs/emails will be skipped.",
+        "importSuccess": "Data imported successfully",
+        "importFailed": "Failed to import data:",
+        "importing": "Importing...",
+        "serverProxy": "Server Proxy",
+        "lastRefreshed": "Last refreshed"
     },
     "AuditLogs": {
         "title": "Audit Logs",
@@ -409,7 +428,8 @@
         "search": "Search",
         "filter": "Filter",
         "export": "Export",
-        "import": "Import"
+        "import": "Import",
+        "add": "Add"
     },
     "Housekeeping": {
         "title": "Housekeeping",

@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from "react"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,6 +22,25 @@ import { useEnterNavigation } from "@/hooks/use-enter-navigation"
 import { useCurrency } from "@/hooks/use-currency"
 import { api } from "@/lib/api"
 import { Booking } from "@/lib/types"
+
+const bookingSchema = z.object({
+    guestId: z.string().min(1, "Guest is required"),
+    roomId: z.string().min(1, "Room is required"),
+    checkIn: z.string().min(1, "Check-in date is required"),
+    checkOut: z.string().min(1, "Check-out date is required"),
+    numberOfGuests: z.preprocess((val) => Number(val), z.number().min(1, "At least 1 guest required")),
+    status: z.string().min(1, "Status is required"),
+    paymentStatus: z.string().optional(),
+    totalAmount: z.preprocess((val) => (val === "" || val === undefined ? undefined : Number(val)), z.number().optional()),
+    paymentMethod: z.string().optional(),
+    assignedTo: z.string().optional(),
+    notes: z.string().optional()
+}).refine((data) => new Date(data.checkOut) > new Date(data.checkIn), {
+    message: "Check-out date must be after check-in date",
+    path: ["checkOut"],
+});
+
+type BookingFormValues = z.infer<typeof bookingSchema>;
 
 interface BookingFormProps {
     initialData?: Partial<Booking>
@@ -46,38 +68,58 @@ export function BookingForm({
 
     const isEditing = !!initialData?.id
 
-    const [selectedGuestId, setSelectedGuestId] = useState<string>(
-        initialData?.guest_id ? initialData.guest_id.toString() : ""
-    )
     const [openGuestPopover, setOpenGuestPopover] = useState(false)
     const [selectedServices, setSelectedServices] = useState<Set<number>>(new Set())
     const [calculatedRate, setCalculatedRate] = useState<number | null>(null)
 
+    const form = useForm<BookingFormValues>({
+        resolver: zodResolver(bookingSchema),
+        defaultValues: {
+            guestId: initialData?.guest_id ? initialData.guest_id.toString() : "",
+            roomId: initialData?.room_id?.toString() || "",
+            checkIn: initialData?.check_in?.substring(0, 10) || "",
+            checkOut: initialData?.check_out?.substring(0, 10) || "",
+            numberOfGuests: initialData?.number_of_guests || 2,
+            status: initialData?.status || "pending",
+            paymentStatus: initialData?.payment_status || "pending",
+            totalAmount: initialData?.total_amount ? convert(initialData.total_amount) : undefined,
+            paymentMethod: initialData?.payment_method || "cash",
+            assignedTo: initialData?.assigned_to || "",
+            notes: initialData?.notes || ""
+        },
+    })
+
+    const watchRoomId = form.watch("roomId")
+    const watchCheckIn = form.watch("checkIn")
+    const watchCheckOut = form.watch("checkOut")
+    const watchNumberOfGuests = form.watch("numberOfGuests")
+    const watchGuestId = form.watch("guestId")
+
     useEffect(() => {
-        if (initialData?.id) {
-            // If editing, load initial services if available inside initialData.services
-            // But initialData from API usually comes with selected services differently or not exposed.
-            // This is a simplified approach, adjust based on actual API behavior.
+        if (!watchRoomId || !watchCheckIn || !watchCheckOut || !watchNumberOfGuests) return
+
+        const checkInDate = new Date(watchCheckIn)
+        const checkOutDate = new Date(watchCheckOut)
+
+        if (!isNaN(checkInDate.getTime()) && !isNaN(checkOutDate.getTime()) && checkOutDate > checkInDate) {
+            handleCalculateRate(watchRoomId, watchCheckIn, watchCheckOut, String(watchNumberOfGuests), selectedServices)
         }
-    }, [initialData])
+    }, [watchRoomId, watchCheckIn, watchCheckOut, watchNumberOfGuests, selectedServices])
 
     const handleCalculateRate = async (
         roomId: string,
         checkIn: string,
         checkOut: string,
         numberOfGuests: string,
-        currentSelectedServices?: Set<number>
+        currentSelectedServices: Set<number>
     ) => {
-        if (!roomId || !checkIn || !checkOut) return
-
-        const servicesToUse = currentSelectedServices || selectedServices
         try {
             const result = await api.calculateRate({
                 room_id: Number(roomId),
                 check_in: checkIn,
                 check_out: checkOut,
                 number_of_guests: numberOfGuests ? Number(numberOfGuests) : undefined,
-                service_ids: Array.from(servicesToUse),
+                service_ids: Array.from(currentSelectedServices),
             })
             setCalculatedRate(result.total_amount || result.calculated_rate)
         } catch (err) {
@@ -85,59 +127,40 @@ export function BookingForm({
         }
     }
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const formData = new FormData(e.currentTarget)
-
+    const onFormSubmit = async (values: BookingFormValues) => {
         const bookingData: any = {
-            guest_id: Number(formData.get("guestId")),
-            room_id: Number(formData.get("roomId")),
-            check_in: formData.get("checkIn") as string,
-            check_out: formData.get("checkOut") as string,
-            number_of_guests: Number(formData.get("numberOfGuests")),
-            status: formData.get("status") as string,
-            notes: formData.get("notes") as string,
+            guest_id: Number(values.guestId),
+            room_id: Number(values.roomId),
+            check_in: values.checkIn,
+            check_out: values.checkOut,
+            number_of_guests: values.numberOfGuests,
+            status: values.status,
+            notes: values.notes || "",
         }
 
-        const checkInDate = new Date(bookingData.check_in)
-        const checkOutDate = new Date(bookingData.check_out)
-
-        if (checkOutDate <= checkInDate) {
-            toast.error(t("form.checkOutBeforeCheckInError") || "Check-out date must be after check-in date")
-            return
+        if (values.totalAmount !== undefined && !isNaN(values.totalAmount)) {
+            bookingData.total_amount = convertToBase(values.totalAmount)
         }
 
-        if (bookingData.number_of_guests < 1) {
-            toast.error(t("form.invalidGuestsError") || "Number of guests must be at least 1")
-            return
-        }
-
-        const totalAmountInput = formData.get("totalAmount")
-        if (totalAmountInput) {
-            bookingData.total_amount = convertToBase(Number(totalAmountInput))
-        }
-
-        const paymentStatus = formData.get("paymentStatus")
-        if (paymentStatus) bookingData.payment_status = paymentStatus
-
-        const paymentMethod = formData.get("paymentMethod")
-        if (paymentMethod) bookingData.payment_method = paymentMethod
-
-        const assignedTo = formData.get("assignedTo")
-        if (assignedTo) bookingData.assigned_to = assignedTo
+        if (values.paymentStatus) bookingData.payment_status = values.paymentStatus
+        if (values.paymentMethod) bookingData.payment_method = values.paymentMethod
+        if (values.assignedTo) bookingData.assigned_to = values.assignedTo
 
         bookingData.services = Array.from(selectedServices)
 
         if (isEditing) {
-            // Retain the ID for parent to know what to update
             bookingData.id = initialData.id
         }
 
-        await onSubmit(bookingData)
+        try {
+            await onSubmit(bookingData)
+        } catch (error) {
+            console.error("Failed to submit booking", error)
+        }
     }
 
     return (
-        <form ref={formRef} onSubmit={handleSubmit}>
+        <form ref={formRef} onSubmit={form.handleSubmit(onFormSubmit)} className="flex flex-col gap-4">
             <div className="grid gap-4 py-4">
                 {/* Guest Selection */}
                 <div className="grid gap-2">
@@ -150,18 +173,17 @@ export function BookingForm({
                             </Button>
                         )}
                     </div>
-                    <input type="hidden" name="guestId" value={selectedGuestId} required />
                     <Popover open={openGuestPopover} onOpenChange={setOpenGuestPopover}>
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
                                 role="combobox"
                                 aria-expanded={openGuestPopover}
-                                className="w-full justify-between"
+                                className={cn("w-full justify-between", form.formState.errors.guestId && "border-destructive")}
                             >
-                                {selectedGuestId
+                                {watchGuestId
                                     ? (() => {
-                                        const guest = guests.find((g) => g.id.toString() === selectedGuestId)
+                                        const guest = guests.find((g) => g.id.toString() === watchGuestId)
                                         return guest
                                             ? `${guest.first_name} ${guest.last_name} ${guest.email ? `(${guest.email})` : ""}`
                                             : t("form.selectGuest")
@@ -181,14 +203,14 @@ export function BookingForm({
                                                 key={guest.id}
                                                 value={`${guest.first_name} ${guest.last_name} ${guest.email || ""}`}
                                                 onSelect={() => {
-                                                    setSelectedGuestId(guest.id.toString())
+                                                    form.setValue("guestId", guest.id.toString(), { shouldValidate: true })
                                                     setOpenGuestPopover(false)
                                                 }}
                                             >
                                                 <Check
                                                     className={cn(
                                                         "mr-2 size-4",
-                                                        selectedGuestId === guest.id.toString() ? "opacity-100" : "opacity-0"
+                                                        watchGuestId === guest.id.toString() ? "opacity-100" : "opacity-0"
                                                     )}
                                                 />
                                                 {guest.first_name} {guest.last_name}{" "}
@@ -200,25 +222,19 @@ export function BookingForm({
                             </Command>
                         </PopoverContent>
                     </Popover>
+                    {form.formState.errors.guestId && (
+                        <p className="text-sm text-destructive">{form.formState.errors.guestId.message}</p>
+                    )}
                 </div>
 
                 {/* Room Selection */}
                 <div className="grid gap-2">
                     <Label htmlFor="roomId">{t("form.room")} *</Label>
                     <Select
-                        name="roomId"
-                        required
-                        defaultValue={initialData?.room_id?.toString()}
-                        onValueChange={(value) => {
-                            const checkIn = (document.getElementById("checkIn") as HTMLInputElement)?.value
-                            const checkOut = (document.getElementById("checkOut") as HTMLInputElement)?.value
-                            const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
-                            if (checkIn && checkOut) {
-                                handleCalculateRate(value, checkIn, checkOut, numberOfGuests)
-                            }
-                        }}
+                        value={watchRoomId}
+                        onValueChange={(val) => form.setValue("roomId", val, { shouldValidate: true })}
                     >
-                        <SelectTrigger>
+                        <SelectTrigger className={cn(form.formState.errors.roomId && "border-destructive")}>
                             <SelectValue placeholder={t("form.selectRoom")} />
                         </SelectTrigger>
                         <SelectContent>
@@ -229,6 +245,9 @@ export function BookingForm({
                             ))}
                         </SelectContent>
                     </Select>
+                    {form.formState.errors.roomId && (
+                        <p className="text-sm text-destructive">{form.formState.errors.roomId.message}</p>
+                    )}
                 </div>
 
                 {/* Dates & Guests */}
@@ -237,71 +256,39 @@ export function BookingForm({
                         <Label htmlFor="checkIn">{t("form.checkInDate")} *</Label>
                         <Input
                             id="checkIn"
-                            name="checkIn"
                             type="date"
-                            required
-                            defaultValue={initialData?.check_in?.substring(0, 10)}
-                            onChange={(e) => {
-                                const roomId = (document.querySelector('[name="roomId"]') as HTMLInputElement)?.value
-                                const checkOutInput = document.getElementById("checkOut") as HTMLInputElement
-                                const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
-
-                                if (checkOutInput) {
-                                    const checkInDate = new Date(e.target.value)
-                                    if (!isNaN(checkInDate.getTime())) {
-                                        const minCheckOut = new Date(checkInDate.getTime() + 86400000)
-                                        const minCheckOutStr = minCheckOut.toISOString().split("T")[0]
-                                        checkOutInput.min = minCheckOutStr
-
-                                        if (checkOutInput.value && checkOutInput.value < minCheckOutStr) {
-                                            checkOutInput.value = minCheckOutStr
-                                        }
-                                    }
-                                }
-
-                                if (roomId && checkOutInput?.value) {
-                                    handleCalculateRate(roomId, e.target.value, checkOutInput.value, numberOfGuests)
-                                }
-                            }}
+                            {...form.register("checkIn")}
+                            className={cn(form.formState.errors.checkIn && "border-destructive")}
                         />
+                        {form.formState.errors.checkIn && (
+                            <p className="text-sm text-destructive">{form.formState.errors.checkIn.message}</p>
+                        )}
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="checkOut">{t("form.checkOutDate")} *</Label>
                         <Input
                             id="checkOut"
-                            name="checkOut"
                             type="date"
-                            required
-                            defaultValue={initialData?.check_out?.substring(0, 10)}
-                            onChange={(e) => {
-                                const roomId = (document.querySelector('[name="roomId"]') as HTMLInputElement)?.value
-                                const checkIn = (document.getElementById("checkIn") as HTMLInputElement)?.value
-                                const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
-                                if (roomId && checkIn) {
-                                    handleCalculateRate(roomId, checkIn, e.target.value, numberOfGuests)
-                                }
-                            }}
+                            min={watchCheckIn ? new Date(new Date(watchCheckIn).getTime() + 86400000).toISOString().split("T")[0] : undefined}
+                            {...form.register("checkOut")}
+                            className={cn(form.formState.errors.checkOut && "border-destructive")}
                         />
+                        {form.formState.errors.checkOut && (
+                            <p className="text-sm text-destructive">{form.formState.errors.checkOut.message}</p>
+                        )}
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="numberOfGuests">{t("form.numberOfGuests")} *</Label>
                         <Input
                             id="numberOfGuests"
-                            name="numberOfGuests"
                             type="number"
                             min="1"
-                            placeholder="2"
-                            required
-                            defaultValue={initialData?.number_of_guests || ""}
-                            onChange={(e) => {
-                                const roomId = (document.querySelector('[name="roomId"]') as HTMLInputElement)?.value
-                                const checkIn = (document.getElementById("checkIn") as HTMLInputElement)?.value
-                                const checkOut = (document.getElementById("checkOut") as HTMLInputElement)?.value
-                                if (roomId && checkIn && checkOut) {
-                                    handleCalculateRate(roomId, checkIn, checkOut, e.target.value)
-                                }
-                            }}
+                            {...form.register("numberOfGuests")}
+                            className={cn(form.formState.errors.numberOfGuests && "border-destructive")}
                         />
+                        {form.formState.errors.numberOfGuests && (
+                            <p className="text-sm text-destructive">{form.formState.errors.numberOfGuests.message}</p>
+                        )}
                     </div>
                 </div>
 
@@ -323,14 +310,6 @@ export function BookingForm({
                                                 newSelected.delete(service.id)
                                             }
                                             setSelectedServices(newSelected)
-
-                                            const roomId = (document.querySelector('[name="roomId"]') as HTMLInputElement)?.value
-                                            const checkIn = (document.getElementById("checkIn") as HTMLInputElement)?.value
-                                            const checkOut = (document.getElementById("checkOut") as HTMLInputElement)?.value
-                                            const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
-                                            if (roomId && checkIn && checkOut) {
-                                                handleCalculateRate(roomId, checkIn, checkOut, numberOfGuests, newSelected)
-                                            }
                                         }}
                                     />
                                     <Label htmlFor={`service-${service.id}`} className="text-sm font-normal cursor-pointer">
@@ -347,8 +326,11 @@ export function BookingForm({
                 <div className="grid gap-4 md:grid-cols-2">
                     <div className="grid gap-2">
                         <Label htmlFor="status">{t("form.bookingStatus")} *</Label>
-                        <Select name="status" defaultValue={initialData?.status || "pending"} required>
-                            <SelectTrigger>
+                        <Select
+                            value={form.watch("status")}
+                            onValueChange={(val) => form.setValue("status", val, { shouldValidate: true })}
+                        >
+                            <SelectTrigger className={cn(form.formState.errors.status && "border-destructive")}>
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -360,10 +342,16 @@ export function BookingForm({
                                 <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
                             </SelectContent>
                         </Select>
+                        {form.formState.errors.status && (
+                            <p className="text-sm text-destructive">{form.formState.errors.status.message}</p>
+                        )}
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="paymentStatus">{t("form.paymentStatus")}</Label>
-                        <Select name="paymentStatus" defaultValue={initialData?.payment_status || undefined}>
+                        <Select
+                            value={form.watch("paymentStatus")}
+                            onValueChange={(val) => form.setValue("paymentStatus", val, { shouldValidate: true })}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder={t("form.selectPaymentStatus")} />
                             </SelectTrigger>
@@ -390,23 +378,23 @@ export function BookingForm({
                         </Label>
                         <Input
                             id="totalAmount"
-                            name="totalAmount"
                             type="number"
                             step="0.01"
                             min="0"
                             placeholder={calculatedRate && !isEditing ? convert(calculatedRate).toFixed(2) : "0.00"}
-                            defaultValue={
-                                initialData?.total_amount
-                                    ? convert(initialData.total_amount).toFixed(2)
-                                    : calculatedRate && !isEditing
-                                        ? convert(calculatedRate).toFixed(2)
-                                        : undefined
-                            }
+                            {...form.register("totalAmount")}
+                            className={cn(form.formState.errors.totalAmount && "border-destructive")}
                         />
+                        {form.formState.errors.totalAmount && (
+                            <p className="text-sm text-destructive">{form.formState.errors.totalAmount.message}</p>
+                        )}
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="paymentMethod">{t("form.paymentMethod")}</Label>
-                        <Select name="paymentMethod" defaultValue={initialData?.payment_method || undefined}>
+                        <Select
+                            value={form.watch("paymentMethod")}
+                            onValueChange={(val) => form.setValue("paymentMethod", val, { shouldValidate: true })}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder={t("form.selectPaymentMethod")} />
                             </SelectTrigger>
@@ -423,13 +411,13 @@ export function BookingForm({
                 {/* Assigned To */}
                 <div className="grid gap-2">
                     <Label htmlFor="assignedTo">{t("form.assignedTo")}</Label>
-                    <Input id="assignedTo" name="assignedTo" defaultValue={initialData?.assigned_to} placeholder={t("form.staffMemberName")} />
+                    <Input id="assignedTo" placeholder={t("form.staffMemberName")} {...form.register("assignedTo")} />
                 </div>
 
                 {/* Notes */}
                 <div className="grid gap-2">
                     <Label htmlFor="notes">{t("form.notes")}</Label>
-                    <Textarea id="notes" name="notes" defaultValue={initialData?.notes} placeholder={t("form.specialRequests")} />
+                    <Textarea id="notes" placeholder={t("form.specialRequests")} {...form.register("notes")} />
                 </div>
             </div>
 

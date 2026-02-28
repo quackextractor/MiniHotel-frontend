@@ -362,7 +362,26 @@
         "status": "Vitality",
         "active": "Breathing",
         "manageSystem": "Wield the Sceptre",
-        "populateData": "Fill the void with ghosts and shadows."
+        "populateData": "Fill the void with ghosts and shadows.",
+        "trackNewCurrency": "Track New Coinage",
+        "trackNewCurrencyDesc": "Addeth a 3-letter coinage code (e.g. JPY, AUD) to fetch and track live rates of exchange.",
+        "currencyCodeExp": "e.g. JPY",
+        "currencyCodeInvalid": "Pray tell, entereth a valid 3-letter coinage code (e.g. JPY, AUD)",
+        "currencyTrackSuccess": "{currency} is now in our sights.",
+        "currencyTrackError": "Alas, 'twas a failure to add the coinage",
+        "autoLogout": "Thou Automagic Departure",
+        "autoLogoutDesc": "Departeth from thy session when idle",
+        "timeoutMinutes": "Moments of waiting (minutes)",
+        "passwordsDoNotMatch": "Thy new secret words art not identical",
+        "currentPasswordRequired": "Thy present secret word is demanded",
+        "passwordUpdatedSuccess": "Thy secret word hath been changed gloriously",
+        "failedUpdatePassword": "Alas, changing thy secret word hath failed",
+        "importWarning": "Hark! This bringeth sample tales. Tales already known shall be ignored.",
+        "importSuccess": "Tales successfully inscribed",
+        "importFailed": "Woe! The inscription of tales failed:",
+        "importing": "Inscribing...",
+        "serverProxy": "Proxy of the Lord",
+        "lastRefreshed": "Last refreshed"
     },
     "AuditLogs": {
         "title": "The Book of Judgement",
@@ -409,7 +428,8 @@
         "search": "Quest",
         "filter": "Winnow",
         "export": "Banish",
-        "import": "Welcome"
+        "import": "Welcome",
+        "add": "Addeth"
     },
     "Housekeeping": {
         "title": "Scullery & Scrub",

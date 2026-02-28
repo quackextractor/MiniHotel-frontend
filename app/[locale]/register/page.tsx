@@ -44,7 +44,7 @@ export default function RegisterPage() {
     useEffect(() => {
         async function checkStatus() {
             try {
-                const res = await fetch('http://localhost:5000/api/auth/status')
+                const res = await fetch('/api/auth/status')
                 const data = await res.json()
                 if (data.initialized) {
                     // Admin already exists, redirect to login
@@ -70,7 +70,7 @@ export default function RegisterPage() {
         setLoading(true)
         setError(null)
         try {
-            const res = await fetch('http://localhost:5000/api/auth/register', {
+            const res = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

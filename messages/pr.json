@@ -362,7 +362,26 @@
         "status": "Condition",
         "active": "Sailing",
         "manageSystem": "Command the ship's logs",
-        "populateData": "Fill the hold with ghost crew and fake gold."
+        "populateData": "Fill the hold with ghost crew and fake gold.",
+        "trackNewCurrency": "Track New Booty",
+        "trackNewCurrencyDesc": "Add a 3-letter booty code (e.g. JPY, AUD) t' fetch an' track live plunder rates.",
+        "currencyCodeExp": "e.g. JPY",
+        "currencyCodeInvalid": "Avast! Enter a right proper 3-letter booty code (e.g. JPY, AUD)",
+        "currencyTrackSuccess": "{currency} be tracked now, matey.",
+        "currencyTrackError": "Failed t' add yer booty t' the spyglass",
+        "autoLogout": "Auto Walk the Plank",
+        "autoLogoutDesc": "Automatically abandon ship after doing nothing",
+        "timeoutMinutes": "Hourglass sands (minutes)",
+        "passwordsDoNotMatch": "New secret words be not matching",
+        "currentPasswordRequired": "Yer current secret word be needed",
+        "passwordUpdatedSuccess": "Secret word updated nicely, matey",
+        "failedUpdatePassword": "Failed to change yer secret word",
+        "importWarning": "This'll bury ye with example loot. Already claimed treasures be skipped.",
+        "importSuccess": "Loot imported to yer hold successfully",
+        "importFailed": "Failed to plunder data:",
+        "importing": "Plundering...",
+        "serverProxy": "Server's First Mate",
+        "lastRefreshed": "Last refreshed"
     },
     "AuditLogs": {
         "title": "Captain's Log",
@@ -409,7 +428,8 @@
         "search": "Hunt",
         "filter": "Sift",
         "export": "Smuggle Out",
-        "import": "Bring Aboard"
+        "import": "Bring Aboard",
+        "add": "Add t' Chest"
     },
     "Housekeeping": {
         "title": "Swab the Decks",

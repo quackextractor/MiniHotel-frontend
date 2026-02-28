@@ -12,9 +12,10 @@ import { useSettings } from "@/lib/settings-context"
 import { toast } from "sonner"
 import { api } from "@/lib/api"
 import { Database } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
 import { useRouter, usePathname } from "@/i18n/routing"
 import { LocaleConfig } from "@/i18n/config"
+import { useCurrency } from "@/hooks/use-currency"
 
 interface SettingsFormProps {
     availableLocales: LocaleConfig[]
@@ -22,7 +23,9 @@ interface SettingsFormProps {
 
 export default function SettingsForm({ availableLocales }: SettingsFormProps) {
     const { settings, updateSettings } = useSettings()
+    const { lastRefreshed } = useCurrency()
     const t = useTranslations("Settings")
+    const locale = useLocale()
     const commonT = useTranslations("Common")
     const router = useRouter()
     const pathname = usePathname()
@@ -42,6 +45,9 @@ export default function SettingsForm({ availableLocales }: SettingsFormProps) {
     const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
     const [importLoading, setImportLoading] = useState(false)
+    const [customCurrency, setCustomCurrency] = useState("")
+    const [customCurrencyLoading, setCustomCurrencyLoading] = useState(false)
+    const [availableCurrencies, setAvailableCurrencies] = useState<string[]>(["USD", "EUR", "CZK", "GBP"])
 
     useEffect(() => {
         setLocalSettings({
@@ -101,6 +107,32 @@ export default function SettingsForm({ availableLocales }: SettingsFormProps) {
         }
     }
 
+    const handleAddCustomCurrency = async () => {
+        if (!customCurrency || customCurrency.length !== 3) {
+            toast.error(t("currencyCodeInvalid"))
+            return
+        }
+
+        setCustomCurrencyLoading(true)
+        try {
+            const res = await api.addExchangeRate(customCurrency.toUpperCase())
+            toast.success(t("currencyTrackSuccess", { currency: customCurrency.toUpperCase() }))
+            setAvailableCurrencies(prev => {
+                if (!prev.includes(customCurrency.toUpperCase())) {
+                    return [...prev, customCurrency.toUpperCase()]
+                }
+                return prev
+            })
+            // Update the form setting directly
+            setLocalSettings(prev => ({ ...prev, currency: customCurrency.toUpperCase() }))
+            setCustomCurrency("")
+        } catch (err: any) {
+            toast.error(err.message)
+        } finally {
+            setCustomCurrencyLoading(false)
+        }
+    }
+
     return (
         <div className="flex flex-1 flex-col gap-4">
             <div className="flex items-center justify-between">
@@ -141,20 +173,56 @@ export default function SettingsForm({ availableLocales }: SettingsFormProps) {
 
                         <div className="grid gap-2">
                             <Label htmlFor="currency">{t("currency")}</Label>
-                            <Select
-                                value={localSettings.currency}
-                                onValueChange={(value) => setLocalSettings({ ...localSettings, currency: value })}
-                            >
-                                <SelectTrigger id="currency">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="USD">USD ($)</SelectItem>
-                                    <SelectItem value="EUR">EUR (€)</SelectItem>
-                                    <SelectItem value="CZK">CZK (Kč)</SelectItem>
-                                    <SelectItem value="GBP">GBP (£)</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <div className="flex items-center gap-2">
+                                <Select
+                                    value={localSettings.currency}
+                                    onValueChange={(value) => setLocalSettings({ ...localSettings, currency: value })}
+                                >
+                                    <SelectTrigger id="currency" className="flex-1">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {availableCurrencies.map(c => {
+                                            let label = c;
+                                            if (c === "USD") label = "USD ($)";
+                                            if (c === "EUR") label = "EUR (€)";
+                                            if (c === "CZK") label = "CZK (Kč)";
+                                            if (c === "GBP") label = "GBP (£)";
+                                            return <SelectItem key={c} value={c}>{label}</SelectItem>;
+                                        })}
+                                        {/* If a custom currency is chosen but not in the default list, show it */}
+                                        {!availableCurrencies.includes(localSettings.currency) && (
+                                            <SelectItem value={localSettings.currency}>{localSettings.currency}</SelectItem>
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            {lastRefreshed && (
+                                <p className="text-xs text-muted-foreground mt-1 text-right">
+                                    {t("lastRefreshed")}: {new Intl.DateTimeFormat(locale, {
+                                        dateStyle: 'medium',
+                                        timeStyle: 'short'
+                                    }).format(new Date(lastRefreshed))}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="grid gap-2 border rounded-md p-3 bg-muted/30">
+                            <Label htmlFor="customCurrency" className="text-sm font-semibold">{t("trackNewCurrency")}</Label>
+                            <p className="text-xs text-muted-foreground">{t("trackNewCurrencyDesc")}</p>
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    id="customCurrency"
+                                    className="uppercase flex-1"
+                                    placeholder={t("currencyCodeExp")}
+                                    maxLength={3}
+                                    value={customCurrency}
+                                    onChange={(e) => setCustomCurrency(e.target.value.toUpperCase())}
+                                />
+                                <Button size="sm" variant="secondary" onClick={handleAddCustomCurrency} disabled={customCurrencyLoading}>
+                                    {customCurrencyLoading ? commonT("loading") : commonT("add")}
+                                </Button>
+                            </div>
                         </div>
 
                         <div className="grid gap-2">

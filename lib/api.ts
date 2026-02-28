@@ -1,13 +1,10 @@
 const API_BASE_URL = "/api"
 
 export async function fetchAPI(endpoint: string, options?: RequestInit) {
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
-
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
   })
@@ -16,7 +13,6 @@ export async function fetchAPI(endpoint: string, options?: RequestInit) {
     // If we receive a 401 Unauthorized, and it's not a login attempt,
     // it means the token is invalid/expired. Log out the user.
     if (typeof window !== "undefined" && !endpoint.includes("/auth/login")) {
-      localStorage.removeItem("token")
       localStorage.removeItem("username")
       localStorage.removeItem("userId")
       window.location.href = "/login?error=Session expired"
@@ -121,6 +117,9 @@ export const api = {
   updateService: (id: number, data: any) => fetchAPI(`/services/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   deleteService: (id: number) => fetchAPI(`/services/${id}`, { method: "DELETE" }),
 
+  // Exchange Rates
+  getExchangeRates: () => fetchAPI("/exchange-rates"),
+  addExchangeRate: (currencyCode: string) => fetchAPI(`/exchange-rates?add=${currencyCode}`),
 
   // Auth & System
   getAuditLogs: () => fetchAPI("/audit-logs"),

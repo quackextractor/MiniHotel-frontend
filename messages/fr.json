@@ -362,7 +362,26 @@
         "status": "Statut",
         "active": "Actif",
         "manageSystem": "Gérer les données système et les tâches administratives",
-        "populateData": "Peupler le système avec des exemples de chambres, clients et réservations."
+        "populateData": "Peupler le système avec des exemples de chambres, clients et réservations.",
+        "trackNewCurrency": "Suivre une Nouvelle Devise",
+        "trackNewCurrencyDesc": "Ajoutez un code de devise à 3 lettres (par ex. JPY, AUD) pour récupérer et suivre les taux en direct.",
+        "currencyCodeExp": "par ex. JPY",
+        "currencyCodeInvalid": "Veuillez entrer un code de devise à 3 lettres valide (par ex. JPY, AUD)",
+        "currencyTrackSuccess": "{currency} est maintenant suivi.",
+        "currencyTrackError": "Échec de l'ajout de la devise au suivi",
+        "autoLogout": "Déconnexion automatique",
+        "autoLogoutDesc": "Se déconnecter automatiquement après une inactivité",
+        "timeoutMinutes": "Délai (minutes)",
+        "passwordsDoNotMatch": "Les nouveaux mots de passe ne correspondent pas",
+        "currentPasswordRequired": "Le mot de passe actuel est requis",
+        "passwordUpdatedSuccess": "Mot de passe mis à jour avec succès",
+        "failedUpdatePassword": "Échec de la mise à jour du mot de passe",
+        "importWarning": "Cela importera des données d'exemple. Les données existantes avec les mêmes identifiants / e-mails seront ignorées.",
+        "importSuccess": "Données importées avec succès",
+        "importFailed": "Échec de l'importation des données:",
+        "importing": "Importation en cours...",
+        "serverProxy": "Proxy du serveur",
+        "lastRefreshed": "Last refreshed"
     },
     "AuditLogs": {
         "title": "Journaux d'Audit",
@@ -409,7 +428,8 @@
         "search": "Rechercher",
         "filter": "Filtrer",
         "export": "Exporter",
-        "import": "Importer"
+        "import": "Importer",
+        "add": "Ajouter"
     },
     "Housekeeping": {
         "title": "Ménage",

@@ -40,7 +40,7 @@ const formSchema = z.object({
 })
 
 export default function ProfilePage() {
-    const { token, user } = useAuth()
+    const { user } = useAuth()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
@@ -65,11 +65,10 @@ export default function ProfilePage() {
                 return
             }
 
-            const res = await fetch('http://localhost:5000/api/auth/profile', {
+            const res = await fetch('/api/auth/profile', {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload),
             })

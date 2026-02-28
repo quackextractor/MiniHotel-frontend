@@ -362,7 +362,26 @@
         "status": "Mood",
         "active": "Workin",
         "manageSystem": "Do boss stuff",
-        "populateData": "Fill wit fake kittehs and boxez."
+        "populateData": "Fill wit fake kittehs and boxez.",
+        "trackNewCurrency": "Stalk Nu Monies",
+        "trackNewCurrencyDesc": "Poot in 3-lettah money code (liek JPY, AUD) 2 see live numbahs and stalk dem.",
+        "currencyCodeExp": "liek JPY",
+        "currencyCodeInvalid": "Plz giv valid 3-lettah money code (liek JPY, AUD)",
+        "currencyTrackSuccess": "{currency} is bein stalked now.",
+        "currencyTrackError": "Can haz no money stalkin. Fail!",
+        "autoLogout": "lolcat timeout",
+        "autoLogoutDesc": "auto loggout no activity can haz",
+        "timeoutMinutes": "minutessz",
+        "passwordsDoNotMatch": "pazzwordz no matchz :(",
+        "currentPasswordRequired": "need curnnt password plz",
+        "passwordUpdatedSuccess": "pazzword updated yay!",
+        "failedUpdatePassword": "failz to update plz try again",
+        "importWarning": "imprtz data. if same email existz, skipz it.",
+        "importSuccess": "datamanz imported yay",
+        "importFailed": "faild 2 import data :(",
+        "importing": "importinnng....",
+        "serverProxy": "srver proxying",
+        "lastRefreshed": "Last refreshed"
     },
     "AuditLogs": {
         "title": "Stalkin Logz",
@@ -409,7 +428,8 @@
         "search": "Find",
         "filter": "Sift",
         "export": "Spit Out",
-        "import": "Eat"
+        "import": "Eat",
+        "add": "Addz It"
     },
     "Housekeeping": {
         "title": "Fur Removal",
