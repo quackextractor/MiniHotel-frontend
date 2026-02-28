@@ -45,6 +45,9 @@ import {
   Trash2,
   Check,
   ChevronsUpDown,
+  Edit2,
+  Save,
+  X,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { api } from "@/lib/api"
@@ -54,6 +57,7 @@ import { useDateFormat } from "@/hooks/use-custom-format"
 import { useTranslations } from "next-intl"
 
 import { Booking } from "@/lib/types"
+import { BookingForm } from "@/components/booking-form"
 
 const statusConfig: Record<string, { color: string; icon: any }> = {
   confirmed: { color: "bg-blue-500/10 text-blue-500 border-blue-500/20", icon: CheckCircle },
@@ -75,11 +79,8 @@ export default function BookingsPage() {
   const [rooms, setRooms] = useState<any[]>([])
   const [guests, setGuests] = useState<any[]>([])
   const [services, setServices] = useState<any[]>([])
-  const [selectedServices, setSelectedServices] = useState<Set<number>>(new Set())
   const [showGuestForm, setShowGuestForm] = useState(false)
-  const [calculatedRate, setCalculatedRate] = useState<number | null>(null)
-  const [open, setOpen] = useState(false)
-  const [selectedGuestId, setSelectedGuestId] = useState<string>("")
+  const [isEditing, setIsEditing] = useState(false)
   const formRef = useEnterNavigation()
 
   const { convert, convertToBase, currency } = useCurrency()
@@ -114,52 +115,34 @@ export default function BookingsPage() {
     fetchData()
   }, [])
 
-  useEffect(() => {
-    if (!isAddDialogOpen) {
-      setSelectedServices(new Set())
-      setCalculatedRate(null)
+  const handleEditBookingSubmit = async (bookingData: any) => {
+    if (!selectedBooking) return
+    try {
+      console.log("[v0] Saving booking edits...")
+      await api.updateBooking(selectedBooking.id, bookingData)
+      const updatedBookings = await api.getBookings()
+      setBookings(Array.isArray(updatedBookings) ? updatedBookings : updatedBookings.items || [])
+      const updatedBooking = (Array.isArray(updatedBookings) ? updatedBookings : updatedBookings.items || []).find((b: Booking) => b.id === selectedBooking.id)
+      if (updatedBooking) {
+        setSelectedBooking(updatedBooking)
+      }
+      setIsEditing(false)
+      toast.success("Booking updated successfully")
+    } catch (err) {
+      console.error("[v0] Error updating booking:", err)
+      toast.error("Failed to update booking: " + (err instanceof Error ? err.message : "Unknown error"))
     }
-  }, [isAddDialogOpen])
+  }
 
-  const handleAddBooking = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-
+  const handleCreateBookingSubmit = async (bookingData: any) => {
     try {
       console.log("[v0] Creating new booking...")
-      const bookingData: any = {
-        guest_id: Number(formData.get("guestId")),
-        room_id: Number(formData.get("roomId")),
-        check_in: formData.get("checkIn") as string,
-        check_out: formData.get("checkOut") as string,
-        number_of_guests: Number(formData.get("numberOfGuests")),
-        status: formData.get("status") as string,
-        notes: formData.get("notes") as string,
-      }
-
-      const totalAmountInput = formData.get("totalAmount")
-      if (totalAmountInput) {
-        // Convert the input amount (User Currency) back to Base (CZK)
-        bookingData.total_amount = convertToBase(Number(totalAmountInput))
-      }
-
-      const paymentStatus = formData.get("paymentStatus")
-      if (paymentStatus) bookingData.payment_status = paymentStatus
-
-      const paymentMethod = formData.get("paymentMethod")
-      if (paymentMethod) bookingData.payment_method = paymentMethod
-
-      const assignedTo = formData.get("assignedTo")
-      if (assignedTo) bookingData.assigned_to = assignedTo
-
-      bookingData.services = Array.from(selectedServices)
-
       const newBooking = await api.createBooking(bookingData)
       console.log("[v0] Booking created:", newBooking)
       setBookings([...bookings, newBooking])
       setIsAddDialogOpen(false)
       setShowGuestForm(false)
-      setCalculatedRate(null)
+      toast.success("Booking created successfully!")
     } catch (err) {
       console.error("[v0] Error creating booking:", err)
       toast.error("Failed to create booking: " + (err instanceof Error ? err.message : "Unknown error"))
@@ -189,32 +172,7 @@ export default function BookingsPage() {
     }
   }
 
-  const handleCalculateRate = async (
-    roomId: string,
-    checkIn: string,
-    checkOut: string,
-    numberOfGuests: string,
-    currentSelectedServices?: Set<number>
-  ) => {
-    if (!roomId || !checkIn || !checkOut) return
 
-    const servicesToUse = currentSelectedServices || selectedServices
-
-    try {
-      const result = await api.calculateRate({
-        room_id: Number(roomId),
-        check_in: checkIn,
-        check_out: checkOut,
-        number_of_guests: numberOfGuests ? Number(numberOfGuests) : undefined,
-        service_ids: Array.from(servicesToUse),
-      })
-      // API returns rate in Base Currency (CZK)
-      // We store it as is, but UI will convert it for display
-      setCalculatedRate(result.total_amount || result.calculated_rate)
-    } catch (err) {
-      console.error("[v0] Error calculating rate:", err)
-    }
-  }
 
   const handleStatusChange = async (bookingId: number, newStatus: string, paymentStatus?: string) => {
     try {
@@ -347,292 +305,14 @@ export default function BookingsPage() {
                 </DialogFooter>
               </form>
             ) : (
-              <form ref={formRef} onSubmit={handleAddBooking}>
-                <DialogHeader>
-                  <DialogTitle>{t("createBookingTitle")}</DialogTitle>
-                  <DialogDescription>{t("createBookingDescription")}</DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="guestId">{t("form.guest")} *</Label>
-                      <Button type="button" variant="outline" size="sm" onClick={() => setShowGuestForm(true)}>
-                        <UserPlus className="mr-2 size-4" />
-                        {t("form.newGuest")}
-                      </Button>
-                    </div>
-
-
-                    <input type="hidden" name="guestId" value={selectedGuestId} />
-
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={open}
-                          className="w-full justify-between"
-                        >
-                          {selectedGuestId
-                            ? (() => {
-                              const guest = guests.find((g) => g.id.toString() === selectedGuestId)
-                              return guest
-                                ? `${guest.first_name} ${guest.last_name} ${guest.email ? `(${guest.email})` : ""}`
-                                : t("form.selectGuest")
-                            })()
-                            : t("form.selectGuest")}
-                          <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-                        <Command>
-                          <CommandInput placeholder={t("form.searchGuest")} />
-                          <CommandList>
-                            <CommandEmpty>{t("form.noGuestFound")}</CommandEmpty>
-                            <CommandGroup>
-                              {guests.map((guest) => (
-                                <CommandItem
-                                  key={guest.id}
-                                  value={`${guest.first_name} ${guest.last_name} ${guest.email || ""}`}
-                                  onSelect={() => {
-                                    setSelectedGuestId(guest.id.toString())
-                                    setOpen(false)
-                                  }}
-                                >
-                                  <Check
-                                    className={cn(
-                                      "mr-2 size-4",
-                                      selectedGuestId === guest.id.toString() ? "opacity-100" : "opacity-0"
-                                    )}
-                                  />
-                                  {guest.first_name} {guest.last_name} {guest.email && <span className="ml-2 text-muted-foreground">({guest.email})</span>}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="roomId">{t("form.room")} *</Label>
-                    <Select
-                      name="roomId"
-                      required
-                      onValueChange={(value) => {
-                        const checkIn = (document.getElementById("checkIn") as HTMLInputElement)?.value
-                        const checkOut = (document.getElementById("checkOut") as HTMLInputElement)?.value
-                        const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
-                        if (checkIn && checkOut) {
-                          handleCalculateRate(value, checkIn, checkOut, numberOfGuests)
-                        }
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("form.selectRoom")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {rooms.map((room) => (
-                          <SelectItem key={room.id} value={room.id.toString()}>
-                            Room {room.room_number} - {room.room_type} (${room.base_rate}/night, Capacity:{" "}
-                            {room.capacity})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-3">
-                    <div className="grid gap-2">
-                      <Label htmlFor="checkIn">{t("form.checkInDate")} *</Label>
-                      <Input
-                        id="checkIn"
-                        name="checkIn"
-                        type="date"
-                        required
-                        onChange={(e) => {
-                          const roomId = (document.querySelector('[name="roomId"]') as any)?.value
-                          const checkOutInput = document.getElementById("checkOut") as HTMLInputElement
-                          const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
-
-                          if (checkOutInput) {
-                            const checkInDate = new Date(e.target.value)
-                            if (!isNaN(checkInDate.getTime())) {
-                              // Set min checkout to check in + 1 day
-                              const minCheckOut = new Date(checkInDate.getTime() + 86400000)
-                              const minCheckOutStr = minCheckOut.toISOString().split('T')[0]
-                              checkOutInput.min = minCheckOutStr
-
-                              if (checkOutInput.value && checkOutInput.value < minCheckOutStr) {
-                                checkOutInput.value = minCheckOutStr
-                              }
-                            }
-                          }
-
-                          if (roomId && checkOutInput?.value) {
-                            handleCalculateRate(roomId, e.target.value, checkOutInput.value, numberOfGuests)
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="checkOut">{t("form.checkOutDate")} *</Label>
-                      <Input
-                        id="checkOut"
-                        name="checkOut"
-                        type="date"
-                        required
-                        onChange={(e) => {
-                          const roomId = (document.querySelector('[name="roomId"]') as any)?.value
-                          const checkIn = (document.getElementById("checkIn") as HTMLInputElement)?.value
-                          const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
-                          if (roomId && checkIn) {
-                            handleCalculateRate(roomId, checkIn, e.target.value, numberOfGuests)
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="numberOfGuests">{t("form.numberOfGuests")} *</Label>
-                      <Input
-                        id="numberOfGuests"
-                        name="numberOfGuests"
-                        type="number"
-                        min="1"
-                        placeholder="2"
-                        required
-                        onChange={(e) => {
-                          const roomId = (document.querySelector('[name="roomId"]') as any)?.value
-                          const checkIn = (document.getElementById("checkIn") as HTMLInputElement)?.value
-                          const checkOut = (document.getElementById("checkOut") as HTMLInputElement)?.value
-                          if (roomId && checkIn && checkOut) {
-                            handleCalculateRate(roomId, checkIn, checkOut, e.target.value)
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-
-
-
-                  <div className="grid gap-2">
-                    <Label>{t("selectServices")}</Label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 border rounded-md p-4 max-h-[150px] overflow-y-auto">
-                      {services.map((service) => (
-                        <div key={service.id} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`service-${service.id}`}
-                            checked={selectedServices.has(service.id)}
-                            onCheckedChange={(checked) => {
-                              const newSelected = new Set(selectedServices)
-                              if (checked) {
-                                newSelected.add(service.id)
-                              } else {
-                                newSelected.delete(service.id)
-                              }
-                              setSelectedServices(newSelected)
-
-                              // Trigger calculation
-                              const roomId = (document.querySelector('[name="roomId"]') as any)?.value
-                              const checkIn = (document.getElementById("checkIn") as HTMLInputElement)?.value
-                              const checkOut = (document.getElementById("checkOut") as HTMLInputElement)?.value
-                              const numberOfGuests = (document.getElementById("numberOfGuests") as HTMLInputElement)?.value
-                              if (roomId && checkIn && checkOut) {
-                                handleCalculateRate(roomId, checkIn, checkOut, numberOfGuests, newSelected)
-                              }
-                            }}
-                          />
-                          <Label htmlFor={`service-${service.id}`} className="text-sm font-normal cursor-pointer">
-                            {service.name} ({convert(service.price).toFixed(2)} {currency})
-                          </Label>
-                        </div>
-                      ))}
-                      {services.length === 0 && <p className="text-sm text-muted-foreground col-span-2">{t("noServicesAvailable")}</p>}
-                    </div>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="grid gap-2">
-                      <Label htmlFor="status">{t("form.bookingStatus")} *</Label>
-                      <Select name="status" defaultValue="pending" required>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="draft">{t("status.draft")}</SelectItem>
-                          <SelectItem value="pending">{t("status.pending")}</SelectItem>
-                          <SelectItem value="confirmed">{t("status.confirmed")}</SelectItem>
-                          <SelectItem value="checked-in">{t("status.checkedIn")}</SelectItem>
-                          <SelectItem value="checked-out">{t("status.checkedOut")}</SelectItem>
-                          <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="paymentStatus">{t("form.paymentStatus")}</Label>
-                      <Select name="paymentStatus">
-                        <SelectTrigger>
-                          <SelectValue placeholder={t("form.selectPaymentStatus")} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="pending">{t("paymentStatus.pending")}</SelectItem>
-                          <SelectItem value="paid">{t("paymentStatus.paid")}</SelectItem>
-                          <SelectItem value="partial">{t("paymentStatus.partial")}</SelectItem>
-                          <SelectItem value="refunded">{t("paymentStatus.refunded")}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="grid gap-2">
-                      <Label htmlFor="totalAmount">
-                        {t("form.totalAmount", { currency })}
-                        {calculatedRate && (
-                          <span className="ml-2 text-sm text-muted-foreground">({t("calculated")}: {convert(calculatedRate).toFixed(2)} {currency})</span>
-                        )}
-                      </Label>
-                      <Input
-                        id="totalAmount"
-                        name="totalAmount"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        placeholder={calculatedRate ? convert(calculatedRate).toFixed(2) : "0.00"}
-                        defaultValue={calculatedRate ? convert(calculatedRate).toFixed(2) : undefined}
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="paymentMethod">{t("form.paymentMethod")}</Label>
-                      <Select name="paymentMethod">
-                        <SelectTrigger>
-                          <SelectValue placeholder={t("form.selectPaymentMethod")} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="cash">{t("paymentMethod.cash")}</SelectItem>
-                          <SelectItem value="card">{t("paymentMethod.card")}</SelectItem>
-                          <SelectItem value="bank_transfer">{t("paymentMethod.bankTransfer")}</SelectItem>
-                          <SelectItem value="online">{t("paymentMethod.online")}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="assignedTo">{t("form.assignedTo")}</Label>
-                    <Input id="assignedTo" name="assignedTo" placeholder={t("form.staffMemberName")} />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="notes">{t("form.notes")}</Label>
-                    <Textarea id="notes" name="notes" placeholder={t("form.specialRequests")} />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button type="submit">{t("createBooking")}</Button>
-                </DialogFooter>
-              </form>
+              <BookingForm
+                rooms={rooms}
+                guests={guests}
+                services={services}
+                onSubmit={handleCreateBookingSubmit}
+                onCancel={() => setIsAddDialogOpen(false)}
+                onGuestCreateClick={() => setShowGuestForm(true)}
+              />
             )}
           </DialogContent>
         </Dialog>
@@ -700,145 +380,160 @@ export default function BookingsPage() {
           <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>{t("bookingDetailsTitle", { id: selectedBooking.id })}</DialogTitle>
-                <DialogDescription>{t("bookingDetailsDescription")}</DialogDescription>
+                <DialogTitle>{isEditing ? `Edit Booking #${selectedBooking.id}` : t("bookingDetailsTitle", { id: selectedBooking.id })}</DialogTitle>
+                <DialogDescription>{isEditing ? "Update booking details below." : t("bookingDetailsDescription")}</DialogDescription>
               </DialogHeader>
-              <div className="grid gap-6 py-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="text-muted-foreground">{t("guestInformation")}</Label>
+              {isEditing ? (
+                <BookingForm
+                  initialData={selectedBooking}
+                  rooms={rooms}
+                  guests={guests}
+                  services={services}
+                  onSubmit={handleEditBookingSubmit}
+                  onCancel={() => setIsEditing(false)}
+                />
+              ) : (
+                <div className="grid gap-6 py-4">
+                  <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <User className="size-4 text-muted-foreground" />
-                        <span>
-                          {selectedBooking.guest?.first_name} {selectedBooking.guest?.last_name}
-                        </span>
+                      <Label className="text-muted-foreground">{t("guestInformation")}</Label>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <User className="size-4 text-muted-foreground" />
+                          <span>
+                            {selectedBooking.guest?.first_name} {selectedBooking.guest?.last_name}
+                          </span>
+                        </div>
+                        {selectedBooking.guest?.email && (
+                          <div className="flex items-center gap-2">
+                            <Mail className="size-4 text-muted-foreground" />
+                            <span className="text-sm">{selectedBooking.guest.email}</span>
+                          </div>
+                        )}
+                        {selectedBooking.guest?.phone && (
+                          <div className="flex items-center gap-2">
+                            <Phone className="size-4 text-muted-foreground" />
+                            <span className="text-sm">{selectedBooking.guest.phone}</span>
+                          </div>
+                        )}
                       </div>
-                      {selectedBooking.guest?.email && (
-                        <div className="flex items-center gap-2">
-                          <Mail className="size-4 text-muted-foreground" />
-                          <span className="text-sm">{selectedBooking.guest.email}</span>
-                        </div>
-                      )}
-                      {selectedBooking.guest?.phone && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="size-4 text-muted-foreground" />
-                          <span className="text-sm">{selectedBooking.guest.phone}</span>
-                        </div>
-                      )}
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-muted-foreground">{t("roomDetails")}</Label>
                     <div className="space-y-2">
-                      <p>
-                        <span className="font-medium">{t("form.room")}:</span> {selectedBooking.room?.room_number}
-                      </p>
-                      <p>
-                        <span className="font-medium">{t("form.type")}:</span> {selectedBooking.room?.room_type}
-                      </p>
-                      <p>
-                        <span className="font-medium">{t("form.numberOfGuests")}:</span> {selectedBooking.number_of_guests}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="text-muted-foreground">{t("stayDuration")}</Label>
-                    <div className="space-y-2">
-                      <p>
-                        <span className="font-medium">{t("form.checkInDate")}:</span>{" "}
-                        {formatDate(selectedBooking.check_in)}
-                      </p>
-                      <p>
-                        <span className="font-medium">{t("form.checkOutDate")}:</span>{" "}
-                        {formatDate(selectedBooking.check_out)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-muted-foreground">{t("payment")}</Label>
-                    <div className="space-y-2">
-                      {selectedBooking.total_amount && (
+                      <Label className="text-muted-foreground">{t("roomDetails")}</Label>
+                      <div className="space-y-2">
                         <p>
-                          <span className="font-medium">{t("total")}:</span> {convert(selectedBooking.total_amount).toFixed(2)} {currency}
+                          <span className="font-medium">{t("form.room")}:</span> {selectedBooking.room?.room_number}
                         </p>
-                      )}
-                      {selectedBooking.payment_status && (
-                        <div className="flex items-center gap-2">
-                          <CreditCard className="size-4 text-muted-foreground" />
-                          <Badge
-                            variant="outline"
-                            className={
-                              selectedBooking.payment_status === "paid"
-                                ? "bg-green-500/10 text-green-500"
-                                : "bg-yellow-500/10 text-yellow-500"
-                            }
-                          >
-                            {selectedBooking.payment_status}
-                          </Badge>
-                        </div>
-                      )}
+                        <p>
+                          <span className="font-medium">{t("form.type")}:</span> {selectedBooking.room?.room_type}
+                        </p>
+                        <p>
+                          <span className="font-medium">{t("form.numberOfGuests")}:</span> {selectedBooking.number_of_guests}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-                {selectedBooking.notes && (
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label className="text-muted-foreground">{t("stayDuration")}</Label>
+                      <div className="space-y-2">
+                        <p>
+                          <span className="font-medium">{t("form.checkInDate")}:</span>{" "}
+                          {formatDate(selectedBooking.check_in)}
+                        </p>
+                        <p>
+                          <span className="font-medium">{t("form.checkOutDate")}:</span>{" "}
+                          {formatDate(selectedBooking.check_out)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-muted-foreground">{t("payment")}</Label>
+                      <div className="space-y-2">
+                        {selectedBooking.total_amount && (
+                          <p>
+                            <span className="font-medium">{t("total")}:</span> {convert(selectedBooking.total_amount).toFixed(2)} {currency}
+                          </p>
+                        )}
+                        {selectedBooking.payment_status && (
+                          <div className="flex items-center gap-2">
+                            <CreditCard className="size-4 text-muted-foreground" />
+                            <Badge
+                              variant="outline"
+                              className={
+                                selectedBooking.payment_status === "paid"
+                                  ? "bg-green-500/10 text-green-500"
+                                  : "bg-yellow-500/10 text-yellow-500"
+                              }
+                            >
+                              {selectedBooking.payment_status}
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  {selectedBooking.notes ? (
+                    <div className="space-y-2">
+                      <Label className="text-muted-foreground">{t("notes")}</Label>
+                      <p className="text-sm">{selectedBooking.notes}</p>
+                    </div>
+                  ) : null}
                   <div className="space-y-2">
-                    <Label className="text-muted-foreground">{t("notes")}</Label>
-                    <p className="text-sm">{selectedBooking.notes}</p>
+                    <Label>{t("updateStatus")}</Label>
+                    <div className="grid gap-2">
+                      <Select
+                        value={selectedBooking.status}
+                        onValueChange={(value) => {
+                          handleStatusChange(selectedBooking.id, value, selectedBooking.payment_status)
+                          setSelectedBooking({ ...selectedBooking, status: value })
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">{t("status.pending")}</SelectItem>
+                          <SelectItem value="confirmed">{t("status.confirmed")}</SelectItem>
+                          <SelectItem value="checked-in">{t("status.checkedIn")}</SelectItem>
+                          <SelectItem value="checked-out">{t("status.checkedOut")}</SelectItem>
+                          <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Select
+                        value={selectedBooking.payment_status || "pending"}
+                        onValueChange={(value) => {
+                          handleStatusChange(selectedBooking.id, selectedBooking.status, value)
+                          setSelectedBooking({ ...selectedBooking, payment_status: value })
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Payment status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">{t("paymentStatus.pending")}</SelectItem>
+                          <SelectItem value="paid">{t("paymentStatus.paid")}</SelectItem>
+                          <SelectItem value="partial">{t("paymentStatus.partial")}</SelectItem>
+                          <SelectItem value="refunded">{t("paymentStatus.refunded")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                )}
-                <div className="space-y-2">
-                  <Label>{t("updateStatus")}</Label>
-                  <div className="grid gap-2">
-                    <Select
-                      value={selectedBooking.status}
-                      onValueChange={(value) => {
-                        handleStatusChange(selectedBooking.id, value, selectedBooking.payment_status)
-                        setSelectedBooking({ ...selectedBooking, status: value })
-                      }}
+                  <DialogFooter className="flex justify-between sm:justify-between w-full">
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleDeleteBooking(selectedBooking.id)}
                     >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pending">{t("status.pending")}</SelectItem>
-                        <SelectItem value="confirmed">{t("status.confirmed")}</SelectItem>
-                        <SelectItem value="checked-in">{t("status.checkedIn")}</SelectItem>
-                        <SelectItem value="checked-out">{t("status.checkedOut")}</SelectItem>
-                        <SelectItem value="cancelled">{t("status.cancelled")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Select
-                      value={selectedBooking.payment_status || "pending"}
-                      onValueChange={(value) => {
-                        handleStatusChange(selectedBooking.id, selectedBooking.status, value)
-                        setSelectedBooking({ ...selectedBooking, payment_status: value })
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Payment status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pending">{t("paymentStatus.pending")}</SelectItem>
-                        <SelectItem value="paid">{t("paymentStatus.paid")}</SelectItem>
-                        <SelectItem value="partial">{t("paymentStatus.partial")}</SelectItem>
-                        <SelectItem value="refunded">{t("paymentStatus.refunded")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                      <Trash2 className="mr-2 size-4" />
+                      {t("deleteBooking")}
+                    </Button>
+                    <Button onClick={() => setIsEditing(true)}>
+                      <Edit2 className="mr-2 size-4" />
+                      Edit
+                    </Button>
+                  </DialogFooter>
                 </div>
-                <DialogFooter>
-                  <Button
-                    variant="destructive"
-                    onClick={() => handleDeleteBooking(selectedBooking.id)}
-                  >
-                    <Trash2 className="mr-2 size-4" />
-                    {t("deleteBooking")}
-                  </Button>
-                </DialogFooter>
-              </div>
+              )}
             </DialogContent>
           </Dialog>
         )

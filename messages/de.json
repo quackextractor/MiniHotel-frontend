@@ -250,7 +250,9 @@
             "lastName": "Nachname",
             "email": "E-Mail",
             "phone": "Telefon",
-            "address": "Adresse"
+            "address": "Adresse",
+            "checkOutBeforeCheckInError": "Das Check-out-Datum muss nach dem Check-in-Datum liegen",
+            "invalidGuestsError": "Die Anzahl der Gäste muss mindestens 1 betragen"
         },
         "status": {
             "draft": "Entwurf",
@@ -258,13 +260,17 @@
             "confirmed": "Bestätigt",
             "checkedIn": "Eingecheckt",
             "checkedOut": "Ausgecheckt",
+            "checked_in": "Eingecheckt",
+            "checked_out": "Ausgecheckt",
+            "pending_payment": "Zahlung ausstehend",
             "cancelled": "Storniert"
         },
         "paymentStatus": {
             "pending": "Ausstehend",
             "paid": "Bezahlt",
             "partial": "Teilweise",
-            "refunded": "Erstattet"
+            "refunded": "Erstattet",
+            "not_paid": "Nicht bezahlt"
         },
         "paymentMethod": {
             "cash": "Bar",

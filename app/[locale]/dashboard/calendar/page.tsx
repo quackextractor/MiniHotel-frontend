@@ -163,6 +163,20 @@ export default function CalendarPage() {
         notes: editFormData.notes
       }
 
+      const checkInDate = new Date(payload.check_in || selectedBooking.check_in)
+      const checkOutDate = new Date(payload.check_out || selectedBooking.check_out)
+
+      if (checkOutDate <= checkInDate) {
+        toast.error("Check-out date must be after check-in date")
+        return
+      }
+
+      const guests = payload.number_of_guests !== undefined && !isNaN(payload.number_of_guests) ? payload.number_of_guests : selectedBooking.number_of_guests
+      if (guests < 1) {
+        toast.error("Number of guests must be at least 1")
+        return
+      }
+
       await api.updateBooking(selectedBooking.id, payload)
       const updatedBookings = await api.getBookings()
       setBookings(Array.isArray(updatedBookings) ? updatedBookings : updatedBookings.items || [])

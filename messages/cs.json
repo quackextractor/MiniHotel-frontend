@@ -250,7 +250,9 @@
             "lastName": "Příjmení",
             "email": "E-mail",
             "phone": "Telefon",
-            "address": "Adresa"
+            "address": "Adresa",
+            "checkOutBeforeCheckInError": "Datum odjezdu musí být po datu příjezdu",
+            "invalidGuestsError": "Počet hostů musí být alespoň 1"
         },
         "status": {
             "draft": "Koncept",
@@ -258,13 +260,17 @@
             "confirmed": "Potvrzeno",
             "checkedIn": "Ubytován",
             "checkedOut": "Odhlášen",
+            "checked_in": "Ubytován",
+            "checked_out": "Odhlášen",
+            "pending_payment": "Čeká na platbu",
             "cancelled": "Zrušeno"
         },
         "paymentStatus": {
             "pending": "Čekající",
             "paid": "Zaplaceno",
             "partial": "Částečně",
-            "refunded": "Vráceno"
+            "refunded": "Vráceno",
+            "not_paid": "Nezaplaceno"
         },
         "paymentMethod": {
             "cash": "Hotovost",

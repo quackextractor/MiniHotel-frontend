@@ -7,8 +7,10 @@ export interface Booking {
     number_of_guests: number
     status: string
     payment_status?: string
+    payment_method?: string
     total_amount?: number
     notes?: string
+    assigned_to?: string
     guest?: {
         first_name: string
         last_name: string
