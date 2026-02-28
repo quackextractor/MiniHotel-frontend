@@ -18,7 +18,8 @@
         "housekeeping": "Swab the Decks",
         "logout": "Abandon Ship",
         "minihotel": "The Brig",
-        "management": "Quartermasters"
+        "management": "Quartermasters",
+        "clients": "Souls"
     },
     "Dashboard": {
         "dashboard": "Captain's Quarters",
@@ -178,7 +179,10 @@
         "loadingServices": "Haulin' services...",
         "errorLoading": "Curses! Error Loading Services",
         "serviceCreated": "Service forged successfully",
-        "noDescription": "No tale to tell"
+        "noDescription": "No tale to tell",
+        "editService": "Modify Goodie",
+        "editServiceDescription": "Update the tale of this service.",
+        "save": "Secure Changes"
     },
     "Bookings": {
         "title": "The Scroll",
@@ -283,6 +287,31 @@
             "bankTransfer": "Gold Wiring",
             "online": "Sky Magic"
         }
+    },
+    "Clients": {
+        "title": "Souls",
+        "subtitle": "Manage yer landlubbers and scallywags",
+        "addClient": "Add Soul",
+        "addClientDescription": "Scribe a new soul in the ledger.",
+        "firstName": "First Moniker",
+        "lastName": "Clan Name",
+        "email": "Message Bottle",
+        "phone": "Speaker Tube",
+        "address": "Home Port",
+        "createClient": "Scribe Soul",
+        "clientCreated": "Soul inscribed successfully",
+        "editClient": "Modify Soul",
+        "editClientDescription": "Update the scallywag's scrawlings.",
+        "clientUpdated": "Soul modified successfully",
+        "confirmDelete": "Ye sure ye want to scuttle this soul?",
+        "clientDeleted": "Soul cast into the depths",
+        "loadingClients": "Scouring fer souls...",
+        "errorLoading": "Blight upon the Data",
+        "filters": "Sifters",
+        "searchClients": "Hunt souls by name, bottle, or tube.",
+        "searchPlaceholder": "Hunt souls...",
+        "noClientsFound": "No souls spotted",
+        "tryAdjustingSearch": "Try a different map"
     },
     "Calendar": {
         "title": "Star Charts",

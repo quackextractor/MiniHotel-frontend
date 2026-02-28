@@ -18,7 +18,8 @@
         "housekeeping": "Úklid",
         "logout": "Odhlásit",
         "minihotel": "Minihotel",
-        "management": "Správa"
+        "management": "Správa",
+        "clients": "Klienti"
     },
     "Dashboard": {
         "dashboard": "Přehled",
@@ -178,7 +179,10 @@
         "loadingServices": "Načítání služeb...",
         "errorLoading": "Chyba při načítání služeb",
         "serviceCreated": "Služba úspěšně vytvořena",
-        "noDescription": "Popis není k dispozici"
+        "noDescription": "Popis není k dispozici",
+        "editService": "Upravit službu",
+        "editServiceDescription": "Aktualizovat detaily vaší služby.",
+        "save": "Uložit změny"
     },
     "Bookings": {
         "title": "Rezervace",
@@ -283,6 +287,31 @@
             "bankTransfer": "Bankovní převod",
             "online": "Online"
         }
+    },
+    "Clients": {
+        "title": "Klienti",
+        "subtitle": "Správa hotelových klientů a hostů",
+        "addClient": "Přidat klienta",
+        "addClientDescription": "Vytvořit nový profil klienta.",
+        "firstName": "Jméno",
+        "lastName": "Příjmení",
+        "email": "E-mail",
+        "phone": "Telefon",
+        "address": "Adresa",
+        "createClient": "Vytvořit klienta",
+        "clientCreated": "Klient úspěšně vytvořen",
+        "editClient": "Upravit klienta",
+        "editClientDescription": "Aktualizovat informace o klientovi.",
+        "clientUpdated": "Klient úspěšně aktualizován",
+        "confirmDelete": "Opravdu chcete smazat tohoto klienta?",
+        "clientDeleted": "Klient úspěšně smazán",
+        "loadingClients": "Načítání klientů...",
+        "errorLoading": "Chyba při načítání dat",
+        "filters": "Filtry",
+        "searchClients": "Hledat klienty podle jména, e-mailu nebo telefonu.",
+        "searchPlaceholder": "Hledat klienty...",
+        "noClientsFound": "Nebyli nalezeni žádní klienti",
+        "tryAdjustingSearch": "Zkuste upravit kritéria hledání"
     },
     "Calendar": {
         "title": "Zobrazení kalendáře",

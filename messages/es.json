@@ -18,7 +18,8 @@
         "housekeeping": "Limpieza",
         "logout": "Cerrar Sesión",
         "minihotel": "Minihotel",
-        "management": "Gestión"
+        "management": "Gestión",
+        "clients": "Clientes"
     },
     "Dashboard": {
         "dashboard": "Panel de Control",
@@ -178,7 +179,10 @@
         "loadingServices": "Cargando servicios...",
         "errorLoading": "Error Cargando Servicios",
         "serviceCreated": "Servicio creado con éxito",
-        "noDescription": "Sin descripción disponible"
+        "noDescription": "Sin descripción disponible",
+        "editService": "Editar Servicio",
+        "editServiceDescription": "Actualice los detalles de su servicio.",
+        "save": "Guardar Cambios"
     },
     "Bookings": {
         "title": "Reservas",
@@ -283,6 +287,31 @@
             "bankTransfer": "Transferencia Bancaria",
             "online": "Online"
         }
+    },
+    "Clients": {
+        "title": "Clientes",
+        "subtitle": "Gestione los clientes y huéspedes de su hotel",
+        "addClient": "Añadir Cliente",
+        "addClientDescription": "Crear un nuevo perfil de cliente.",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "email": "Correo Electrónico",
+        "phone": "Teléfono",
+        "address": "Dirección",
+        "createClient": "Crear Cliente",
+        "clientCreated": "Cliente creado con éxito",
+        "editClient": "Editar Cliente",
+        "editClientDescription": "Actualice la información del cliente.",
+        "clientUpdated": "Cliente actualizado con éxito",
+        "confirmDelete": "¿Está seguro de que desea eliminar este cliente?",
+        "clientDeleted": "Cliente eliminado con éxito",
+        "loadingClients": "Cargando clientes...",
+        "errorLoading": "Error Cargando Datos",
+        "filters": "Filtros",
+        "searchClients": "Buscar clientes por nombre, correo o teléfono.",
+        "searchPlaceholder": "Buscar clientes...",
+        "noClientsFound": "No se encontraron clientes",
+        "tryAdjustingSearch": "Intente ajustar sus criterios de búsqueda"
     },
     "Calendar": {
         "title": "Vista de Calendario",

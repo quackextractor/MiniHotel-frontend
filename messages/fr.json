@@ -18,7 +18,8 @@
         "housekeeping": "Ménage",
         "logout": "Déconnexion",
         "minihotel": "Minihotel",
-        "management": "Gestion"
+        "management": "Gestion",
+        "clients": "Clients"
     },
     "Dashboard": {
         "dashboard": "Tableau de bord",
@@ -178,7 +179,10 @@
         "loadingServices": "Chargement des services...",
         "errorLoading": "Erreur Chargement Services",
         "serviceCreated": "Service créé avec succès",
-        "noDescription": "Aucune description disponible"
+        "noDescription": "Aucune description disponible",
+        "editService": "Modifier le Service",
+        "editServiceDescription": "Mettez à jour les détails de votre service.",
+        "save": "Enregistrer les modifications"
     },
     "Bookings": {
         "title": "Réservations",
@@ -283,6 +287,31 @@
             "bankTransfer": "Virement Bancaire",
             "online": "En ligne"
         }
+    },
+    "Clients": {
+        "title": "Clients",
+        "subtitle": "Gérez les clients et les invités de votre hôtel",
+        "addClient": "Ajouter un Client",
+        "addClientDescription": "Créer un nouveau profil client.",
+        "firstName": "Prénom",
+        "lastName": "Nom",
+        "email": "Email",
+        "phone": "Téléphone",
+        "address": "Adresse",
+        "createClient": "Créer Client",
+        "clientCreated": "Client créé avec succès",
+        "editClient": "Modifier le Client",
+        "editClientDescription": "Mettre à jour les informations du client.",
+        "clientUpdated": "Client mis à jour avec succès",
+        "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce client ?",
+        "clientDeleted": "Client supprimé avec succès",
+        "loadingClients": "Chargement des clients...",
+        "errorLoading": "Erreur de chargement des données",
+        "filters": "Filtres",
+        "searchClients": "Rechercher des clients par nom, e-mail ou téléphone.",
+        "searchPlaceholder": "Rechercher des clients...",
+        "noClientsFound": "Aucun client trouvé",
+        "tryAdjustingSearch": "Essayez d'ajuster vos critères de recherche"
     },
     "Calendar": {
         "title": "Vue Calendrier",

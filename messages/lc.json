@@ -18,7 +18,8 @@
         "housekeeping": "Fur Removal",
         "logout": "Kthxbye",
         "minihotel": "Teh Smol Inn",
-        "management": "Ceiling Cat"
+        "management": "Ceiling Cat",
+        "clients": "Frens"
     },
     "Dashboard": {
         "dashboard": "Dashbored",
@@ -178,7 +179,10 @@
         "loadingServices": "Finding treetz...",
         "errorLoading": "O Noes! No treetz.",
         "serviceCreated": "Treet made!",
-        "noDescription": "Iz mystery"
+        "noDescription": "Iz mystery",
+        "editService": "Fix Treet",
+        "editServiceDescription": "Change treet deetz.",
+        "save": "Save It"
     },
     "Bookings": {
         "title": "Noms Requests",
@@ -283,6 +287,31 @@
             "bankTransfer": "Magic Wire",
             "online": "Interwebz"
         }
+    },
+    "Clients": {
+        "title": "Frens",
+        "subtitle": "Manage ur frens dat stay",
+        "addClient": "Add Fren",
+        "addClientDescription": "Put new fren in computer.",
+        "firstName": "Furrst Name",
+        "lastName": "Last Name",
+        "email": "Elecktronik Mail",
+        "phone": "Ring Ring",
+        "address": "Home",
+        "createClient": "Make Fren",
+        "clientCreated": "Fren made! Kthx.",
+        "editClient": "Fix Fren",
+        "editClientDescription": "Change fren deetz.",
+        "clientUpdated": "Fren fixed bigly",
+        "confirmDelete": "U sure u wanna delete dis fren?",
+        "clientDeleted": "Fren gone! Nom nom.",
+        "loadingClients": "Findin frens...",
+        "errorLoading": "O Noes! Error.",
+        "filters": "Pickyz",
+        "searchClients": "Find frens by name, mail, or ring ring.",
+        "searchPlaceholder": "Find frens...",
+        "noClientsFound": "No frens here",
+        "tryAdjustingSearch": "Look harder"
     },
     "Calendar": {
         "title": "Wen View",

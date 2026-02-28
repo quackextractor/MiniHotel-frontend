@@ -53,6 +53,11 @@ export function AppSidebar() {
       icon: ConciergeBell,
     },
     {
+      title: t("clients") || "Clients",
+      url: "/dashboard/clients",
+      icon: Users,
+    },
+    {
       title: t("rates"),
       url: "/dashboard/rates",
       icon: Percent,

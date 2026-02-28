@@ -46,6 +46,8 @@ export const api = {
   searchGuests: (query: string) => fetchAPI(`/guests/search?q=${encodeURIComponent(query)}`),
   createGuest: (data: any) => fetchAPI("/guests", { method: "POST", body: JSON.stringify(data) }),
   updateGuest: (id: number, data: any) => fetchAPI(`/guests/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteGuest: (id: number) => fetchAPI(`/guests/${id}`, { method: "DELETE" }),
+
 
   // Bookings
   getBookings: async (params?: Record<string, string>) => {
@@ -116,6 +118,9 @@ export const api = {
   // services
   getServices: () => fetchAPI("/services"),
   createService: (data: any) => fetchAPI("/services", { method: "POST", body: JSON.stringify(data) }),
+  updateService: (id: number, data: any) => fetchAPI(`/services/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteService: (id: number) => fetchAPI(`/services/${id}`, { method: "DELETE" }),
+
 
   // Auth & System
   getAuditLogs: () => fetchAPI("/audit-logs"),

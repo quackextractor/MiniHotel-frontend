@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ConciergeBell, Plus, Search, DollarSign } from "lucide-react"
+import { ConciergeBell, Plus, Search, DollarSign, Edit, Trash2 } from "lucide-react"
 import { api } from "@/lib/api"
 import { useTranslations, useFormatter } from "next-intl"
 import { useCurrency } from "@/hooks/use-currency"
@@ -39,6 +39,8 @@ export default function ServicesPage() {
     const [error, setError] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState("")
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+    const [selectedService, setSelectedService] = useState<Service | null>(null)
 
     useEffect(() => {
         async function fetchServices() {
@@ -82,6 +84,43 @@ export default function ServicesPage() {
         } catch (err) {
             console.error("Error creating service:", err)
             toast.error("Failed to create service: " + (err instanceof Error ? err.message : "Unknown error"))
+        }
+    }
+
+    const handleEditService = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (!selectedService) return
+        const formData = new FormData(e.currentTarget)
+
+        try {
+            const inputPrice = Number(formData.get("price"))
+            const basePrice = convertToBase(inputPrice)
+
+            const updatedService = await api.updateService(selectedService.id, {
+                name: formData.get("name") as string,
+                description: formData.get("description") as string,
+                price: basePrice,
+            })
+
+            setServices(services.map(s => s.id === updatedService.id ? updatedService : s))
+            setIsEditDialogOpen(false)
+            setSelectedService(null)
+            toast.success(t("serviceUpdated") || "Service updated successfully")
+        } catch (err) {
+            console.error("Error updating service:", err)
+            toast.error("Failed to update service: " + (err instanceof Error ? err.message : "Unknown error"))
+        }
+    }
+
+    const handleDeleteService = async (id: number) => {
+        if (!confirm(t("confirmDelete") || "Are you sure you want to delete this service?")) return
+        try {
+            await api.deleteService(id)
+            setServices(services.filter(s => s.id !== id))
+            toast.success(t("serviceDeleted") || "Service deleted successfully")
+        } catch (err) {
+            console.error("Error deleting service:", err)
+            toast.error("Failed to delete service")
         }
     }
 
@@ -149,6 +188,37 @@ export default function ServicesPage() {
                         </form>
                     </DialogContent>
                 </Dialog>
+
+                <Dialog open={isEditDialogOpen} onOpenChange={(open) => {
+                    setIsEditDialogOpen(open)
+                    if (!open) setSelectedService(null)
+                }}>
+                    <DialogContent>
+                        <form onSubmit={handleEditService}>
+                            <DialogHeader>
+                                <DialogTitle>{t("editService") || "Edit Service"}</DialogTitle>
+                                <DialogDescription>{t("editServiceDescription") || "Update the details of your service."}</DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="edit-name">{t("serviceName")}</Label>
+                                    <Input id="edit-name" name="name" defaultValue={selectedService?.name} required />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="edit-price">{t("price")} ({currency})</Label>
+                                    <Input id="edit-price" name="price" type="number" step="0.01" min="0" defaultValue={selectedService ? convert(selectedService.price) : ""} required />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="edit-description">{t("description")}</Label>
+                                    <Textarea id="edit-description" name="description" defaultValue={selectedService?.description} />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button type="submit">{t("save") || "Save Changes"}</Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <Card>
@@ -184,6 +254,17 @@ export default function ServicesPage() {
                                             {format.number(convert(service.price), { style: 'currency', currency: currency })}
                                         </p>
                                     </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button variant="ghost" size="icon" onClick={() => {
+                                        setSelectedService(service)
+                                        setIsEditDialogOpen(true)
+                                    }}>
+                                        <Edit className="size-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => handleDeleteService(service.id)}>
+                                        <Trash2 className="size-4" />
+                                    </Button>
                                 </div>
                             </div>
                         </CardHeader>

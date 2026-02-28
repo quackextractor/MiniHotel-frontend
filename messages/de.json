@@ -18,7 +18,8 @@
         "housekeeping": "Reinigung",
         "logout": "Abmelden",
         "minihotel": "Minihotel",
-        "management": "Verwaltung"
+        "management": "Verwaltung",
+        "clients": "Kunden"
     },
     "Dashboard": {
         "dashboard": "Dashboard",
@@ -178,7 +179,10 @@
         "loadingServices": "Lade Services...",
         "errorLoading": "Fehler beim Laden der Services",
         "serviceCreated": "Service erfolgreich erstellt",
-        "noDescription": "Keine Beschreibung verfügbar"
+        "noDescription": "Keine Beschreibung verfügbar",
+        "editService": "Service bearbeiten",
+        "editServiceDescription": "Aktualisieren Sie die Details Ihres Services.",
+        "save": "Änderungen speichern"
     },
     "Bookings": {
         "title": "Buchungen",
@@ -283,6 +287,31 @@
             "bankTransfer": "Überweisung",
             "online": "Online"
         }
+    },
+    "Clients": {
+        "title": "Kunden",
+        "subtitle": "Verwalten Sie Ihre Hotelkunden und Gäste",
+        "addClient": "Kunden hinzufügen",
+        "addClientDescription": "Neues Kundenprofil erstellen.",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "address": "Adresse",
+        "createClient": "Kunden erstellen",
+        "clientCreated": "Kunde erfolgreich erstellt",
+        "editClient": "Kunden bearbeiten",
+        "editClientDescription": "Kundeninformationen aktualisieren.",
+        "clientUpdated": "Kunde erfolgreich aktualisiert",
+        "confirmDelete": "Sind Sie sicher, dass Sie diesen Kunden löschen möchten?",
+        "clientDeleted": "Kunde erfolgreich gelöscht",
+        "loadingClients": "Lade Kunden...",
+        "errorLoading": "Fehler beim Laden der Daten",
+        "filters": "Filter",
+        "searchClients": "Suchen Sie nach Kunden über Name, E-Mail oder Telefon.",
+        "searchPlaceholder": "Kunden suchen...",
+        "noClientsFound": "Keine Kunden gefunden",
+        "tryAdjustingSearch": "Versuchen Sie, Ihre Suchkriterien anzupassen"
     },
     "Calendar": {
         "title": "Kalenderansicht",

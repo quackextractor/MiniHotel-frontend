@@ -159,7 +159,7 @@ export default function HousekeepingPage() {
     if (loading) return <div>Loading...</div>
 
     return (
-        <div className="flex flex-1 flex-col gap-4">
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-4">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>

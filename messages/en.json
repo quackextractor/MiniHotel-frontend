@@ -18,7 +18,8 @@
         "housekeeping": "Housekeeping",
         "logout": "Logout",
         "minihotel": "Minihotel",
-        "management": "Management"
+        "management": "Management",
+        "clients": "Clients"
     },
     "Dashboard": {
         "dashboard": "Dashboard",
@@ -178,7 +179,10 @@
         "loadingServices": "Loading services...",
         "errorLoading": "Error Loading Services",
         "serviceCreated": "Service created successfully",
-        "noDescription": "No description available"
+        "noDescription": "No description available",
+        "editService": "Edit Service",
+        "editServiceDescription": "Update the details of your service.",
+        "save": "Save Changes"
     },
     "Bookings": {
         "title": "Bookings",
@@ -283,6 +287,31 @@
             "bankTransfer": "Bank Transfer",
             "online": "Online"
         }
+    },
+    "Clients": {
+        "title": "Clients",
+        "subtitle": "Manage your hotel clients and guests",
+        "addClient": "Add Client",
+        "addClientDescription": "Create a new client profile.",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "createClient": "Create Client",
+        "clientCreated": "Client created successfully",
+        "editClient": "Edit Client",
+        "editClientDescription": "Update the client's information.",
+        "clientUpdated": "Client updated successfully",
+        "confirmDelete": "Are you sure you want to delete this client?",
+        "clientDeleted": "Client deleted successfully",
+        "loadingClients": "Loading clients...",
+        "errorLoading": "Error Loading Data",
+        "filters": "Filters",
+        "searchClients": "Search through clients by name, email, or phone.",
+        "searchPlaceholder": "Search clients...",
+        "noClientsFound": "No clients found",
+        "tryAdjustingSearch": "Try adjusting your search criteria"
     },
     "Calendar": {
         "title": "Calendar View",

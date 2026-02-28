@@ -18,7 +18,8 @@
         "housekeeping": "Scullery & Scrub",
         "logout": "Flee This Realm",
         "minihotel": "Ye Humble Abode",
-        "management": "The Overlords"
+        "management": "The Overlords",
+        "clients": "Wanderers"
     },
     "Dashboard": {
         "dashboard": "The Grand Stage",
@@ -178,7 +179,10 @@
         "loadingServices": "Summoning the luxuries...",
         "errorLoading": "A Pox! The services are lost.",
         "serviceCreated": "A new delight is born",
-        "noDescription": "A mystery, shrouded in silence"
+        "noDescription": "A mystery, shrouded in silence",
+        "editService": "Reform Boon",
+        "editServiceDescription": "Amend the secrets of thy service.",
+        "save": "Seal the Fate"
     },
     "Bookings": {
         "title": "Scrolls of Destiny",
@@ -283,6 +287,31 @@
             "bankTransfer": "Alchemy",
             "online": "Sorcery"
         }
+    },
+    "Clients": {
+        "title": "Wanderers",
+        "subtitle": "Govern the wanderers within thy realm",
+        "addClient": "Summon Wanderer",
+        "addClientDescription": "Craft a new wanderer's tale.",
+        "firstName": "Christian Name",
+        "lastName": "House Name",
+        "email": "E-Missive",
+        "phone": "Farspeaker",
+        "address": "Abode",
+        "createClient": "Summon Wanderer",
+        "clientCreated": "A new wanderer is born",
+        "editClient": "Reform Wanderer",
+        "editClientDescription": "Amend the wanderer's chronicle.",
+        "clientUpdated": "Wanderer reformed fittingly",
+        "confirmDelete": "Dost thou wish to banish this wanderer?",
+        "clientDeleted": "Wanderer vanished forever",
+        "loadingClients": "Scouring for wanderers...",
+        "errorLoading": "Tragedy! Data is lost",
+        "filters": "Sieves of Truth",
+        "searchClients": "Quest for wanderers by name, missive, or farspeaker.",
+        "searchPlaceholder": "Seek wanderers...",
+        "noClientsFound": "Alas! No wanderers found",
+        "tryAdjustingSearch": "Cast thy gaze wider"
     },
     "Calendar": {
         "title": "The Almanack",

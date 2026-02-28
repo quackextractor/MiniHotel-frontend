@@ -337,6 +337,7 @@ export default function BookingsPage() {
       <Tabs defaultValue="all" className="flex-1">
         <TabsList>
           <TabsTrigger value="all">{t("allBookings")}</TabsTrigger>
+          <TabsTrigger value="draft">{t("status.draft") || "Draft"}</TabsTrigger>
           <TabsTrigger value="pending">{t("status.pending")}</TabsTrigger>
           <TabsTrigger value="confirmed">{t("status.confirmed")}</TabsTrigger>
           <TabsTrigger value="checked-in">{t("status.checkedIn")}</TabsTrigger>
@@ -345,6 +346,14 @@ export default function BookingsPage() {
         <TabsContent value="all" className="space-y-4">
           <BookingsList
             bookings={filteredBookings()}
+            onStatusChange={handleStatusChange}
+            onSelectBooking={setSelectedBooking}
+          />
+        </TabsContent>
+
+        <TabsContent value="draft" className="space-y-4">
+          <BookingsList
+            bookings={filteredBookings("draft")}
             onStatusChange={handleStatusChange}
             onSelectBooking={setSelectedBooking}
           />
@@ -493,6 +502,7 @@ export default function BookingsPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="draft">{t("status.draft") || "Draft"}</SelectItem>
                           <SelectItem value="pending">{t("status.pending")}</SelectItem>
                           <SelectItem value="confirmed">{t("status.confirmed")}</SelectItem>
                           <SelectItem value="checked-in">{t("status.checkedIn")}</SelectItem>
@@ -567,7 +577,7 @@ function BookingsList({
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
       {bookings.map((booking) => {
         const statusKey = booking.status.toLowerCase()
         const config = statusConfig[statusKey] || statusConfig.pending
