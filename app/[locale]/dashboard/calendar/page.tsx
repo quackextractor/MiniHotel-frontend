@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { BookingForm } from "@/components/booking-form"
 
 interface Booking {
   id: number
@@ -57,6 +58,8 @@ interface Booking {
   room?: {
     room_number: string
     room_type: string
+    base_rate: number
+    capacity: number
   }
 }
 
@@ -79,6 +82,8 @@ export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [bookings, setBookings] = useState<Booking[]>([])
   const [rooms, setRooms] = useState<any[]>([])
+  const [guests, setGuests] = useState<any[]>([])
+  const [services, setServices] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
@@ -90,10 +95,17 @@ export default function CalendarPage() {
       try {
         setLoading(true)
         console.log("[v0] Fetching calendar data from API...")
-        const [bookingsData, roomsData] = await Promise.all([api.getBookings(), api.getRooms()])
-        console.log("[v0] Calendar data received:", { bookingsData, roomsData })
-        setBookings(bookingsData)
+        const [bookingsData, roomsData, guestsData, servicesData] = await Promise.all([
+          api.getBookings(),
+          api.getRooms(),
+          api.getGuests(),
+          api.getServices()
+        ])
+        console.log("[v0] Calendar data received:", { bookingsData, roomsData, guestsData, servicesData })
+        setBookings(bookingsData || [])
         setRooms(roomsData)
+        setGuests(guestsData)
+        setServices(servicesData)
         setError(null)
       } catch (err) {
         console.error("[v0] Error fetching calendar data:", err)
@@ -150,32 +162,14 @@ export default function CalendarPage() {
     setEditFormData({ ...editFormData, [field]: value })
   }
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = async (payload: any) => {
     if (!selectedBooking) return
     try {
       console.log("[v0] Saving booking edits...")
+      await api.updateBooking(selectedBooking.id, payload)
+      console.log("[v0] Saving booking edits...")
+      await api.updateBooking(selectedBooking.id, payload)
 
-      const payload: any = {
-        check_in: editFormData.check_in,
-        check_out: editFormData.check_out,
-        number_of_guests: Number(editFormData.number_of_guests),
-        room_id: Number(editFormData.room_id),
-        notes: editFormData.notes
-      }
-
-      const checkInDate = new Date(payload.check_in || selectedBooking.check_in)
-      const checkOutDate = new Date(payload.check_out || selectedBooking.check_out)
-
-      if (checkOutDate <= checkInDate) {
-        toast.error("Check-out date must be after check-in date")
-        return
-      }
-
-      const guests = payload.number_of_guests !== undefined && !isNaN(payload.number_of_guests) ? payload.number_of_guests : selectedBooking.number_of_guests
-      if (guests < 1) {
-        toast.error("Number of guests must be at least 1")
-        return
-      }
 
       await api.updateBooking(selectedBooking.id, payload)
       const updatedBookings = await api.getBookings()
@@ -445,65 +439,44 @@ export default function CalendarPage() {
               <DialogDescription>{tBookings("bookingDetailsDescription")}</DialogDescription>
             </DialogHeader>
             <div className="grid gap-6 py-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">{tBookings("guestInformation")}</Label>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <User className="size-4 text-muted-foreground" />
-                      <span>
-                        {selectedBooking.guest?.first_name} {selectedBooking.guest?.last_name}
-                      </span>
-                    </div>
-                    {selectedBooking.guest?.email && (
-                      <div className="flex items-center gap-2">
-                        <Mail className="size-4 text-muted-foreground" />
-                        <span className="text-sm">{selectedBooking.guest.email}</span>
-                      </div>
-                    )}
-                    {selectedBooking.guest?.phone && (
-                      <div className="flex items-center gap-2">
-                        <Phone className="size-4 text-muted-foreground" />
-                        <span className="text-sm">{selectedBooking.guest.phone}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">{tBookings("roomDetails")}</Label>
-                  <div className="space-y-2">
-                    {isEditing ? (
+              {isEditing ? (
+                <BookingForm
+                  initialData={selectedBooking}
+                  rooms={rooms}
+                  guests={guests}
+                  services={services}
+                  onSubmit={handleSaveEdit}
+                  onCancel={() => setIsEditing(false)}
+                />
+              ) : (
+                <>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label className="text-muted-foreground">{tBookings("guestInformation")}</Label>
                       <div className="space-y-2">
-                        <div className="flex gap-2">
-                          <Label className="self-center w-24">{tBookings("form.room")}</Label>
-                          <Select
-                            value={editFormData.room_id ? editFormData.room_id.toString() : ""}
-                            onValueChange={(value) => handleEditChange("room_id", Number(value))}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder={tBookings("form.selectRoom")} />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {rooms.map((room) => (
-                                <SelectItem key={room.id} value={room.id.toString()}>
-                                  Room {room.room_number} - {room.room_type}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                        <div className="flex items-center gap-2">
+                          <User className="size-4 text-muted-foreground" />
+                          <span>
+                            {selectedBooking.guest?.first_name} {selectedBooking.guest?.last_name}
+                          </span>
                         </div>
-                        <div className="flex gap-2">
-                          <Label className="self-center w-24">{tBookings("form.numberOfGuests")}</Label>
-                          <Input
-                            type="number"
-                            min="1"
-                            value={editFormData.number_of_guests || ""}
-                            onChange={(e) => handleEditChange("number_of_guests", e.target.value)}
-                          />
-                        </div>
+                        {selectedBooking.guest?.email && (
+                          <div className="flex items-center gap-2">
+                            <Mail className="size-4 text-muted-foreground" />
+                            <span className="text-sm">{selectedBooking.guest.email}</span>
+                          </div>
+                        )}
+                        {selectedBooking.guest?.phone && (
+                          <div className="flex items-center gap-2">
+                            <Phone className="size-4 text-muted-foreground" />
+                            <span className="text-sm">{selectedBooking.guest.phone}</span>
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      <>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-muted-foreground">{tBookings("roomDetails")}</Label>
+                      <div className="space-y-2">
                         <p>
                           <span className="font-medium">{tBookings("form.room")}:</span> {selectedBooking.room?.room_number}
                         </p>
@@ -513,36 +486,13 @@ export default function CalendarPage() {
                         <p>
                           <span className="font-medium">{tBookings("form.numberOfGuests")}:</span> {selectedBooking.number_of_guests}
                         </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">{tBookings("stayDuration")}</Label>
-                  <div className="space-y-2">
-                    {isEditing ? (
-                      <div className="space-y-2">
-                        <div className="flex gap-2">
-                          <Label className="self-center w-24">{tBookings("form.checkInDate")}</Label>
-                          <Input
-                            type="date"
-                            value={editFormData.check_in ? editFormData.check_in.substring(0, 10) : ""}
-                            onChange={(e) => handleEditChange("check_in", e.target.value)}
-                          />
-                        </div>
-                        <div className="flex gap-2">
-                          <Label className="self-center w-24">{tBookings("form.checkOutDate")}</Label>
-                          <Input
-                            type="date"
-                            value={editFormData.check_out ? editFormData.check_out.substring(0, 10) : ""}
-                            onChange={(e) => handleEditChange("check_out", e.target.value)}
-                          />
-                        </div>
                       </div>
-                    ) : (
-                      <>
+                    </div>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label className="text-muted-foreground">{tBookings("stayDuration")}</Label>
+                      <div className="space-y-2">
                         <p>
                           <span className="font-medium">{tBookings("form.checkInDate")}:</span>{" "}
                           {new Date(selectedBooking.check_in).toLocaleDateString()}
@@ -551,117 +501,94 @@ export default function CalendarPage() {
                           <span className="font-medium">{tBookings("form.checkOutDate")}:</span>{" "}
                           {new Date(selectedBooking.check_out).toLocaleDateString()}
                         </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">{tBookings("payment")}</Label>
-                  <div className="space-y-2">
-                    {selectedBooking.total_amount && (
-                      <p>
-                        <span className="font-medium">{tBookings("total")}:</span> {convert(selectedBooking.total_amount).toFixed(2)} {currency}
-                      </p>
-                    )}
-                    {selectedBooking.payment_status && (
-                      <div className="flex items-center gap-2">
-                        <CreditCard className="size-4 text-muted-foreground" />
-                        <Badge
-                          variant="outline"
-                          className={
-                            selectedBooking.payment_status === "paid"
-                              ? "bg-green-500/10 text-green-500"
-                              : "bg-yellow-500/10 text-yellow-500"
-                          }
-                        >
-                          {selectedBooking.payment_status}
-                        </Badge>
                       </div>
-                    )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-muted-foreground">{tBookings("payment")}</Label>
+                      <div className="space-y-2">
+                        {selectedBooking.total_amount && (
+                          <p>
+                            <span className="font-medium">{tBookings("total")}:</span> {convert(selectedBooking.total_amount).toFixed(2)} {currency}
+                          </p>
+                        )}
+                        {selectedBooking.payment_status && (
+                          <div className="flex items-center gap-2">
+                            <CreditCard className="size-4 text-muted-foreground" />
+                            <Badge
+                              variant="outline"
+                              className={
+                                selectedBooking.payment_status === "paid"
+                                  ? "bg-green-500/10 text-green-500"
+                                  : "bg-yellow-500/10 text-yellow-500"
+                              }
+                            >
+                              {selectedBooking.payment_status}
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              {isEditing || selectedBooking.notes ? (
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground">{tBookings("notes")}</Label>
-                  {isEditing ? (
-                    <Textarea
-                      value={editFormData.notes || ""}
-                      onChange={(e) => handleEditChange("notes", e.target.value)}
-                      placeholder={tBookings("form.specialRequests")}
-                    />
-                  ) : (
-                    <p className="text-sm">{selectedBooking.notes}</p>
-                  )}
-                </div>
-              ) : null}
-              <div className="space-y-2">
-                <Label>{tBookings("updateStatus")}</Label>
-                <div className="grid gap-2">
-                  <Select
-                    value={selectedBooking.status}
-                    onValueChange={(value) => {
-                      handleStatusChange(selectedBooking.id, value, selectedBooking.payment_status)
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">{tBookings("status.pending")}</SelectItem>
-                      <SelectItem value="confirmed">{tBookings("status.confirmed")}</SelectItem>
-                      <SelectItem value="checked-in">{tBookings("status.checkedIn")}</SelectItem>
-                      <SelectItem value="checked-out">{tBookings("status.checkedOut")}</SelectItem>
-                      <SelectItem value="cancelled">{tBookings("status.cancelled")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select
-                    value={selectedBooking.payment_status || "pending"}
-                    onValueChange={(value) => {
-                      handleStatusChange(selectedBooking.id, selectedBooking.status, value)
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={tBookings("form.selectPaymentStatus")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">{tBookings("paymentStatus.pending")}</SelectItem>
-                      <SelectItem value="paid">{tBookings("paymentStatus.paid")}</SelectItem>
-                      <SelectItem value="partial">{tBookings("paymentStatus.partial")}</SelectItem>
-                      <SelectItem value="refunded">{tBookings("paymentStatus.refunded")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <DialogFooter className="flex justify-between sm:justify-between w-full">
-                <Button
-                  variant="destructive"
-                  onClick={() => handleDeleteBooking(selectedBooking.id)}
-                >
-                  <Trash2 className="mr-2 size-4" />
-                  {tBookings("deleteBooking")}
-                </Button>
-                {isEditing ? (
-                  <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => setIsEditing(false)}>
-                      <X className="mr-2 size-4" />
-                      {tCommon("cancel")}
-                    </Button>
-                    <Button onClick={handleSaveEdit}>
-                      <Save className="mr-2 size-4" />
-                      {tCommon("save")}
-                    </Button>
+                  {selectedBooking.notes ? (
+                    <div className="space-y-2">
+                      <Label className="text-muted-foreground">{tBookings("notes")}</Label>
+                      <p className="text-sm">{selectedBooking.notes}</p>
+                    </div>
+                  ) : null}
+                  <div className="space-y-2">
+                    <Label>{tBookings("updateStatus")}</Label>
+                    <div className="grid gap-2">
+                      <Select
+                        value={selectedBooking.status}
+                        onValueChange={(value) => {
+                          handleStatusChange(selectedBooking.id, value, selectedBooking.payment_status)
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="draft">{tBookings("status.draft")}</SelectItem>
+                          <SelectItem value="pending">{tBookings("status.pending")}</SelectItem>
+                          <SelectItem value="confirmed">{tBookings("status.confirmed")}</SelectItem>
+                          <SelectItem value="checked-in">{tBookings("status.checkedIn")}</SelectItem>
+                          <SelectItem value="checked-out">{tBookings("status.checkedOut")}</SelectItem>
+                          <SelectItem value="cancelled">{tBookings("status.cancelled")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Select
+                        value={selectedBooking.payment_status || "pending"}
+                        onValueChange={(value) => {
+                          handleStatusChange(selectedBooking.id, selectedBooking.status, value)
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder={tBookings("form.selectPaymentStatus")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">{tBookings("paymentStatus.pending")}</SelectItem>
+                          <SelectItem value="paid">{tBookings("paymentStatus.paid")}</SelectItem>
+                          <SelectItem value="partial">{tBookings("paymentStatus.partial")}</SelectItem>
+                          <SelectItem value="refunded">{tBookings("paymentStatus.refunded")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                ) : (
-                  <Button onClick={() => {
-                    setEditFormData(selectedBooking)
-                    setIsEditing(true)
-                  }}>
-                    <Edit2 className="mr-2 size-4" />
-                    {tCommon("edit")}
-                  </Button>
-                )}
-              </DialogFooter>
+                  <DialogFooter className="flex justify-between sm:justify-between w-full">
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleDeleteBooking(selectedBooking.id)}
+                    >
+                      <Trash2 className="mr-2 size-4" />
+                      {tBookings("deleteBooking")}
+                    </Button>
+                    <Button onClick={() => setIsEditing(true)}>
+                      <Edit2 className="mr-2 size-4" />
+                      {tCommon("edit")}
+                    </Button>
+                  </DialogFooter>
+                </>
+              )}
             </div>
           </DialogContent>
         </Dialog>
