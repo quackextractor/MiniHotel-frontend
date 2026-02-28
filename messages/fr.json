@@ -250,7 +250,9 @@
             "lastName": "Nom",
             "email": "Email",
             "phone": "Téléphone",
-            "address": "Adresse"
+            "address": "Adresse",
+            "checkOutBeforeCheckInError": "La date de départ doit être postérieure à la date d'arrivée",
+            "invalidGuestsError": "Le nombre de clients doit être d'au moins 1"
         },
         "status": {
             "draft": "Brouillon",
@@ -258,13 +260,22 @@
             "confirmed": "Confirmée",
             "checkedIn": "Arrivé",
             "checkedOut": "Parti",
-            "cancelled": "Annulée"
+            "checked_in": "Arrivé",
+            "checked_out": "Parti",
+            "pending_payment": "Paiement en attente",
+            "cancelled": "Annulée",
+            "checked-in": "Checked In",
+            "checked-out": "Checked Out",
+            "pending payment": "Pending Payment",
+            "pending-payment": "Pending Payment"
         },
         "paymentStatus": {
             "pending": "En attente",
             "paid": "Payé",
             "partial": "Partiel",
-            "refunded": "Remboursé"
+            "refunded": "Remboursé",
+            "not_paid": "Non Payé",
+            "not-paid": "Not Paid"
         },
         "paymentMethod": {
             "cash": "Espèces",

@@ -25,31 +25,34 @@ export function I18nAuditLoader() {
 
     try {
         const messagesDir = path.join(process.cwd(), "messages")
-        const enContent = fs.readFileSync(path.join(messagesDir, "en.json"), "utf8")
-        const enMessages = JSON.parse(enContent)
-        const enKeys = new Set(flattenKeys(enMessages))
 
-        const requiredLanguages = ["cs", "de"]
+        if (!fs.existsSync(messagesDir)) {
+            return null
+        }
+
+        const files = fs.readdirSync(messagesDir).filter((file) => file.endsWith('.json'))
+        const allMessages: Record<string, string[]> = {}
+        const allUniqueKeys = new Set<string>()
+
+        for (const file of files) {
+            const locale = file.replace('.json', '')
+            const content = fs.readFileSync(path.join(messagesDir, file), "utf8")
+            const messages = JSON.parse(content)
+            const keys = flattenKeys(messages)
+            allMessages[locale] = keys
+            keys.forEach(k => allUniqueKeys.add(k))
+        }
+
         const missingTranslations = []
 
-        for (const locale of requiredLanguages) {
-            try {
-                const content = fs.readFileSync(path.join(messagesDir, `${locale}.json`), "utf8")
-                const messages = JSON.parse(content)
-                const keys = new Set(flattenKeys(messages))
+        for (const locale in allMessages) {
+            const localeKeys = new Set(allMessages[locale])
+            const missing = Array.from(allUniqueKeys).filter(k => !localeKeys.has(k))
 
-                const missing = [...enKeys].filter(x => !keys.has(x))
-                if (missing.length > 0) {
-                    missingTranslations.push({
-                        locale,
-                        missingKeys: missing
-                    })
-                }
-            } catch (e) {
-                console.error(`Error loading locale ${locale}:`, e)
+            if (missing.length > 0) {
                 missingTranslations.push({
                     locale,
-                    missingKeys: ["Could not load file (syntax error or missing)"]
+                    missingKeys: missing
                 })
             }
         }

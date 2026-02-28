@@ -263,14 +263,19 @@
             "checked_in": "Ubytován",
             "checked_out": "Odhlášen",
             "pending_payment": "Čeká na platbu",
-            "cancelled": "Zrušeno"
+            "cancelled": "Zrušeno",
+            "checked-in": "Checked In",
+            "checked-out": "Checked Out",
+            "pending payment": "Pending Payment",
+            "pending-payment": "Pending Payment"
         },
         "paymentStatus": {
             "pending": "Čekající",
             "paid": "Zaplaceno",
             "partial": "Částečně",
             "refunded": "Vráceno",
-            "not_paid": "Nezaplaceno"
+            "not_paid": "Nezaplaceno",
+            "not-paid": "Not Paid"
         },
         "paymentMethod": {
             "cash": "Hotovost",

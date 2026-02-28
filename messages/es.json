@@ -250,7 +250,9 @@
             "lastName": "Apellido",
             "email": "Correo Electrónico",
             "phone": "Teléfono",
-            "address": "Dirección"
+            "address": "Dirección",
+            "checkOutBeforeCheckInError": "La fecha de salida debe ser posterior a la de entrada",
+            "invalidGuestsError": "El número de huéspedes debe ser al menos 1"
         },
         "status": {
             "draft": "Borrador",
@@ -258,13 +260,22 @@
             "confirmed": "Confirmada",
             "checkedIn": "Entrada Realizada",
             "checkedOut": "Salida Realizada",
-            "cancelled": "Cancelada"
+            "checked_in": "Entrada Realizada",
+            "checked_out": "Salida Realizada",
+            "pending_payment": "Pago Pendiente",
+            "cancelled": "Cancelada",
+            "checked-in": "Checked In",
+            "checked-out": "Checked Out",
+            "pending payment": "Pending Payment",
+            "pending-payment": "Pending Payment"
         },
         "paymentStatus": {
             "pending": "Pendiente",
             "paid": "Pagado",
             "partial": "Parcial",
-            "refunded": "Reembolsado"
+            "refunded": "Reembolsado",
+            "not_paid": "No Pagado",
+            "not-paid": "Not Paid"
         },
         "paymentMethod": {
             "cash": "Efectivo",

@@ -263,14 +263,19 @@
             "checked_in": "Eingecheckt",
             "checked_out": "Ausgecheckt",
             "pending_payment": "Zahlung ausstehend",
-            "cancelled": "Storniert"
+            "cancelled": "Storniert",
+            "checked-in": "Checked In",
+            "checked-out": "Checked Out",
+            "pending payment": "Pending Payment",
+            "pending-payment": "Pending Payment"
         },
         "paymentStatus": {
             "pending": "Ausstehend",
             "paid": "Bezahlt",
             "partial": "Teilweise",
             "refunded": "Erstattet",
-            "not_paid": "Nicht bezahlt"
+            "not_paid": "Nicht bezahlt",
+            "not-paid": "Not Paid"
         },
         "paymentMethod": {
             "cash": "Bar",

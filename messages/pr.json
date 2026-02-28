@@ -250,7 +250,9 @@
             "lastName": "Clan Name",
             "email": "Message Bottle",
             "phone": "Speaker Tube",
-            "address": "Home Port"
+            "address": "Home Port",
+            "checkOutBeforeCheckInError": "Departure must be after arrival, ye fool",
+            "invalidGuestsError": "Need at least one warm body"
         },
         "status": {
             "draft": "Rough Map",
@@ -258,13 +260,22 @@
             "confirmed": "Oathed",
             "checkedIn": "On Deck",
             "checkedOut": "Walked the Plank",
-            "cancelled": "Scrapped"
+            "checked_in": "On Deck",
+            "checked_out": "Walked the Plank",
+            "pending_payment": "Debt Owed",
+            "cancelled": "Scrapped",
+            "checked-in": "Checked In",
+            "checked-out": "Checked Out",
+            "pending payment": "Pending Payment",
+            "pending-payment": "Pending Payment"
         },
         "paymentStatus": {
             "pending": "Owed",
             "paid": "In the Chest",
             "partial": "Some Coin",
-            "refunded": "Returned"
+            "refunded": "Returned",
+            "not_paid": "No Gold",
+            "not-paid": "Not Paid"
         },
         "paymentMethod": {
             "cash": "Pieces of Eight",

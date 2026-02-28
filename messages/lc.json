@@ -250,7 +250,9 @@
             "lastName": "Last Name",
             "email": "Elecktronik Mail",
             "phone": "Ring Ring",
-            "address": "Home"
+            "address": "Home",
+            "checkOutBeforeCheckInError": "Bai must be after Hi",
+            "invalidGuestsError": "Need at least 1 fren"
         },
         "status": {
             "draft": "Scribble",
@@ -258,13 +260,22 @@
             "confirmed": "Srsly",
             "checkedIn": "Here Nao",
             "checkedOut": "Gone",
-            "cancelled": "Nope"
+            "checked_in": "Here Nao",
+            "checked_out": "Gone",
+            "pending_payment": "Need Shinyz",
+            "cancelled": "Nope",
+            "checked-in": "Checked In",
+            "checked-out": "Checked Out",
+            "pending payment": "Pending Payment",
+            "pending-payment": "Pending Payment"
         },
         "paymentStatus": {
             "pending": "Gimme Money",
             "paid": "Got Money",
             "partial": "Some Money",
-            "refunded": "Gave Bak"
+            "refunded": "Gave Bak",
+            "not_paid": "No Shinyz",
+            "not-paid": "Not Paid"
         },
         "paymentMethod": {
             "cash": "Paper",

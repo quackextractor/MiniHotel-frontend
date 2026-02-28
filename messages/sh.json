@@ -250,7 +250,9 @@
             "lastName": "House Name",
             "email": "E-Missive",
             "phone": "Farspeaker",
-            "address": "Abode"
+            "address": "Abode",
+            "checkOutBeforeCheckInError": "Thine exodus cannot precede thine arrival",
+            "invalidGuestsError": "Prithee, at least one soul must attend"
         },
         "status": {
             "draft": "A Mere Whim",
@@ -258,13 +260,22 @@
             "confirmed": "Written in Stone",
             "checkedIn": "Ensconced",
             "checkedOut": "Vanished",
-            "cancelled": "Forsaken"
+            "checked_in": "Ensconced",
+            "checked_out": "Vanished",
+            "pending_payment": "Awaiting Tribute",
+            "cancelled": "Forsaken",
+            "checked-in": "Checked In",
+            "checked-out": "Checked Out",
+            "pending payment": "Pending Payment",
+            "pending-payment": "Pending Payment"
         },
         "paymentStatus": {
             "pending": "Debt Unpaid",
             "paid": "Debt Settled",
             "partial": "A Token Given",
-            "refunded": "Gold Restored"
+            "refunded": "Gold Restored",
+            "not_paid": "No Coin Offered",
+            "not-paid": "Not Paid"
         },
         "paymentMethod": {
             "cash": "Cold Hard Coin",

@@ -263,14 +263,19 @@
             "checked_in": "Checked In",
             "checked_out": "Checked Out",
             "pending_payment": "Pending Payment",
-            "cancelled": "Cancelled"
+            "cancelled": "Cancelled",
+            "checked-in": "Checked In",
+            "checked-out": "Checked Out",
+            "pending payment": "Pending Payment",
+            "pending-payment": "Pending Payment"
         },
         "paymentStatus": {
             "pending": "Pending",
             "paid": "Paid",
             "partial": "Partial",
             "refunded": "Refunded",
-            "not_paid": "Not Paid"
+            "not_paid": "Not Paid",
+            "not-paid": "Not Paid"
         },
         "paymentMethod": {
             "cash": "Cash",

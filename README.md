@@ -25,6 +25,7 @@ When adding new translations or components, run the internationalization linter 
 ```bash
 npm run lint:i18n
 ```
+> **Note**: The build process and SSR logic now strictly throws errors for any missing localization keys. Run the linter constantly to avoid build and server errors.
 
 ### Building for Production
 
