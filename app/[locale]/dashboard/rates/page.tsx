@@ -353,18 +353,18 @@ hover:bg-destructive/10 hover:text-destructive" onClick={() => handleDeleteRate(
                             <div className="flex flex-col gap-1 text-sm text-muted-foreground">
                                 {rate.room_type && (
                                     <div className="flex justify-between">
-                                        <span>Room Type:</span>
+                                        <span>{t("roomTypeLabel")}:</span>
                                         <span className="font-medium">{rate.room_type}</span>
                                     </div>
                                 )}
                                 {rate.room_group_id && (
                                     <div className="flex justify-between">
-                                        <span>Group ID:</span>
+                                        <span>{t("groupIdLabel")}:</span>
                                         <span className="font-medium">{rate.room_group_id}</span>
                                     </div>
                                 )}
                                 {!rate.room_type && !rate.room_group_id && (
-                                    <div className="italic">Applies to all rooms</div>
+                                    <div className="italic">{t("appliesToAll")}</div>
                                 )}
                             </div>
                         </CardContent>

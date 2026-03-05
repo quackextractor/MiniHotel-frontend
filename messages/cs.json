@@ -126,7 +126,11 @@
         "noRoomsInGroup": "V této skupině nejsou žádné pokoje",
         "addGroup": "Přidat skupinu",
         "save": "Uložit změny",
-        "saveGroup": "Vytvořit skupinu"
+        "saveGroup": "Vytvořit skupinu",
+        "roomLabel": "Pokoj",
+        "guestsUnit": "Hosté",
+        "nightUnit": "noc",
+        "roomsCount": "{count} pokojů"
     },
     "Rates": {
         "title": "Sezónní ceny",
@@ -159,7 +163,10 @@
         "rateUpdated": "Sazba úspěšně aktualizována",
         "rateDeleted": "Sazba úspěšně smazána",
         "deleteConfirmMessage": "Opravdu chcete tuto sazbu smazat?",
-        "endDateMustBeAfterStart": "Datum konce musí být po datu začátku"
+        "endDateMustBeAfterStart": "Datum konce musí být po datu začátku",
+        "roomTypeLabel": "Typ pokoje",
+        "groupIdLabel": "ID skupiny",
+        "appliesToAll": "Platí pro všechny pokoje"
     },
     "Services": {
         "title": "Služby",
@@ -271,10 +278,11 @@
             "checked_out": "Odhlášen",
             "pending_payment": "Čeká na platbu",
             "cancelled": "Zrušeno",
-            "checked-in": "Checked In",
-            "checked-out": "Checked Out",
-            "pending payment": "Pending Payment",
-            "pending-payment": "Pending Payment"
+            "checked-in": "Ubytován",
+            "checked-out": "Odhlášen",
+            "pending payment": "Čeká na platbu",
+            "pending-payment": "Čeká na platbu",
+            "not_paid": "Nezaplaceno"
         },
         "paymentStatus": {
             "pending": "Čekající",
@@ -282,7 +290,7 @@
             "partial": "Částečně",
             "refunded": "Vráceno",
             "not_paid": "Nezaplaceno",
-            "not-paid": "Not Paid"
+            "not-paid": "Nezaplaceno"
         },
         "paymentMethod": {
             "cash": "Hotovost",
@@ -384,7 +392,7 @@
         "importFailed": "Import dat se nezdařil:",
         "importing": "Importování...",
         "serverProxy": "Proxy serveru",
-        "lastRefreshed": "Last refreshed"
+        "lastRefreshed": "Naposledy aktualizováno:"
     },
     "AuditLogs": {
         "title": "Auditní logy",

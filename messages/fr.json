@@ -126,7 +126,11 @@
         "noRoomsInGroup": "Aucune chambre dans ce groupe",
         "addGroup": "Ajouter un Groupe",
         "save": "Enregistrer les Modifications",
-        "saveGroup": "Créer un Groupe"
+        "saveGroup": "Créer un Groupe",
+        "roomLabel": "Chambre",
+        "guestsUnit": "Clients",
+        "nightUnit": "nuit",
+        "roomsCount": "{count} chambres"
     },
     "Rates": {
         "title": "Tarifs Saisonniers",
@@ -159,7 +163,10 @@
         "rateUpdated": "Tarif mis à jour avec succès",
         "rateDeleted": "Tarif supprimé avec succès",
         "deleteConfirmMessage": "Êtes-vous sûr de vouloir supprimer ce tarif ?",
-        "endDateMustBeAfterStart": "La date de fin doit être postérieure à la date de début"
+        "endDateMustBeAfterStart": "La date de fin doit être postérieure à la date de début",
+        "roomTypeLabel": "Type de Chambre",
+        "groupIdLabel": "ID de Groupe",
+        "appliesToAll": "S'applique à toutes les chambres"
     },
     "Services": {
         "title": "Services",
@@ -271,10 +278,11 @@
             "checked_out": "Parti",
             "pending_payment": "Paiement en attente",
             "cancelled": "Annulée",
-            "checked-in": "Checked In",
-            "checked-out": "Checked Out",
-            "pending payment": "Pending Payment",
-            "pending-payment": "Pending Payment"
+            "checked-in": "Arrivé",
+            "checked-out": "Parti",
+            "pending payment": "Paiement en attente",
+            "pending-payment": "Paiement en attente",
+            "not_paid": "Non Payé"
         },
         "paymentStatus": {
             "pending": "En attente",
@@ -282,7 +290,7 @@
             "partial": "Partiel",
             "refunded": "Remboursé",
             "not_paid": "Non Payé",
-            "not-paid": "Not Paid"
+            "not-paid": "Non Payé"
         },
         "paymentMethod": {
             "cash": "Espèces",
@@ -384,7 +392,7 @@
         "importFailed": "Échec de l'importation des données:",
         "importing": "Importation en cours...",
         "serverProxy": "Proxy du serveur",
-        "lastRefreshed": "Last refreshed"
+        "lastRefreshed": "Dernière actualisation :"
     },
     "AuditLogs": {
         "title": "Journaux d'Audit",

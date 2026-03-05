@@ -126,7 +126,11 @@
         "noRoomsInGroup": "No cabins in this deck",
         "addGroup": "Add Fleet",
         "save": "Secure Changes",
-        "saveGroup": "Commission Fleet"
+        "saveGroup": "Commission Fleet",
+        "roomLabel": "Cabin",
+        "guestsUnit": "Souls",
+        "nightUnit": "night",
+        "roomsCount": "{count} cabins"
     },
     "Rates": {
         "title": "Seasonal Bounties",
@@ -159,7 +163,10 @@
         "rateUpdated": "Bounty modified successfully",
         "rateDeleted": "Bounty scrapped to the depths",
         "deleteConfirmMessage": "Ye sure ye want to abandon this bounty?",
-        "endDateMustBeAfterStart": "The End Watch must be set after the Start Watch, ye fool"
+        "endDateMustBeAfterStart": "The End Watch must be set after the Start Watch, ye fool",
+        "roomTypeLabel": "Cabin Class",
+        "groupIdLabel": "Cluster Mark",
+        "appliesToAll": "Plunders all cabins"
     },
     "Services": {
         "title": "Extras & Loot",
@@ -271,10 +278,11 @@
             "checked_out": "Walked the Plank",
             "pending_payment": "Debt Owed",
             "cancelled": "Scrapped",
-            "checked-in": "Checked In",
-            "checked-out": "Checked Out",
-            "pending payment": "Pending Payment",
-            "pending-payment": "Pending Payment"
+            "checked-in": "On Deck",
+            "checked-out": "Walked the Plank",
+            "pending payment": "Debt Owed",
+            "pending-payment": "Debt Owed",
+            "not_paid": "No Gold"
         },
         "paymentStatus": {
             "pending": "Owed",
@@ -282,7 +290,7 @@
             "partial": "Some Coin",
             "refunded": "Returned",
             "not_paid": "No Gold",
-            "not-paid": "Not Paid"
+            "not-paid": "No Gold"
         },
         "paymentMethod": {
             "cash": "Pieces of Eight",
@@ -384,7 +392,7 @@
         "importFailed": "Failed to plunder data:",
         "importing": "Plundering...",
         "serverProxy": "Server's First Mate",
-        "lastRefreshed": "Last refreshed"
+        "lastRefreshed": "Last swabbed at"
     },
     "AuditLogs": {
         "title": "Captain's Log",

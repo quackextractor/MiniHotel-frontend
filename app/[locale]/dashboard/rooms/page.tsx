@@ -66,6 +66,7 @@ const statusColors = {
 
 export default function RoomsPage() {
   const t = useTranslations("Rooms")
+  const tCommon = useTranslations("Common")
   const format = useFormatter()
   const { convert, convertToBase, currency } = useCurrency()
   const [rooms, setRooms] = useState<Room[]>([])
@@ -257,7 +258,7 @@ export default function RoomsPage() {
             </DropdownMenu>
           </div>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">Room {room.room_number}</CardTitle>
+            <CardTitle className="text-lg">{t("roomLabel")} {room.room_number}</CardTitle>
           </div>
           <div className="flex items-center gap-2 mt-1">
             <CardDescription className="capitalize">{room.room_type}</CardDescription>
@@ -270,10 +271,10 @@ export default function RoomsPage() {
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center text-muted-foreground">
               <Users className="mr-1 size-4" />
-              {room.capacity} Guests
+              {room.capacity} {t("guestsUnit")}
             </div>
             <div className="font-medium">
-              {convert(room.base_rate).toFixed(2)} {currency} / night
+              {convert(room.base_rate).toFixed(2)} {currency} / {t("nightUnit")}
             </div>
           </div>
         </CardContent>
@@ -290,7 +291,7 @@ export default function RoomsPage() {
         <AccordionTrigger className="hover:no-underline">
           <div className="flex items-center gap-2 flex-1 relative">
             <span className="font-semibold text-lg">{group.name}</span>
-            <Badge variant="secondary" className="ml-2">{groupRooms.length} rooms</Badge>
+            <Badge variant="secondary" className="ml-2">{t("roomsCount", { count: groupRooms.length })}</Badge>
           </div>
         </AccordionTrigger>
         <div className="absolute right-10 top-3 opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center gap-1 z-10">
@@ -337,7 +338,7 @@ export default function RoomsPage() {
   if (loading) {
     return (
       <div className="flex bg-muted/40 items-center justify-center p-8 flex-1">
-        <div className="text-muted-foreground">Loading rooms...</div>
+        <div className="text-muted-foreground">{tCommon("loading")}</div>
       </div>
     )
   }

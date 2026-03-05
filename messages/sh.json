@@ -126,7 +126,11 @@
         "noRoomsInGroup": "No chambers dwell within this cluster",
         "addGroup": "Add Cluster",
         "save": "Consecrate",
-        "saveGroup": "Forge Cluster"
+        "saveGroup": "Forge Cluster",
+        "roomLabel": "Chamber",
+        "guestsUnit": "Souls",
+        "nightUnit": "moon",
+        "roomsCount": "{count} chambers"
     },
     "Rates": {
         "title": "Seasonal Plunder",
@@ -159,7 +163,10 @@
         "rateUpdated": "Toll updated fittingly",
         "rateDeleted": "Toll vanquished",
         "deleteConfirmMessage": "Are you certain you wish to vanquish this toll?",
-        "endDateMustBeAfterStart": "The Setting Sun must follow the Rising Sun, lest chaos reign"
+        "endDateMustBeAfterStart": "The Setting Sun must follow the Rising Sun, lest chaos reign",
+        "roomTypeLabel": "Chamber Lineage",
+        "groupIdLabel": "Faction Mark",
+        "appliesToAll": "Levied upon all chambers"
     },
     "Services": {
         "title": "Royal Favours",
@@ -271,10 +278,11 @@
             "checked_out": "Vanished",
             "pending_payment": "Awaiting Tribute",
             "cancelled": "Forsaken",
-            "checked-in": "Checked In",
-            "checked-out": "Checked Out",
-            "pending payment": "Pending Payment",
-            "pending-payment": "Pending Payment"
+            "checked-in": "Ensconced",
+            "checked-out": "Vanished",
+            "pending payment": "Awaiting Tribute",
+            "pending-payment": "Awaiting Tribute",
+            "not_paid": "No Coin Offered"
         },
         "paymentStatus": {
             "pending": "Debt Unpaid",
@@ -282,7 +290,7 @@
             "partial": "A Token Given",
             "refunded": "Gold Restored",
             "not_paid": "No Coin Offered",
-            "not-paid": "Not Paid"
+            "not-paid": "No Coin Offered"
         },
         "paymentMethod": {
             "cash": "Cold Hard Coin",
@@ -384,7 +392,7 @@
         "importFailed": "Woe! The inscription of tales failed:",
         "importing": "Inscribing...",
         "serverProxy": "Proxy of the Lord",
-        "lastRefreshed": "Last refreshed"
+        "lastRefreshed": "Last refreshed at"
     },
     "AuditLogs": {
         "title": "The Book of Judgement",

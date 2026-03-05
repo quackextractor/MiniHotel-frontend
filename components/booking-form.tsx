@@ -63,6 +63,7 @@ export function BookingForm({
     onGuestCreateClick,
 }: BookingFormProps) {
     const t = useTranslations("Bookings")
+    const tRooms = useTranslations("Rooms")
     const tCommon = useTranslations("Common")
     const { convert, convertToBase, currency } = useCurrency()
     const formRef = useEnterNavigation()
@@ -249,7 +250,7 @@ export function BookingForm({
                         <SelectContent>
                             {rooms.map((room) => (
                                 <SelectItem key={room.id} value={room.id.toString()}>
-                                    Room {room.room_number} - {room.room_type} (${room.base_rate}/night, Capacity: {room.capacity})
+                                    Room {room.room_number} - {room.room_type} (${room.base_rate}/{tRooms("nightUnit")}, {tRooms("capacity")}: {room.capacity})
                                 </SelectItem>
                             ))}
                         </SelectContent>

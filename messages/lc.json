@@ -126,7 +126,11 @@
         "noRoomsInGroup": "No boxez here",
         "addGroup": "Add Pile",
         "save": "Keepz",
-        "saveGroup": "Make Pile"
+        "saveGroup": "Make Pile",
+        "roomLabel": "Box",
+        "guestsUnit": "Frens",
+        "nightUnit": "nite",
+        "roomsCount": "{count} boxez"
     },
     "Rates": {
         "title": "Sezonal Costz",
@@ -159,7 +163,10 @@
         "rateUpdated": "Rule updated bigly",
         "rateDeleted": "Rule deleted completely",
         "deleteConfirmMessage": "U sure u wanna delete this rule?",
-        "endDateMustBeAfterStart": "End wen must be aftr start wen plz"
+        "endDateMustBeAfterStart": "End wen must be aftr start wen plz",
+        "roomTypeLabel": "Box Kind",
+        "groupIdLabel": "Pile #",
+        "appliesToAll": "4 all boxez"
     },
     "Services": {
         "title": "Treetz",
@@ -271,10 +278,11 @@
             "checked_out": "Gone",
             "pending_payment": "Need Shinyz",
             "cancelled": "Nope",
-            "checked-in": "Checked In",
-            "checked-out": "Checked Out",
-            "pending payment": "Pending Payment",
-            "pending-payment": "Pending Payment"
+            "checked-in": "Here Nao",
+            "checked-out": "Gone",
+            "pending payment": "Need Shinyz",
+            "pending-payment": "Need Shinyz",
+            "not_paid": "No Shinyz"
         },
         "paymentStatus": {
             "pending": "Gimme Money",
@@ -282,7 +290,7 @@
             "partial": "Some Money",
             "refunded": "Gave Bak",
             "not_paid": "No Shinyz",
-            "not-paid": "Not Paid"
+            "not-paid": "No Shinyz"
         },
         "paymentMethod": {
             "cash": "Paper",
@@ -384,7 +392,7 @@
         "importFailed": "faild 2 import data :(",
         "importing": "importinnng....",
         "serverProxy": "srver proxying",
-        "lastRefreshed": "Last refreshed"
+        "lastRefreshed": "Last licked at"
     },
     "AuditLogs": {
         "title": "Stalkin Logz",

@@ -126,7 +126,11 @@
         "noRoomsInGroup": "No rooms in this group",
         "addGroup": "Add Group",
         "save": "Save Changes",
-        "saveGroup": "Create Group"
+        "saveGroup": "Create Group",
+        "roomLabel": "Room",
+        "guestsUnit": "Guests",
+        "nightUnit": "night",
+        "roomsCount": "{count} rooms"
     },
     "Rates": {
         "title": "Seasonal Rates",
@@ -159,7 +163,10 @@
         "rateUpdated": "Rate updated successfully",
         "rateDeleted": "Rate deleted successfully",
         "deleteConfirmMessage": "Are you sure you want to delete this rate?",
-        "endDateMustBeAfterStart": "End date must be after start date"
+        "endDateMustBeAfterStart": "End date must be after start date",
+        "roomTypeLabel": "Room Type",
+        "groupIdLabel": "Group ID",
+        "appliesToAll": "Applies to all rooms"
     },
     "Services": {
         "title": "Services",
@@ -274,7 +281,8 @@
             "checked-in": "Checked In",
             "checked-out": "Checked Out",
             "pending payment": "Pending Payment",
-            "pending-payment": "Pending Payment"
+            "pending-payment": "Pending Payment",
+            "not_paid": "Not Paid"
         },
         "paymentStatus": {
             "pending": "Pending",
@@ -384,7 +392,7 @@
         "importFailed": "Failed to import data:",
         "importing": "Importing...",
         "serverProxy": "Server Proxy",
-        "lastRefreshed": "Last refreshed"
+        "lastRefreshed": "Last refreshed at"
     },
     "AuditLogs": {
         "title": "Audit Logs",

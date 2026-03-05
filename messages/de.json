@@ -126,7 +126,11 @@
         "noRoomsInGroup": "Keine Zimmer in dieser Gruppe",
         "addGroup": "Gruppe hinzufügen",
         "save": "Änderungen speichern",
-        "saveGroup": "Gruppe erstellen"
+        "saveGroup": "Gruppe erstellen",
+        "roomLabel": "Zimmer",
+        "guestsUnit": "Gäste",
+        "nightUnit": "Nacht",
+        "roomsCount": "{count} Zimmer"
     },
     "Rates": {
         "title": "Saisonale Preise",
@@ -159,7 +163,10 @@
         "rateUpdated": "Preis erfolgreich aktualisiert",
         "rateDeleted": "Preis erfolgreich gelöscht",
         "deleteConfirmMessage": "Sind Sie sicher, dass Sie diesen Preis löschen möchten?",
-        "endDateMustBeAfterStart": "Das Enddatum muss nach dem Startdatum liegen"
+        "endDateMustBeAfterStart": "Das Enddatum muss nach dem Startdatum liegen",
+        "roomTypeLabel": "Zimmertyp",
+        "groupIdLabel": "Gruppen-ID",
+        "appliesToAll": "Gilt für alle Zimmer"
     },
     "Services": {
         "title": "Dienstleistungen",
@@ -271,10 +278,11 @@
             "checked_out": "Ausgecheckt",
             "pending_payment": "Zahlung ausstehend",
             "cancelled": "Storniert",
-            "checked-in": "Checked In",
-            "checked-out": "Checked Out",
-            "pending payment": "Pending Payment",
-            "pending-payment": "Pending Payment"
+            "checked-in": "Eingecheckt",
+            "checked-out": "Ausgecheckt",
+            "pending payment": "Zahlung ausstehend",
+            "pending-payment": "Zahlung ausstehend",
+            "not_paid": "Nicht bezahlt"
         },
         "paymentStatus": {
             "pending": "Ausstehend",
@@ -282,7 +290,7 @@
             "partial": "Teilweise",
             "refunded": "Erstattet",
             "not_paid": "Nicht bezahlt",
-            "not-paid": "Not Paid"
+            "not-paid": "Nicht bezahlt"
         },
         "paymentMethod": {
             "cash": "Bar",
@@ -384,7 +392,7 @@
         "importFailed": "Datenimport fehlgeschlagen:",
         "importing": "Importieren...",
         "serverProxy": "Server-Proxy",
-        "lastRefreshed": "Last refreshed"
+        "lastRefreshed": "Zuletzt aktualisiert:"
     },
     "AuditLogs": {
         "title": "Audit-Protokolle",

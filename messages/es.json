@@ -126,7 +126,11 @@
         "noRoomsInGroup": "No hay habitaciones en este grupo",
         "addGroup": "Añadir Grupo",
         "save": "Guardar Cambios",
-        "saveGroup": "Crear Grupo"
+        "saveGroup": "Crear Grupo",
+        "roomLabel": "Habitación",
+        "guestsUnit": "Huéspedes",
+        "nightUnit": "noche",
+        "roomsCount": "{count} habitaciones"
     },
     "Rates": {
         "title": "Tarifas Estacionales",
@@ -159,7 +163,10 @@
         "rateUpdated": "Tarifa actualizada con éxito",
         "rateDeleted": "Tarifa eliminada con éxito",
         "deleteConfirmMessage": "¿Estás seguro de que deseas eliminar esta tarifa?",
-        "endDateMustBeAfterStart": "La fecha de fin debe ser posterior a la fecha de inicio"
+        "endDateMustBeAfterStart": "La fecha de fin debe ser posterior a la fecha de inicio",
+        "roomTypeLabel": "Tipo de Habitación",
+        "groupIdLabel": "ID de Grupo",
+        "appliesToAll": "Se aplica a todas las habitaciones"
     },
     "Services": {
         "title": "Servicios",
@@ -271,10 +278,11 @@
             "checked_out": "Salida Realizada",
             "pending_payment": "Pago Pendiente",
             "cancelled": "Cancelada",
-            "checked-in": "Checked In",
-            "checked-out": "Checked Out",
-            "pending payment": "Pending Payment",
-            "pending-payment": "Pending Payment"
+            "checked-in": "Entrada Realizada",
+            "checked-out": "Salida Realizada",
+            "pending payment": "Pago Pendiente",
+            "pending-payment": "Pago Pendiente",
+            "not_paid": "No Pagado"
         },
         "paymentStatus": {
             "pending": "Pendiente",
@@ -282,7 +290,7 @@
             "partial": "Parcial",
             "refunded": "Reembolsado",
             "not_paid": "No Pagado",
-            "not-paid": "Not Paid"
+            "not-paid": "No Pagado"
         },
         "paymentMethod": {
             "cash": "Efectivo",
@@ -384,7 +392,7 @@
         "importFailed": "Error al importar datos:",
         "importing": "Importando...",
         "serverProxy": "Proxy del servidor",
-        "lastRefreshed": "Last refreshed"
+        "lastRefreshed": "Última actualización:"
     },
     "AuditLogs": {
         "title": "Registros de Auditoría",
