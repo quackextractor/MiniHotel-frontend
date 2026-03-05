@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: "Minihotel Management System",
   description: "Professional hotel management system for bookings, rooms, and operations",
   generator: "v0.app",
+  icons: {
+    icon: "/favicon.ico",
+  },
 }
 
 export default async function RootLayout({
